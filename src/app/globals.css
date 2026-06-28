@@ -1,26 +1,221 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-surface: #faf9f7;
+  --color-surface-dim: #dbdad8;
+  --color-surface-bright: #faf9f7;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f4f3f1;
+  --color-surface-container: #efeeec;
+  --color-surface-container-high: #e9e8e6;
+  --color-surface-container-highest: #e3e2e0;
+  --color-on-surface: #1b1c1b;
+  --color-on-surface-variant: #474741;
+  --color-inverse-surface: #2f3130;
+  --color-inverse-on-surface: #f2f1ee;
+  --color-outline: #787770;
+  --color-outline-variant: #c8c7be;
+  --color-surface-tint: #5f5e5b;
+  --color-primary: #000000;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #1c1c19;
+  --color-on-primary-container: #858480;
+  --color-inverse-primary: #c9c6c2;
+  --color-secondary: #5e5f5c;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #e0e0dc;
+  --color-on-secondary-container: #626360;
+  --color-tertiary: #000000;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #351000;
+  --color-on-tertiary-container: #dd5c00;
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  --color-primary-fixed: #e5e2de;
+  --color-primary-fixed-dim: #c9c6c2;
+  --color-on-primary-fixed: #1c1c19;
+  --color-on-primary-fixed-variant: #474744;
+  --color-secondary-fixed: #e3e2df;
+  --color-secondary-fixed-dim: #c7c7c3;
+  --color-on-secondary-fixed: #1b1c1a;
+  --color-on-secondary-fixed-variant: #464744;
+  --color-tertiary-fixed: #ffdbcc;
+  --color-tertiary-fixed-dim: #ffb693;
+  --color-on-tertiary-fixed: #351000;
+  --color-on-tertiary-fixed-variant: #7a3000;
+  --color-background: #faf9f7;
+  --color-on-background: #1b1c1b;
+  --color-surface-variant: #e3e2e0;
+  --color-ink-muted: #6B6860;
+  --color-ink-faint: #9C9990;
+  --color-border-base: #D0CEC9;
+  --color-border-muted: #B8B5AF;
+  --color-signal-orange: #FF6B00;
+  --color-signal-dim: #FF6B0018;
+  --color-success-green: #1A7A4A;
+  --color-success-dim: #1A7A4A18;
+  --color-error-red: #C0392B;
+  --color-error-dim: #C0392B18;
+
+  /* Font Families */
+  --font-display: var(--font-space-grotesk), sans-serif;
+  --font-reading: var(--font-inter), sans-serif;
+  --font-technical: var(--font-jetbrains-mono), monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@utility text-headline-lg {
+  font-family: var(--font-display);
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@utility text-headline-lg-mobile {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+@utility text-headline-md {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+@utility text-body-lg {
+  font-family: var(--font-reading);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+@utility text-body-md {
+  font-family: var(--font-reading);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+@utility text-data-mono {
+  font-family: var(--font-technical);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+}
+
+@utility text-label-mono {
+  font-family: var(--font-technical);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@utility text-micro-mono {
+  font-family: var(--font-technical);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.0;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Custom animations for status pulse indicators */
+.pulse-success {
+  animation: pulse-success-ring 2s infinite;
+}
+
+@keyframes pulse-success-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(26, 122, 74, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(26, 122, 74, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(26, 122, 74, 0);
+  }
+}
+
+.pulse-signal {
+  animation: pulse-signal-ring 2s infinite;
+}
+
+@keyframes pulse-signal-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 107, 0, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(255, 107, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 107, 0, 0);
+  }
+}
+
+.pulse-error {
+  animation: pulse-error-ring 2s infinite;
+}
+
+@keyframes pulse-error-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(192, 57, 43, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(192, 57, 43, 0);
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  font-family: var(--font-reading);
+  margin: 0;
+  padding: 0;
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.panel-dot-pulse {
+  animation: panel-dot-anim 2s infinite;
+}
+@keyframes panel-dot-anim {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.nav-link-hover:hover {
+  color: #0F0F0D;
+}
+.btn-ink:hover {
+  background: #FF6B00 !important;
+}
+.btn-signal:hover {
+  background: #e05a00 !important;
+}
+.step-code-line-keyword { color: #FF6B00; }
+.step-code-line-string { color: #7ec8a0; }
+.step-code-line-comment { color: #555; }
+.step-code-line-default { color: #aaa; }
