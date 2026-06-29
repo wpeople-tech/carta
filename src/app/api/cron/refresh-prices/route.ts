@@ -49,8 +49,11 @@ export async function GET(req: NextRequest) {
           },
         })
       }
+
+      console.log(`OK: ${coinId}`);
       updated++
-    } catch {
+    } catch (err) {
+      console.error(`ERR: ${coinId}`, err);
       skipped++
     }
   }

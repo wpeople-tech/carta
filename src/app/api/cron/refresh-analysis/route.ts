@@ -218,8 +218,10 @@ export async function GET(req: NextRequest) {
 
       const aiUsed = !(signalUnchanged && trendUnchanged && latest)
       results[coin.coin_id] = `OK ${ta.signal} ${ta.confidence_pct}/100 AI=${aiUsed}`
+      console.log(results[coin.coin_id]);
     } catch (err) {
       results[coin.coin_id] = `ERR: ${String(err).slice(0, 80)}`
+      console.error(results[coin.coin_id]);
     }
   }
 
