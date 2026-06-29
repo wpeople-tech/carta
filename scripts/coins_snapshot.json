@@ -1,0 +1,608 @@
+{
+  "version": 1,
+  "validated_at": "2026-05-19T17:42:10Z",
+  "validation_method": "TradingView scanner.tradingview.com/crypto/scan",
+  "count": 100,
+  "coins": [
+    {
+      "coin_id": "bitcoin",
+      "name": "Bitcoin",
+      "symbol": "BTC",
+      "tv_symbol": "BINANCE:BTCUSDT"
+    },
+    {
+      "coin_id": "ethereum",
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "tv_symbol": "BINANCE:ETHUSDT"
+    },
+    {
+      "coin_id": "binancecoin",
+      "name": "BNB",
+      "symbol": "BNB",
+      "tv_symbol": "BINANCE:BNBUSDT"
+    },
+    {
+      "coin_id": "ripple",
+      "name": "XRP",
+      "symbol": "XRP",
+      "tv_symbol": "BINANCE:XRPUSDT"
+    },
+    {
+      "coin_id": "solana",
+      "name": "Solana",
+      "symbol": "SOL",
+      "tv_symbol": "BINANCE:SOLUSDT"
+    },
+    {
+      "coin_id": "tron",
+      "name": "TRON",
+      "symbol": "TRX",
+      "tv_symbol": "BINANCE:TRXUSDT"
+    },
+    {
+      "coin_id": "dogecoin",
+      "name": "Dogecoin",
+      "symbol": "DOGE",
+      "tv_symbol": "BINANCE:DOGEUSDT"
+    },
+    {
+      "coin_id": "hyperliquid",
+      "name": "Hyperliquid",
+      "symbol": "HYPE",
+      "tv_symbol": "BYBIT:HYPEUSDT"
+    },
+    {
+      "coin_id": "zcash",
+      "name": "Zcash",
+      "symbol": "ZEC",
+      "tv_symbol": "BINANCE:ZECUSDT"
+    },
+    {
+      "coin_id": "leo-token",
+      "name": "LEO Token",
+      "symbol": "LEO",
+      "tv_symbol": "OKX:LEOUSDT"
+    },
+    {
+      "coin_id": "cardano",
+      "name": "Cardano",
+      "symbol": "ADA",
+      "tv_symbol": "BINANCE:ADAUSDT"
+    },
+    {
+      "coin_id": "bitcoin-cash",
+      "name": "Bitcoin Cash",
+      "symbol": "BCH",
+      "tv_symbol": "BINANCE:BCHUSDT"
+    },
+    {
+      "coin_id": "monero",
+      "name": "Monero",
+      "symbol": "XMR",
+      "tv_symbol": "KRAKEN:XMRUSD"
+    },
+    {
+      "coin_id": "chainlink",
+      "name": "Chainlink",
+      "symbol": "LINK",
+      "tv_symbol": "BINANCE:LINKUSDT"
+    },
+    {
+      "coin_id": "canton-network",
+      "name": "Canton",
+      "symbol": "CC",
+      "tv_symbol": "BYBIT:CCUSDT"
+    },
+    {
+      "coin_id": "the-open-network",
+      "name": "Toncoin",
+      "symbol": "TON",
+      "tv_symbol": "BINANCE:TONUSDT"
+    },
+    {
+      "coin_id": "stellar",
+      "name": "Stellar",
+      "symbol": "XLM",
+      "tv_symbol": "BINANCE:XLMUSDT"
+    },
+    {
+      "coin_id": "memecore",
+      "name": "MemeCore",
+      "symbol": "M",
+      "tv_symbol": "KRAKEN:MUSD"
+    },
+    {
+      "coin_id": "sui",
+      "name": "Sui",
+      "symbol": "SUI",
+      "tv_symbol": "BINANCE:SUIUSDT"
+    },
+    {
+      "coin_id": "litecoin",
+      "name": "Litecoin",
+      "symbol": "LTC",
+      "tv_symbol": "BINANCE:LTCUSDT"
+    },
+    {
+      "coin_id": "avalanche-2",
+      "name": "Avalanche",
+      "symbol": "AVAX",
+      "tv_symbol": "BINANCE:AVAXUSDT"
+    },
+    {
+      "coin_id": "hedera-hashgraph",
+      "name": "Hedera",
+      "symbol": "HBAR",
+      "tv_symbol": "BINANCE:HBARUSDT"
+    },
+    {
+      "coin_id": "rain",
+      "name": "Rain",
+      "symbol": "RAIN",
+      "tv_symbol": "KRAKEN:RAINUSD"
+    },
+    {
+      "coin_id": "shiba-inu",
+      "name": "Shiba Inu",
+      "symbol": "SHIB",
+      "tv_symbol": "BINANCE:SHIBUSDT"
+    },
+    {
+      "coin_id": "crypto-com-chain",
+      "name": "Cronos",
+      "symbol": "CRO",
+      "tv_symbol": "OKX:CROUSDT"
+    },
+    {
+      "coin_id": "bittensor",
+      "name": "Bittensor",
+      "symbol": "TAO",
+      "tv_symbol": "BINANCE:TAOUSDT"
+    },
+    {
+      "coin_id": "uniswap",
+      "name": "Uniswap",
+      "symbol": "UNI",
+      "tv_symbol": "BINANCE:UNIUSDT"
+    },
+    {
+      "coin_id": "near",
+      "name": "NEAR Protocol",
+      "symbol": "NEAR",
+      "tv_symbol": "BINANCE:NEARUSDT"
+    },
+    {
+      "coin_id": "polkadot",
+      "name": "Polkadot",
+      "symbol": "DOT",
+      "tv_symbol": "BINANCE:DOTUSDT"
+    },
+    {
+      "coin_id": "mantle",
+      "name": "Mantle",
+      "symbol": "MNT",
+      "tv_symbol": "BYBIT:MNTUSDT"
+    },
+    {
+      "coin_id": "world-liberty-financial",
+      "name": "World Liberty Financial",
+      "symbol": "WLFI",
+      "tv_symbol": "BINANCE:WLFIUSDT"
+    },
+    {
+      "coin_id": "ondo-finance",
+      "name": "Ondo",
+      "symbol": "ONDO",
+      "tv_symbol": "BINANCE:ONDOUSDT"
+    },
+    {
+      "coin_id": "htx-dao",
+      "name": "HTX DAO",
+      "symbol": "HTX",
+      "tv_symbol": "BYBIT:HTXUSDT"
+    },
+    {
+      "coin_id": "okb",
+      "name": "OKB",
+      "symbol": "OKB",
+      "tv_symbol": "OKX:OKBUSDT"
+    },
+    {
+      "coin_id": "aster-2",
+      "name": "Aster",
+      "symbol": "ASTER",
+      "tv_symbol": "BINANCE:ASTERUSDT"
+    },
+    {
+      "coin_id": "sky",
+      "name": "Sky",
+      "symbol": "SKY",
+      "tv_symbol": "BINANCE:SKYUSDT"
+    },
+    {
+      "coin_id": "pi-network",
+      "name": "Pi Network",
+      "symbol": "PI",
+      "tv_symbol": "OKX:PIUSDT"
+    },
+    {
+      "coin_id": "pepe",
+      "name": "Pepe",
+      "symbol": "PEPE",
+      "tv_symbol": "BINANCE:PEPEUSDT"
+    },
+    {
+      "coin_id": "internet-computer",
+      "name": "Internet Computer",
+      "symbol": "ICP",
+      "tv_symbol": "BINANCE:ICPUSDT"
+    },
+    {
+      "coin_id": "bitget-token",
+      "name": "Bitget Token",
+      "symbol": "BGB",
+      "tv_symbol": "KRAKEN:BGBUSD"
+    },
+    {
+      "coin_id": "ethereum-classic",
+      "name": "Ethereum Classic",
+      "symbol": "ETC",
+      "tv_symbol": "BINANCE:ETCUSDT"
+    },
+    {
+      "coin_id": "aave",
+      "name": "Aave",
+      "symbol": "AAVE",
+      "tv_symbol": "BINANCE:AAVEUSDT"
+    },
+    {
+      "coin_id": "morpho",
+      "name": "Morpho",
+      "symbol": "MORPHO",
+      "tv_symbol": "BINANCE:MORPHOUSDT"
+    },
+    {
+      "coin_id": "quant-network",
+      "name": "Quant",
+      "symbol": "QNT",
+      "tv_symbol": "BINANCE:QNTUSDT"
+    },
+    {
+      "coin_id": "kucoin-shares",
+      "name": "KuCoin",
+      "symbol": "KCS",
+      "tv_symbol": "BYBIT:KCSUSDT"
+    },
+    {
+      "coin_id": "cosmos",
+      "name": "Cosmos Hub",
+      "symbol": "ATOM",
+      "tv_symbol": "BINANCE:ATOMUSDT"
+    },
+    {
+      "coin_id": "algorand",
+      "name": "Algorand",
+      "symbol": "ALGO",
+      "tv_symbol": "BINANCE:ALGOUSDT"
+    },
+    {
+      "coin_id": "polygon-ecosystem-token",
+      "name": "POL (ex-MATIC)",
+      "symbol": "POL",
+      "tv_symbol": "BINANCE:POLUSDT"
+    },
+    {
+      "coin_id": "ethena",
+      "name": "Ethena",
+      "symbol": "ENA",
+      "tv_symbol": "BINANCE:ENAUSDT"
+    },
+    {
+      "coin_id": "kaspa",
+      "name": "Kaspa",
+      "symbol": "KAS",
+      "tv_symbol": "BYBIT:KASUSDT"
+    },
+    {
+      "coin_id": "render-token",
+      "name": "Render",
+      "symbol": "RENDER",
+      "tv_symbol": "BINANCE:RENDERUSDT"
+    },
+    {
+      "coin_id": "nexo",
+      "name": "NEXO",
+      "symbol": "NEXO",
+      "tv_symbol": "BINANCE:NEXOUSDT"
+    },
+    {
+      "coin_id": "stable-2",
+      "name": "​​Stable",
+      "symbol": "STABLE",
+      "tv_symbol": "BYBIT:STABLEUSDT"
+    },
+    {
+      "coin_id": "worldcoin-wld",
+      "name": "Worldcoin",
+      "symbol": "WLD",
+      "tv_symbol": "BINANCE:WLDUSDT"
+    },
+    {
+      "coin_id": "just",
+      "name": "JUST",
+      "symbol": "JST",
+      "tv_symbol": "BINANCE:JSTUSDT"
+    },
+    {
+      "coin_id": "aptos",
+      "name": "Aptos",
+      "symbol": "APT",
+      "tv_symbol": "BINANCE:APTUSDT"
+    },
+    {
+      "coin_id": "filecoin",
+      "name": "Filecoin",
+      "symbol": "FIL",
+      "tv_symbol": "BINANCE:FILUSDT"
+    },
+    {
+      "coin_id": "flare-networks",
+      "name": "Flare",
+      "symbol": "FLR",
+      "tv_symbol": "BYBIT:FLRUSDT"
+    },
+    {
+      "coin_id": "arbitrum",
+      "name": "Arbitrum",
+      "symbol": "ARB",
+      "tv_symbol": "BINANCE:ARBUSDT"
+    },
+    {
+      "coin_id": "venice-token",
+      "name": "Venice Token",
+      "symbol": "VVV",
+      "tv_symbol": "BYBIT:VVVUSDT"
+    },
+    {
+      "coin_id": "jupiter-exchange-solana",
+      "name": "Jupiter",
+      "symbol": "JUP",
+      "tv_symbol": "BINANCE:JUPUSDT"
+    },
+    {
+      "coin_id": "dexe",
+      "name": "DeXe",
+      "symbol": "DEXE",
+      "tv_symbol": "BINANCE:DEXEUSDT"
+    },
+    {
+      "coin_id": "xdce-crowd-sale",
+      "name": "XDC Network",
+      "symbol": "XDC",
+      "tv_symbol": "BYBIT:XDCUSDT"
+    },
+    {
+      "coin_id": "beldex",
+      "name": "Beldex",
+      "symbol": "BDX",
+      "tv_symbol": "KRAKEN:BDXUSD"
+    },
+    {
+      "coin_id": "pump-fun",
+      "name": "Pump.fun",
+      "symbol": "PUMP",
+      "tv_symbol": "BINANCE:PUMPUSDT"
+    },
+    {
+      "coin_id": "vechain",
+      "name": "VeChain",
+      "symbol": "VET",
+      "tv_symbol": "BINANCE:VETUSDT"
+    },
+    {
+      "coin_id": "dash",
+      "name": "Dash",
+      "symbol": "DASH",
+      "tv_symbol": "BINANCE:DASHUSDT"
+    },
+    {
+      "coin_id": "pudgy-penguins",
+      "name": "Pudgy Penguins",
+      "symbol": "PENGU",
+      "tv_symbol": "BINANCE:PENGUUSDT"
+    },
+    {
+      "coin_id": "bonk",
+      "name": "Bonk",
+      "symbol": "BONK",
+      "tv_symbol": "BINANCE:BONKUSDT"
+    },
+    {
+      "coin_id": "midnight-3",
+      "name": "Midnight",
+      "symbol": "NIGHT",
+      "tv_symbol": "BINANCE:NIGHTUSDT"
+    },
+    {
+      "coin_id": "kite-2",
+      "name": "Kite",
+      "symbol": "KITE",
+      "tv_symbol": "BINANCE:KITEUSDT"
+    },
+    {
+      "coin_id": "chiliz",
+      "name": "Chiliz",
+      "symbol": "CHZ",
+      "tv_symbol": "BINANCE:CHZUSDT"
+    },
+    {
+      "coin_id": "injective-protocol",
+      "name": "Injective",
+      "symbol": "INJ",
+      "tv_symbol": "BINANCE:INJUSDT"
+    },
+    {
+      "coin_id": "official-trump",
+      "name": "Official Trump",
+      "symbol": "TRUMP",
+      "tv_symbol": "BINANCE:TRUMPUSDT"
+    },
+    {
+      "coin_id": "virtual-protocol",
+      "name": "Virtuals Protocol",
+      "symbol": "VIRTUAL",
+      "tv_symbol": "BINANCE:VIRTUALUSDT"
+    },
+    {
+      "coin_id": "pancakeswap-token",
+      "name": "PancakeSwap",
+      "symbol": "CAKE",
+      "tv_symbol": "BINANCE:CAKEUSDT"
+    },
+    {
+      "coin_id": "blockstack",
+      "name": "Stacks",
+      "symbol": "STX",
+      "tv_symbol": "BINANCE:STXUSDT"
+    },
+    {
+      "coin_id": "fetch-ai",
+      "name": "Artificial Superintelligence Alliance",
+      "symbol": "FET",
+      "tv_symbol": "BINANCE:FETUSDT"
+    },
+    {
+      "coin_id": "terra-luna",
+      "name": "Terra Luna Classic",
+      "symbol": "LUNC",
+      "tv_symbol": "BINANCE:LUNCUSDT"
+    },
+    {
+      "coin_id": "sei-network",
+      "name": "Sei",
+      "symbol": "SEI",
+      "tv_symbol": "BINANCE:SEIUSDT"
+    },
+    {
+      "coin_id": "aerodrome-finance",
+      "name": "Aerodrome Finance",
+      "symbol": "AERO",
+      "tv_symbol": "BYBIT:AEROUSDT"
+    },
+    {
+      "coin_id": "sun-token",
+      "name": "Sun Token",
+      "symbol": "SUN",
+      "tv_symbol": "BINANCE:SUNUSDT"
+    },
+    {
+      "coin_id": "tezos",
+      "name": "Tezos",
+      "symbol": "XTZ",
+      "tv_symbol": "BINANCE:XTZUSDT"
+    },
+    {
+      "coin_id": "celestia",
+      "name": "Celestia",
+      "symbol": "TIA",
+      "tv_symbol": "BINANCE:TIAUSDT"
+    },
+    {
+      "coin_id": "curve-dao-token",
+      "name": "Curve DAO",
+      "symbol": "CRV",
+      "tv_symbol": "BINANCE:CRVUSDT"
+    },
+    {
+      "coin_id": "spx6900",
+      "name": "SPX6900",
+      "symbol": "SPX",
+      "tv_symbol": "BYBIT:SPXUSDT"
+    },
+    {
+      "coin_id": "layerzero",
+      "name": "LayerZero",
+      "symbol": "ZRO",
+      "tv_symbol": "BINANCE:ZROUSDT"
+    },
+    {
+      "coin_id": "ether-fi",
+      "name": "Ether.fi",
+      "symbol": "ETHFI",
+      "tv_symbol": "BINANCE:ETHFIUSDT"
+    },
+    {
+      "coin_id": "bittorrent",
+      "name": "BitTorrent",
+      "symbol": "BTT",
+      "tv_symbol": "BINANCE:BTTCUSDT"
+    },
+    {
+      "coin_id": "monad",
+      "name": "Monad",
+      "symbol": "MON",
+      "tv_symbol": "OKX:MONUSDT"
+    },
+    {
+      "coin_id": "doublezero",
+      "name": "DoubleZero",
+      "symbol": "2Z",
+      "tv_symbol": "BINANCE:2ZUSDT"
+    },
+    {
+      "coin_id": "gnosis",
+      "name": "Gnosis",
+      "symbol": "GNO",
+      "tv_symbol": "BINANCE:GNOUSDT"
+    },
+    {
+      "coin_id": "pendle",
+      "name": "Pendle",
+      "symbol": "PENDLE",
+      "tv_symbol": "BINANCE:PENDLEUSDT"
+    },
+    {
+      "coin_id": "pyth-network",
+      "name": "Pyth Network",
+      "symbol": "PYTH",
+      "tv_symbol": "BINANCE:PYTHUSDT"
+    },
+    {
+      "coin_id": "conflux-token",
+      "name": "Conflux",
+      "symbol": "CFX",
+      "tv_symbol": "BINANCE:CFXUSDT"
+    },
+    {
+      "coin_id": "lido-dao",
+      "name": "Lido DAO",
+      "symbol": "LDO",
+      "tv_symbol": "BINANCE:LDOUSDT"
+    },
+    {
+      "coin_id": "kaia",
+      "name": "Kaia",
+      "symbol": "KAIA",
+      "tv_symbol": "BINANCE:KAIAUSDT"
+    },
+    {
+      "coin_id": "zebec-network",
+      "name": "Zebec Network",
+      "symbol": "ZBCN",
+      "tv_symbol": "OKX:ZBCNUSDT"
+    },
+    {
+      "coin_id": "decred",
+      "name": "Decred",
+      "symbol": "DCR",
+      "tv_symbol": "BINANCE:DCRUSDT"
+    },
+    {
+      "coin_id": "floki",
+      "name": "FLOKI",
+      "symbol": "FLOKI",
+      "tv_symbol": "BINANCE:FLOKIUSDT"
+    }
+  ]
+}
