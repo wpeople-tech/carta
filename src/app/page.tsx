@@ -3,6 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { motion, Transition } from "motion/react";
 import TextType from "@/components/TextType";
+import TopoBg from "@/components/TopoBg";
+import TopoDivider from "@/components/TopoDivider";
+import Navbar from "@/components/Navbar";
+import LeftHeroSection from "@/sections/Home/LeftHeroSection";
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 const C = {
@@ -62,157 +66,10 @@ const easeOutFast: Transition<any> = { ease: [0.22, 0.97, 0.36, 1], duration: 0.
 
 const viewportOnce = { once: true, margin: "-60px" };
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
-
-function TopoBg() {
-  return (
-    <div
-      style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0, opacity: 0.028 }}
-      aria-hidden="true"
-    >
-      <svg
-        viewBox="0 0 1440 900"
-        preserveAspectRatio="xMidYMid slice"
-        style={{ width: "100%", height: "100%" }}
-        fill="none"
-        stroke="#0F0F0D"
-        strokeWidth="0.8"
-      >
-        <g>
-          <path d="M-100,180 C120,140 280,200 460,170 C640,140 780,90 960,120 C1140,150 1280,100 1540,130" />
-          <path d="M-100,220 C100,185 260,245 440,215 C620,185 770,128 950,162 C1130,196 1270,142 1540,175" />
-          <path d="M-100,260 C80,228 240,292 420,260 C600,228 755,168 935,204 C1115,240 1255,184 1540,220" />
-          <path d="M-100,300 C60,272 218,338 398,305 C578,272 738,208 918,246 C1098,284 1238,226 1540,265" />
-          <path d="M-100,340 C50,316 198,384 378,350 C558,316 720,248 900,288 C1080,328 1218,268 1540,310" />
-          <path d="M-100,420 C150,380 340,460 520,425 C700,390 860,310 1040,355 C1220,400 1360,335 1540,375" />
-          <path d="M-100,465 C130,428 320,508 500,472 C680,436 845,353 1025,400 C1205,447 1345,380 1540,422" />
-          <path d="M-100,510 C110,476 296,556 476,519 C656,482 825,396 1005,445 C1185,494 1325,425 1540,469" />
-          <path d="M-100,555 C90,524 272,604 452,566 C632,528 805,439 985,490 C1165,541 1305,470 1540,516" />
-          <path d="M-100,640 C200,595 420,680 600,640 C780,600 940,510 1120,560 C1300,610 1420,545 1540,580" />
-          <path d="M-100,685 C180,642 398,728 578,687 C758,646 920,553 1100,605 C1280,657 1400,590 1540,627" />
-          <path d="M-100,60 C200,30 380,90 560,55 C740,20 900,-30 1080,20 C1260,70 1380,10 1540,40" />
-          <path d="M-100,100 C180,72 358,134 538,98 C718,62 880,5 1060,57 C1240,109 1358,47 1540,80" />
-          <ellipse cx="240" cy="380" rx="180" ry="90" opacity="0.6" />
-          <ellipse cx="240" cy="380" rx="130" ry="62" opacity="0.7" />
-          <ellipse cx="240" cy="380" rx="80" ry="36" opacity="0.8" />
-          <ellipse cx="240" cy="380" rx="40" ry="18" opacity="0.9" />
-          <ellipse cx="780" cy="250" rx="200" ry="100" opacity="0.5" />
-          <ellipse cx="780" cy="250" rx="140" ry="68" opacity="0.6" />
-          <ellipse cx="780" cy="250" rx="85" ry="40" opacity="0.7" />
-          <ellipse cx="780" cy="250" rx="42" ry="20" opacity="0.9" />
-          <ellipse cx="1280" cy="500" rx="160" ry="80" opacity="0.5" />
-          <ellipse cx="1280" cy="500" rx="110" ry="54" opacity="0.6" />
-          <ellipse cx="1280" cy="500" rx="65" ry="32" opacity="0.8" />
-          <ellipse cx="400" cy="700" rx="150" ry="75" opacity="0.5" />
-          <ellipse cx="400" cy="700" rx="100" ry="50" opacity="0.6" />
-          <ellipse cx="400" cy="700" rx="55" ry="28" opacity="0.8" />
-        </g>
-        <g stroke="#0F0F0D" strokeWidth="0.3" opacity="0.4">
-          <line x1="360" y1="0" x2="360" y2="900" />
-          <line x1="720" y1="0" x2="720" y2="900" />
-          <line x1="1080" y1="0" x2="1080" y2="900" />
-          <line x1="0" y1="225" x2="1440" y2="225" />
-          <line x1="0" y1="450" x2="1440" y2="450" />
-          <line x1="0" y1="675" x2="1440" y2="675" />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-type TopoDividerVariant = 1 | 2 | 3 | 4 | 5;
-
-function TopoDivider({ v = 1 }: { v?: TopoDividerVariant }) {
-  const configs: Record<TopoDividerVariant, { paths: string[]; stroke: string; opacity: number }> = {
-    1: {
-      paths: [
-        "M0,24 C120,10 240,38 360,24 C480,10 600,38 720,24 C840,10 960,38 1080,24 C1200,10 1320,38 1440,24",
-        "M0,32 C120,18 240,46 360,32 C480,18 600,46 720,32 C840,18 960,46 1080,32 C1200,18 1320,46 1440,32",
-        "M0,16 C120,4 240,28 360,16 C480,4 600,28 720,16 C840,4 960,28 1080,16 C1200,4 1320,28 1440,16",
-      ],
-      stroke: "#0F0F0D",
-      opacity: 0.12,
-    },
-    2: {
-      paths: [
-        "M0,28 C180,14 360,42 540,28 C720,14 900,42 1080,28 C1260,14 1380,36 1440,28",
-        "M0,20 C180,8 360,34 540,20 C720,8 900,34 1080,20 C1260,8 1380,28 1440,20",
-      ],
-      stroke: "#0F0F0D",
-      opacity: 0.12,
-    },
-    3: {
-      paths: [
-        "M0,24 C200,8 400,40 600,24 C800,8 1000,40 1200,24 C1320,16 1400,32 1440,24",
-        "M0,34 C200,18 400,48 600,34 C800,18 1000,48 1200,34 C1320,26 1400,42 1440,34",
-      ],
-      stroke: "#F5F4F0",
-      opacity: 0.07,
-    },
-    4: {
-      paths: [
-        "M0,20 C160,36 320,8 480,24 C640,40 800,12 960,28 C1120,44 1280,16 1440,24",
-        "M0,30 C160,46 320,18 480,34 C640,50 800,22 960,38 C1120,54 1280,26 1440,34",
-        "M0,12 C160,26 320,2 480,16 C640,30 800,4 960,18 C1120,32 1280,8 1440,16",
-      ],
-      stroke: "#0F0F0D",
-      opacity: 0.12,
-    },
-    5: {
-      paths: [
-        "M0,24 C120,10 240,38 360,24 C480,10 600,38 720,24 C840,10 960,38 1080,24 C1200,10 1320,38 1440,24",
-        "M0,14 C120,2 240,26 360,14 C480,2 600,26 720,14 C840,2 960,26 1080,14 C1200,2 1320,26 1440,14",
-      ],
-      stroke: "#0F0F0D",
-      opacity: 0.12,
-    },
-  };
-
-  const { paths, stroke, opacity } = configs[v];
-  return (
-    <div
-      style={{ position: "relative", height: 48, overflow: "hidden", opacity, zIndex: 1 }}
-      aria-hidden="true"
-    >
-      <svg
-        viewBox="0 0 1440 48"
-        preserveAspectRatio="none"
-        style={{ width: "100%", height: "100%" }}
-        fill="none"
-        stroke={stroke}
-        strokeWidth="1"
-      >
-        {paths.map((d, i) => (
-          <path key={i} d={d} />
-        ))}
-      </svg>
-    </div>
-  );
-}
-
 // ─── Main page ────────────────────────────────────────────────────────────────
-export default function Home() {
-  const [coinsAnalyzed, setCoinsAnalyzed] = useState(0);
-  const [updatesQueue, setUpdatesQueue] = useState(0);
+export default function Page() {
   const [srValues, setSrValues] = useState(["", "", "", ""]);
   const [confidence, setConfidence] = useState(0);
-
-  // Live metric counters
-  useEffect(() => {
-    let coins = 0;
-    const ci = setInterval(() => {
-      coins += Math.floor(Math.random() * 5) + 3;
-      if (coins >= 150) { coins = 150; clearInterval(ci); }
-      setCoinsAnalyzed(coins);
-    }, 80);
-    let updates = 0;
-    const ui = setInterval(() => {
-      updates += Math.floor(Math.random() * 3) + 1;
-      if (updates >= 47) { updates = 47; clearInterval(ui); }
-      setUpdatesQueue(updates);
-    }, 120);
-    return () => { clearInterval(ci); clearInterval(ui); };
-  }, []);
 
   // Panel type-out + confidence animation
   useEffect(() => {
@@ -240,74 +97,23 @@ export default function Home() {
   }, []);
 
   return (
-    <div style={{ background: C.bg, color: C.ink, fontFamily: BODY, fontSize: 16, lineHeight: 1.6 }}>
+    <div className="bg-background text-ink font-reading">
       <TopoBg />
 
-      {/* ── NAV ── */}
-      <motion.nav
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.45, ease: "easeOut" }}
-        style={{
-          position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          padding: "16px 48px", background: C.bg, borderBottom: `1px solid ${C.border}`,
-        }}
-      >
-        <a
-          href="#"
-          style={{ fontFamily: MONO, fontSize: 15, fontWeight: 600, letterSpacing: "0.08em", color: C.ink, textDecoration: "none" }}
-        >
-          CARTA<span style={{ color: C.signal }}>.</span>
-        </a>
-        <motion.ul
-          className="hidden md:flex"
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-          style={{ gap: 32, listStyle: "none", margin: 0, padding: 0 }}
-        >
-          {([["#how", "How it works"], ["#features", "Features"], ["#mcp", "Claude via MCP"], ["#lore", "The Territory"]] as [string, string][]).map(
-            ([href, label]) => (
-              <motion.li key={href} variants={fadeIn} transition={easeOutFast}>
-                <a
-                  href={href}
-                  className="nav-link-hover"
-                  style={{ fontFamily: MONO, fontSize: 12, fontWeight: 500, letterSpacing: "0.06em", color: C.inkMuted, textDecoration: "none", textTransform: "uppercase", transition: "color 0.15s" }}
-                >
-                  {label}
-                </a>
-              </motion.li>
-            )
-          )}
-        </motion.ul>
-        <motion.a
-          href="#install"
-          className="btn-ink"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.35, duration: 0.3 }}
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          style={{ fontFamily: MONO, fontSize: 12, fontWeight: 600, letterSpacing: "0.06em", color: C.bg, background: C.ink, padding: "8px 20px", textDecoration: "none", textTransform: "uppercase", transition: "background 0.15s", display: "inline-block" }}
-        >
-          Install Free
-        </motion.a>
-      </motion.nav>
+      <Navbar />
 
       {/* ── HERO WRAPPER ── */}
-      <div style={{ position: "relative" }}>
+      <div className="relative">
         {/* Coordinate labels */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.6 }}
-          style={{ position: "absolute", top: 80, left: 48, zIndex: 2, display: "flex", alignItems: "center", gap: 8 }}
-          className="hidden md:flex"
+          className="hidden md:flex absolute top-24 left-12 z-2 items-center gap-2"
         >
-          <span style={{ fontFamily: MONO, fontSize: 10, color: C.inkMuted, letterSpacing: "0.08em", opacity: 0.8 }}>13°S 106°E</span>
-          <span style={{ fontFamily: MONO, fontSize: 10, color: C.inkMuted, opacity: 0.7 }}>·</span>
-          <span style={{ fontFamily: MONO, fontSize: 10, color: C.inkMuted, letterSpacing: "0.08em", opacity: 0.8 }}>CRYPTO TERRITORY · DAILY</span>
+          <span className="font-technical text-xs text-ink-muted font-semibold opacity-70">13°S 106°E</span>
+          <span className="font-technical text-xs text-ink-muted font-semibold opacity-70">·</span>
+          <span className="font-technical text-xs text-ink-muted font-semibold opacity-70">CRYPTO TERRITORY · DAILY</span>
         </motion.div>
         <motion.div
           initial={{ opacity: 0 }}
@@ -321,151 +127,35 @@ export default function Home() {
 
         {/* ── HERO SECTION ── */}
         <section
-          className="grid grid-cols-1 lg:grid-cols-2 items-center"
-          style={{ minHeight: "100vh", padding: "120px 48px 80px", gap: 64, maxWidth: 1280, margin: "0 auto", position: "relative", zIndex: 1 }}
+          className="grid grid-cols-1 lg:grid-cols-2 items-center px-8 md:px-16 py-28"
+          style={{ minHeight: "100vh", gap: 64, maxWidth: 1280, margin: "0 auto", position: "relative", zIndex: 1 }}
         >
           {/* Hero left — stagger children */}
+          <LeftHeroSection />
+
+          {/* Hero right — CARTA Panel, enters from the right on first render */}
           <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
+            initial={{ opacity: 0, x: 72 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
           >
             <motion.div
-              variants={slideFromLeft}
-              transition={{ ...easeOut, delay: 0.1 }}
-              style={{ fontFamily: MONO, fontWeight: 500, letterSpacing: "0.12em", color: C.signal, textTransform: "uppercase", marginBottom: 20, display: "flex", alignItems: "center", gap: 8 }}
-              className="md:text-xl text-center md:text-start"
-            >
-              <span
-                style={{ width: 40, height: 2, background: C.signal }}
-                className="hidden md:inline-block"
-              />
-              Cartography Trading Agent
-            </motion.div>
-
-            {/* <motion.h1
-              variants={fadeUp}
-              transition={{ ...easeOut, delay: 0.15 }}
-              style={{ fontFamily: SANS, fontSize: "clamp(40px, 5vw, 64px)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.02em", color: C.ink, marginBottom: 24 }}
-            >
-              Your chart<br />finally has a<br />
-              <em style={{ fontStyle: "normal", color: C.signal }}>navigator.</em>
-            </motion.h1> */}
-            <TextType
-              text={["Your chart finally has a navigator"]}
-              typingSpeed={40}
-              pauseDuration={1500}
-              showCursor
-              cursorCharacter="|"
-              deletingSpeed={20}
-              variableSpeed={{
-                min: 60,
-                max: 120,
+              animate={{ y: [0, -12, 0] }}
+              transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                ease: "easeInOut",
               }}
-              cursorBlinkDuration={0.5}
-              className="text-2xl md:text-5xl font-semibold mb-4 md:mb-8"
-            />
-
-            <motion.p
-              variants={fadeUp}
-              transition={{ ...easeOut, delay: 0.2 }}
-              style={{ fontFamily: BODY, fontSize: 17, lineHeight: 1.65, color: C.inkMuted, marginBottom: 40, maxWidth: 440 }}
-            >
-              CARTA reads every crypto chart you open in TradingView. Signal, levels, trade setup.
-              Already there when you arrive. Powered by Claude via MCP.
-            </motion.p>
-
-            <motion.div
-              variants={fadeUp}
-              transition={{ ...easeOut, delay: 0.25 }}
-              style={{ display: "flex", alignItems: "center", gap: 20 }}
-            >
-              <motion.a
-                href="#install"
-                className="btn-ink"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                style={{ fontFamily: MONO, fontSize: 13, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", color: C.bg, background: C.ink, padding: "14px 28px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 10, transition: "background 0.15s" }}
-              >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M7 1v8M4 7l3 3 3-3M2 11h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
-                Add to Chrome
-              </motion.a>
-              <a
-                href="#how"
-                style={{ fontFamily: MONO, fontSize: 12, fontWeight: 500, letterSpacing: "0.05em", color: C.inkMuted, textDecoration: "none", textTransform: "uppercase", borderBottom: `1px solid ${C.border}`, paddingBottom: 2, transition: "color 0.15s, border-color 0.15s" }}
-              >
-                See how it works
-              </a>
-            </motion.div>
-
-            {/* Hero meta stats */}
-            <motion.div
-              variants={staggerFast}
-              style={{ marginTop: 40, display: "flex", gap: 32 }}
-            >
-              {([["150+", "Coins covered"], ["4h", "Refresh cycle"], ["$100M+", "Marketcap filter"]] as [string, string][]).map(([num, label]) => (
-                <motion.div
-                  key={label}
-                  variants={fadeUp}
-                  transition={easeOutFast}
-                  style={{ fontFamily: MONO, fontSize: 11, color: C.inkFaint, letterSpacing: "0.04em" }}
-                >
-                  <strong style={{ display: "block", fontSize: 20, fontWeight: 600, color: C.ink, marginBottom: 2 }}>{num}</strong>
-                  {label}
-                </motion.div>
-              ))}
-            </motion.div>
-
-            {/* Live metric box */}
-            <motion.div
-              variants={fadeUp}
-              transition={{ ...easeOut, delay: 0.35 }}
-              style={{ marginTop: 56, padding: 28, background: `linear-gradient(135deg, ${C.signalDim} 0%, rgba(255,107,0,0.08) 100%)`, border: `1px solid ${C.signal}`, borderRadius: 6, position: "relative", overflow: "hidden" }}
-            >
-              <div
-                style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: C.signal, textTransform: "uppercase", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}
-              >
-                <span className="panel-dot-pulse" style={{ width: 8, height: 8, background: C.signal, borderRadius: "50%", display: "inline-block" }} />
-                Live Metric
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 16 }}>
-                <div style={{ background: "rgba(255,255,255,0.4)", padding: 16, borderRadius: 4, borderLeft: `3px solid ${C.signal}` }}>
-                  <div style={{ fontSize: 32, fontWeight: 700, color: C.signal, fontVariantNumeric: "tabular-nums" }}>{coinsAnalyzed}</div>
-                  <div style={{ fontSize: 11, color: C.inkMuted, marginTop: 6, fontWeight: 500 }}>Coins analyzed today</div>
-                </div>
-                <div style={{ background: "rgba(255,255,255,0.4)", padding: 16, borderRadius: 4, borderLeft: `3px solid ${C.signal}` }}>
-                  <div style={{ fontSize: 32, fontWeight: 700, color: C.signal, fontVariantNumeric: "tabular-nums" }}>{updatesQueue}</div>
-                  <div style={{ fontSize: 11, color: C.inkMuted, marginTop: 6, fontWeight: 500 }}>Updates in queue</div>
-                </div>
-              </div>
-              <div style={{ fontSize: 12, color: C.signal, fontStyle: "italic", display: "flex", alignItems: "center", gap: 8 }}>
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <path d="M8 2L4 6L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
-                Scroll to see how it works
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Hero right — CARTA Panel, slides in from right */}
-          <motion.div
-            initial={{ opacity: 0, x: 48, y: 8 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 0.97, 0.36, 1] }}
-          >
-            <motion.div
-              whileHover={{ y: -10, boxShadow: "0 8px 32px rgba(0,0,0,0.12), 0 32px 64px rgba(0,0,0,0.1)", scale: 1.01 }}
-              transition={{ duration: 0.3 }}
-              style={{ background: C.bg, border: `1px solid ${C.border}`, boxShadow: "0 2px 8px rgba(0,0,0,0.06), 0 16px 48px rgba(0,0,0,0.08)", fontFamily: MONO, fontSize: 12, overflow: "hidden" }}
+              className="overflow-hidden bg-background border border-border-base shadow-md font-technical text-[12px]"
             >
               {/* Panel header */}
               <div
-                style={{ background: C.ink, color: C.bg, padding: "10px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                className="flex items-center justify-between"
+                style={{ background: C.ink, color: C.bg, padding: "10px 16px" }}
+                
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, fontWeight: 600, letterSpacing: "0.08em" }}>
-                  <span className="panel-dot-pulse" style={{ width: 6, height: 6, borderRadius: "50%", background: C.signal, display: "inline-block" }} />
+                <div className="flex items-center" style={{ gap: 8, fontSize: 11, fontWeight: 600, letterSpacing: "0.08em" }}>
+                  <span className="panel-dot-pulse inline-block rounded-full" style={{ width: 6, height: 6, background: C.signal }} />
                   CARTA
                 </div>
                 <span style={{ fontSize: 11, color: "#999", letterSpacing: "0.04em" }}>BTCUSDT · Daily</span>
@@ -473,22 +163,24 @@ export default function Home() {
 
               {/* Signal bar */}
               <div
-                style={{ padding: "14px 16px", borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                className="flex items-center justify-between"
+                style={{ padding: "14px 16px", borderBottom: `1px solid ${C.border}` }}
               >
                 <span
-                  style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, letterSpacing: "0.06em", padding: "6px 14px", background: C.greenDim, color: C.green, border: `1px solid ${C.green}` }}
+                  className="inline-flex items-center"
+                  style={{ gap: 6, fontSize: 13, fontWeight: 600, letterSpacing: "0.06em", padding: "6px 14px", background: C.greenDim, color: C.green, border: `1px solid ${C.green}` }}
                 >
                   ▲ BUY
                 </span>
-                <div style={{ fontSize: 11, color: C.inkMuted, textAlign: "right" }}>
-                  <strong style={{ display: "block", fontSize: 18, fontWeight: 600, color: C.green }}>{confidence}%</strong>
+                <div className="text-right" style={{ fontSize: 11, color: C.inkMuted }}>
+                  <strong className="block" style={{ fontSize: 18, fontWeight: 600, color: C.green }}>{confidence}%</strong>
                   Confidence
                 </div>
               </div>
 
               {/* S/R Levels */}
               <div style={{ padding: "12px 16px", borderBottom: `1px solid ${C.border}` }}>
-                <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: C.inkFaint, marginBottom: 10 }}>
+                <div className="uppercase" style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", color: C.inkFaint, marginBottom: 10 }}>
                   Support & Resistance · Daily
                 </div>
                 {([{ dot: C.red, label: "Strong Resistance", val: srValues[0] }, { dot: "#e07070", label: "Weak Resistance", val: srValues[1] }] as { dot: string; label: string; val: string }[]).map(({ dot, label, val }) => (
@@ -505,7 +197,8 @@ export default function Home() {
                 ))}
                 {/* Current price */}
                 <div
-                  style={{ background: C.signalDim, margin: "0 -16px", padding: "4px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}
+                  className="flex justify-between items-center"
+                  style={{ background: C.signalDim, margin: "0 -16px", padding: "4px 16px" }}
                 >
                   <span style={{ color: C.signal, fontSize: 10, letterSpacing: "0.06em" }}>CURRENT · $103,240</span>
                   <span style={{ color: C.signal, fontSize: 10 }}>+1.8% from support</span>
@@ -513,7 +206,8 @@ export default function Home() {
                 {([{ dot: "#70b090", label: "Weak Support", val: srValues[2] }, { dot: C.green, label: "Strong Support", val: srValues[3] }] as { dot: string; label: string; val: string }[]).map(({ dot, label, val }) => (
                   <div
                     key={label}
-                    style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "4px 0", borderBottom: `1px solid ${C.border}` }}
+                    className="flex justify-between items-center border-b"
+                    style={{ padding: "4px 0", borderColor: C.border }}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: C.inkMuted }}>
                       <span style={{ width: 5, height: 5, borderRadius: "50%", background: dot, flexShrink: 0, display: "inline-block" }} />
@@ -526,8 +220,8 @@ export default function Home() {
 
               {/* Indicators */}
               <div style={{ padding: "12px 16px", borderBottom: `1px solid ${C.border}` }}>
-                <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: C.inkFaint, marginBottom: 10 }}>Indicators</div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                <div className="uppercase" style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", color: C.inkFaint, marginBottom: 10 }}>Indicators</div>
+                <div className="grid grid-cols-2" style={{ gap: 8 }}>
                   {([{ label: "RSI (14)", value: "58.4 · Neutral", color: C.green }, { label: "MACD", value: "Bullish Cross", color: C.green }, { label: "EMA 200", value: "Above", color: C.green }, { label: "Volume", value: "Above Avg", color: C.inkMuted }] as { label: string; value: string; color: string }[]).map(({ label, value, color }) => (
                     <div key={label} style={{ background: C.surface, padding: "8px 10px" }}>
                       <div style={{ fontSize: 10, color: C.inkFaint, letterSpacing: "0.06em", marginBottom: 3 }}>{label}</div>
@@ -539,22 +233,23 @@ export default function Home() {
 
               {/* Trade Setup */}
               <div style={{ padding: "12px 16px", borderBottom: `1px solid ${C.border}` }}>
-                <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: C.inkFaint, marginBottom: 10 }}>
+                <div className="uppercase" style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", color: C.inkFaint, marginBottom: 10 }}>
                   Trade Setup · Long (A-Grade)
                 </div>
                 {([{ label: "Entry Zone", value: "$101,200 – $102,000", color: C.ink }, { label: "Stop (tight)", value: "$99,800 · −1.4%", color: C.red }, { label: "TP1", value: "$105,800 · +3.8R", color: C.green }, { label: "TP2", value: "$109,400 · +7.4R", color: C.green }, { label: "Invalidation", value: "4H close below $99,800", color: C.red }] as { label: string; value: string; color: string }[]).map(({ label, value, color }) => (
-                  <div key={label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0", fontSize: 11 }}>
+                  <div key={label} className="flex justify-between items-center" style={{ padding: "5px 0", fontSize: 11 }}>
                     <span style={{ color: C.inkFaint }}>{label}</span>
-                    <span style={{ color, fontWeight: 500, fontVariantNumeric: "tabular-nums" }}>{value}</span>
+                    <span className="font-medium" style={{ color, fontVariantNumeric: "tabular-nums" }}>{value}</span>
                   </div>
                 ))}
               </div>
 
               {/* CARTA's Call */}
               <div
-                style={{ padding: "12px 16px", background: C.surface, borderTop: `2px solid ${C.signal}`, fontSize: 11, lineHeight: 1.6, color: C.inkMuted, fontFamily: BODY, fontStyle: "italic" }}
+                className="italic"
+                style={{ padding: "12px 16px", background: C.surface, borderTop: `2px solid ${C.signal}`, fontSize: 11, lineHeight: 1.6, color: C.inkMuted, fontFamily: BODY }}
               >
-                <strong style={{ fontStyle: "normal", color: C.signal, fontFamily: MONO, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", display: "block", marginBottom: 4 }}>
+                <strong className="block uppercase" style={{ color: C.signal, fontFamily: MONO, fontSize: 10, letterSpacing: "0.08em", marginBottom: 4 }}>
                   CARTA&apos;s Call
                 </strong>
                 Price is holding above the weekly structure with clean volume. I&apos;d wait for a 4H close inside
@@ -562,7 +257,7 @@ export default function Home() {
               </div>
 
               {/* Freshness row */}
-              <div style={{ padding: "8px 16px", fontSize: 10, color: C.inkFaint, display: "flex", justifyContent: "space-between", letterSpacing: "0.04em" }}>
+              <div className="flex justify-between" style={{ padding: "8px 16px", fontSize: 10, color: C.inkFaint, letterSpacing: "0.04em" }}>
                 <span>mcptrade.site · Full analysis →</span>
                 <span>Generated 1h ago</span>
               </div>
