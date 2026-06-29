@@ -55,6 +55,7 @@ export default function TopoDivider({
   };
 
   const { paths, stroke, opacity } = configs[v];
+  const tickPositions = [72, 216, 360, 504, 648, 792, 936, 1080, 1224, 1368];
   return (
     <div
       style={{ opacity }}
@@ -71,6 +72,10 @@ export default function TopoDivider({
       >
         {paths.map((d, i) => (
           <path key={i} d={d} />
+        ))}
+        {/* Contour tick marks at regular intervals */}
+        {tickPositions.map((x) => (
+          <line key={x} x1={x} y1="18" x2={x} y2="30" stroke={stroke} strokeWidth="0.5" opacity="0.4" />
         ))}
       </svg>
     </div>

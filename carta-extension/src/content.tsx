@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client'
 import Panel from './panel/Panel'
-import panelCss from './panel/panel.css';
+import panelCss from './panel/panel.css?inline';
 
 function injectCARTA() {
   if (document.getElementById('carta-host')) return
@@ -16,7 +16,7 @@ function injectCARTA() {
 
   // Inject CSS ke shadow root
   const style = document.createElement('style')
-  style.textContent = panelCss as string;
+  style.textContent = panelCss;
   shadow.appendChild(style)
 
   // Mount point untuk React

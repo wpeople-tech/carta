@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, Transition } from "motion/react";
-import TextType from "@/components/TextType";
 import TopoBg from "@/components/TopoBg";
 import TopoDivider from "@/components/TopoDivider";
 import Navbar from "@/components/Navbar";
@@ -104,17 +103,37 @@ export default function Page() {
 
       {/* ── HERO WRAPPER ── */}
       <div className="relative">
-        {/* Coordinate labels */}
+        {/* Map reference box — top-left */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.6 }}
-          className="hidden md:flex absolute top-24 left-12 z-2 items-center gap-2"
+          className="hidden md:block absolute top-24 left-12 z-2"
         >
-          <span className="font-technical text-xs text-ink-muted font-semibold opacity-70">13°S 106°E</span>
-          <span className="font-technical text-xs text-ink-muted font-semibold opacity-70">·</span>
-          <span className="font-technical text-xs text-ink-muted font-semibold opacity-70">CRYPTO TERRITORY · DAILY</span>
+          <div style={{ border: `1px solid ${C.border}`, background: "rgba(245,244,240,0.85)", padding: "8px 12px", backdropFilter: "blur(4px)" }}>
+            <div style={{ fontFamily: MONO, fontSize: 9, color: C.inkFaint, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 4 }}>Ref. Point</div>
+            <div style={{ fontFamily: MONO, fontSize: 11, color: C.inkMuted, fontWeight: 600, letterSpacing: "0.06em" }}>13°S 106°E</div>
+            <div style={{ fontFamily: MONO, fontSize: 9, color: C.inkFaint, letterSpacing: "0.08em", marginTop: 2 }}>CRYPTO TERRITORY · DAILY</div>
+          </div>
         </motion.div>
+
+        {/* North arrow — top-right */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.85, duration: 0.6 }}
+          className="hidden lg:flex absolute top-24 right-12 z-2 flex-col items-center gap-1"
+          style={{ opacity: 0.5 }}
+        >
+          <svg width="24" height="32" viewBox="0 0 24 32" fill="none">
+            <path d="M12 2L16 14H8L12 2Z" fill={C.ink} />
+            <path d="M12 30L8 18H16L12 30Z" fill="none" stroke={C.ink} strokeWidth="0.8" />
+            <line x1="12" y1="2" x2="12" y2="30" stroke={C.ink} strokeWidth="0.5" />
+          </svg>
+          <span style={{ fontFamily: MONO, fontSize: 9, color: C.inkMuted, fontWeight: 700, letterSpacing: "0.12em" }}>N</span>
+        </motion.div>
+
+        {/* Scale bar + datum — bottom-right */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -122,7 +141,18 @@ export default function Page() {
           style={{ position: "absolute", bottom: 24, right: 48, zIndex: 2 }}
           className="hidden md:block"
         >
-          <span style={{ fontFamily: MONO, fontSize: 10, color: C.inkMuted, letterSpacing: "0.08em", opacity: 0.8 }}>CARTA · CHART INTEL · MAPPED</span>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
+            {/* Scale bar */}
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ fontFamily: MONO, fontSize: 9, color: C.inkFaint, letterSpacing: "0.06em" }}>0</span>
+              <div style={{ width: 48, height: 4, border: `1px solid ${C.border2}`, overflow: "hidden", display: "flex" }}>
+                <div style={{ width: "50%", background: C.ink, height: "100%", opacity: 0.5 }} />
+              </div>
+              <span style={{ fontFamily: MONO, fontSize: 9, color: C.inkFaint, letterSpacing: "0.06em" }}>50km</span>
+            </div>
+            <span style={{ fontFamily: MONO, fontSize: 9, color: C.inkFaint, letterSpacing: "0.08em", textTransform: "uppercase" }}>Contour interval: 200m · WGS84</span>
+            <span style={{ fontFamily: MONO, fontSize: 10, color: C.inkMuted, letterSpacing: "0.08em", fontWeight: 600 }}>CARTA · CHART INTEL · MAPPED</span>
+          </div>
         </motion.div>
 
         {/* ── HERO SECTION ── */}
@@ -265,6 +295,31 @@ export default function Page() {
           </motion.div>
         </section>
       </div>
+
+      {/* ── MAP LEGEND STRIP ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.0, duration: 0.6 }}
+        className="hidden md:flex items-center justify-center gap-8 border-t border-b"
+        style={{ borderColor: C.border, padding: "10px 48px", background: "rgba(237,236,234,0.6)", position: "relative", zIndex: 1 }}
+      >
+        {([
+          { color: C.ink, label: "Index Contour (200m)" },
+          { color: C.inkFaint, label: "Intermediate Contour" },
+          { color: C.signal, label: "Signal Level" },
+          { color: C.green, label: "Support Zone" },
+          { color: C.red, label: "Resistance Zone" },
+        ] as { color: string; label: string }[]).map(({ color, label }) => (
+          <div key={label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ width: 20, height: 1.5, background: color, flexShrink: 0 }} />
+            <span style={{ fontFamily: MONO, fontSize: 9, color: C.inkFaint, letterSpacing: "0.06em", textTransform: "uppercase" }}>{label}</span>
+          </div>
+        ))}
+        <div style={{ marginLeft: "auto", fontFamily: MONO, fontSize: 9, color: C.inkFaint, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+          Scale 1:250,000 · Projection: Mercator
+        </div>
+      </motion.div>
 
       {/* ── DIVIDER ── */}
       <TopoDivider v={1} />
@@ -635,13 +690,32 @@ export default function Page() {
             whileInView="visible"
             viewport={viewportOnce}
             transition={{ ...easeOut, delay: 0.2 }}
-            style={{ marginTop: 72, paddingTop: 48, borderTop: "1px solid #2a2a28", textAlign: "center" }}
+            style={{ marginTop: 72, paddingTop: 48, borderTop: "1px solid #2a2a28" }}
           >
-            <p style={{ fontFamily: MONO, fontSize: 13, letterSpacing: "0.06em", color: "#555", maxWidth: 560, margin: "0 auto", lineHeight: 1.8 }}>
-              CARTA · CARTOGRAPHY TRADING AGENT<br />
-              <span style={{ color: "#333" }}>The chart always speaks.</span>
-              <span style={{ color: C.signal }}> CARTA translates.</span>
-            </p>
+            {/* Cartographic inset panel */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 32 }}>
+              {/* Mini map legend box */}
+              <div style={{ display: "flex", gap: 24, flexWrap: "wrap", justifyContent: "center" }}>
+                {([
+                  { color: C.signal, label: "Signal Level" },
+                  { color: C.green, label: "Support" },
+                  { color: C.red, label: "Resistance" },
+                  { color: "#555", label: "Contour (200m)" },
+                ] as { color: string; label: string }[]).map(({ color, label }) => (
+                  <div key={label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <div style={{ width: 16, height: 1.5, background: color }} />
+                    <span style={{ fontFamily: MONO, fontSize: 9, color: "#555", letterSpacing: "0.06em", textTransform: "uppercase" }}>{label}</span>
+                  </div>
+                ))}
+              </div>
+              {/* Projection note */}
+              <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.06em", color: "#444", maxWidth: 480, textAlign: "center", lineHeight: 1.9 }}>
+                <span style={{ color: "#666" }}>Datum: WGS84 · Projection: Mercator · Scale 1:250,000</span><br />
+                CARTA · CARTOGRAPHY TRADING AGENT<br />
+                <span style={{ color: "#333" }}>The chart always speaks.</span>
+                <span style={{ color: C.signal }}> CARTA translates.</span>
+              </p>
+            </div>
           </motion.div>
         </div>
       </section>
