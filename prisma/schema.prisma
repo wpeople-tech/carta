@@ -1,0 +1,255 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────────────────────
+
+enum Signal {
+  BUY
+  SELL
+  NEUTRAL
+}
+
+enum WeeklyBias {
+  BULLISH
+  BEARISH
+  NEUTRAL
+}
+
+enum LevelType {
+  SUPPORT
+  RESISTANCE
+}
+
+enum Strength {
+  STRONG
+  WEAK
+}
+
+enum Direction {
+  LONG
+  SHORT
+}
+
+enum Grade {
+  A
+  B
+  C
+}
+
+enum Conviction {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum RsiStatus {
+  OVERBOUGHT
+  OVERSOLD
+  NEUTRAL
+}
+
+enum MacdCross {
+  BULLISH
+  BEARISH
+  NONE
+}
+
+enum PriceVsEma {
+  ABOVE
+  BELOW
+}
+
+enum BbStatus {
+  SQUEEZE
+  EXPANSION
+  NORMAL
+}
+
+enum VolumeStatus {
+  ABOVE_AVG
+  BELOW_AVG
+  NORMAL
+}
+
+// ─────────────────────────────────────────────────────────────
+// coins — master list semua coin yang di-cover
+// ─────────────────────────────────────────────────────────────
+// coin_id   = CoinGecko ID (e.g. "bitcoin"), used as PK to match scripts/
+// symbol    = ticker (e.g. "BTC")
+// tradingview_sym = full TV symbol (e.g. "BINANCE:BTCUSDT")
+//   → extension queries latest_analysis by this field
+// name      = display name (e.g. "Bitcoin")
+// marketcap_usd = latest market cap — filter coverage at >$100M
+// is_active = false = paused from analysis refresh
+// ─────────────────────────────────────────────────────────────
+model Coin {
+  coin_id         String    @id
+  symbol          String
+  name            String
+  tradingview_sym String    @unique
+  image_url       String?
+  marketcap_usd   Float?
+  market_cap_rank Int?
+  is_active       Boolean   @default(true)
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+
+  analyses Analysis[]
+
+  @@map("coins")
+}
+
+// ─────────────────────────────────────────────────────────────
+// analyses — core analisis per coin, di-refresh tiap 4 jam
+// ─────────────────────────────────────────────────────────────
+// signal_prev + trend_prev dipakai cron untuk skip AI call
+//   jika signal & trend tidak berubah → hemat ~70-80% token
+// ─────────────────────────────────────────────────────────────
+model Analysis {
+  id              String    @id @default(cuid())
+  coin_id         String
+  current_price   Float
+  price_change_24h Float    @default(0)
+
+  signal          Signal
+  confidence_pct  Int
+  weekly_bias     WeeklyBias
+  claude_call     String
+
+  signal_prev     Signal?
+  trend_prev      String?
+
+  generated_at    DateTime  @default(now())
+  expires_at      DateTime
+
+  coin            Coin      @relation(fields: [coin_id], references: [coin_id])
+  support_resistance SupportResistance[]
+  indicators      Indicator?
+  trade_setups    TradeSetup[]
+
+  @@index([coin_id, generated_at(sort: Desc)])
+  @@map("analyses")
+}
+
+// ─────────────────────────────────────────────────────────────
+// support_resistance — multi-level S/R per analisis
+// ─────────────────────────────────────────────────────────────
+// sort_order = urutan tampil di extension (0 = paling relevan)
+// confluence_note = e.g. "Confluence with EMA 200"
+// ─────────────────────────────────────────────────────────────
+model SupportResistance {
+  id              Int       @id @default(autoincrement())
+  analysis_id     String
+  level_type      LevelType
+  strength        Strength
+  price           Float
+  confluence_note String?
+  sort_order      Int       @default(0)
+
+  analysis        Analysis  @relation(fields: [analysis_id], references: [id], onDelete: Cascade)
+
+  @@index([analysis_id])
+  @@map("support_resistance")
+}
+
+// ─────────────────────────────────────────────────────────────
+// indicators — semua nilai indikator teknikal per analisis
+// relasi 1-to-1 dengan analyses
+// ─────────────────────────────────────────────────────────────
+// macd_line/signal/histogram = nilai mentah
+// price_vs_ema20/200 = posisi harga vs EMA
+// bb_upper/middle/lower = nilai Bollinger Bands
+// atr_value = Average True Range
+// ─────────────────────────────────────────────────────────────
+model Indicator {
+  id              Int        @id @default(autoincrement())
+  analysis_id     String     @unique
+
+  rsi_value       Float
+  rsi_status      RsiStatus
+
+  macd_line       Float?
+  macd_signal     Float?
+  macd_histogram  Float?
+  macd_cross      MacdCross
+
+  ema20           Float?
+  ema200          Float?
+  price_vs_ema20  PriceVsEma
+  price_vs_ema200 PriceVsEma
+
+  bb_upper        Float?
+  bb_middle       Float?
+  bb_lower        Float?
+  bb_status       BbStatus
+
+  atr_value       Float?
+  volume_status   VolumeStatus
+
+  analysis        Analysis   @relation(fields: [analysis_id], references: [id], onDelete: Cascade)
+
+  @@map("indicators")
+}
+
+// ─────────────────────────────────────────────────────────────
+// trade_setups — Long dan Short setup per analisis
+// ─────────────────────────────────────────────────────────────
+// tp3 nullable — grade C setups mungkin tidak punya TP3
+// risk_pct_tight/safe = % risiko dari entry ke stop
+// setup_note = opsional catatan tambahan per setup
+// ─────────────────────────────────────────────────────────────
+model TradeSetup {
+  id              Int        @id @default(autoincrement())
+  analysis_id     String
+
+  direction       Direction
+  grade           Grade
+  conviction      Conviction
+
+  entry_zone_low  Float
+  entry_zone_high Float
+  stop_tight      Float
+  stop_safe       Float
+  risk_pct_tight  Float
+  risk_pct_safe   Float
+
+  tp1_price       Float
+  tp1_rr          Float
+  tp2_price       Float
+  tp2_rr          Float
+  tp3_price       Float?
+  tp3_rr          Float?
+
+  trigger_note    String
+  invalidation    String
+  setup_note      String?
+
+  analysis        Analysis   @relation(fields: [analysis_id], references: [id], onDelete: Cascade)
+
+  @@index([analysis_id])
+  @@map("trade_setups")
+}
+
+// ─────────────────────────────────────────────────────────────
+// cron_state — tracking progress batch untuk cron Vercel
+// ─────────────────────────────────────────────────────────────
+// key = "refresh_analysis_cursor"
+// value = {"offset": 25} — koin ke-25 sudah diproses
+// Cron baca ini, proses batch N koin, update offset, done.
+// Offset direset ke 0 setelah satu siklus penuh selesai.
+// ─────────────────────────────────────────────────────────────
+model CronState {
+  key         String   @id
+  value       Json     @default("{}")
+  updated_at  DateTime @updatedAt
+
+  @@map("cron_state")
+}
