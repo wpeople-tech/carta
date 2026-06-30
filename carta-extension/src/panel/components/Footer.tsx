@@ -13,14 +13,6 @@ export default function Footer({ generatedAt, expiresAt }: Props) {
 
   return (
     <div className="carta-footer">
-      <a
-        href="https://mcptrade.site"
-        target="_blank"
-        rel="noreferrer"
-        className="carta-footer-link"
-      >
-        mcptrade.site →
-      </a>
       <span className={`carta-freshness${expired ? ' carta-freshness--expired' : ''}`}>
         {label}
       </span>

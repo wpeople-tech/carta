@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "CARTA — Cartography Trading Agent",
+  "version": "1.0.0",
+  "description": "AI-powered crypto technical analysis on TradingView. Powered by Claude via MCP.",
+  "permissions": ["storage", "activeTab"],
+  "host_permissions": [
+    "https://id.tradingview.com/*",
+    "https://www.tradingview.com/*",
+    "https://*.supabase.co/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://id.tradingview.com/chart/*",
+        "https://www.tradingview.com/chart/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "CARTA"
+  }
+}

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import './panel/panel.css'
 import { MOCK_ANALYSIS } from './panel/__mocks__/mockData'
 import Header from './panel/components/Header'
@@ -10,10 +11,13 @@ import Footer from './panel/components/Footer'
 
 // Dev preview — render panel langsung tanpa Shadow DOM dan tanpa TradingView
 export default function App() {
+  const [visible, setVisible] = useState(true)
+  const toggle = () => setVisible(v => !v)
+
   return (
-    <div style={{ display: 'flex', justifyContent: 'flex-end', minHeight: '100vh', background: '#1a1a2e' }}>
-      <div id="carta-panel" style={{ position: 'relative' }}>
-        <Header symbol={MOCK_ANALYSIS.tradingview_sym} onClose={() => {}} />
+    <div style={{ minHeight: '100vh', background: '#1a1a2e' }}>
+      <div id="carta-panel" className={visible ? '' : 'carta-hidden'}>
+        <Header symbol={MOCK_ANALYSIS.tradingview_sym} onClose={toggle} />
         <SignalBar
           signal={MOCK_ANALYSIS.signal}
           confidence={MOCK_ANALYSIS.confidence_pct}
@@ -32,6 +36,10 @@ export default function App() {
           expiresAt={MOCK_ANALYSIS.expires_at}
         />
       </div>
+
+      <button id="carta-toggle" onClick={toggle}>
+        {visible ? '▶' : '◀'} CARTA
+      </button>
     </div>
   )
 }

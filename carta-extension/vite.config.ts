@@ -14,7 +14,7 @@ export default defineConfig(({ command }) => {
   return {
     plugins: [react()],
     build: {
-      outDir: 'dist',
+      outDir: '../public/carta-extension',
       emptyOutDir: true,
       rollupOptions: {
         input: {

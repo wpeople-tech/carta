@@ -48,7 +48,7 @@ export default function LeftHeroSection() {
         pauseDuration={1500}
         showCursor
         cursorCharacter="_"
-        deletingSpeed={20}
+        deletingSpeed={40}
         variableSpeed={{
           min: 60,
           max: 120,
@@ -112,7 +112,7 @@ export default function LeftHeroSection() {
       <motion.div
         variants={fadeUp}
         transition={{ ...easeOut, delay: 0.35 }}
-        className="relative mt-14 overflow-hidden rounded-md border border-signal-orange bg-[linear-gradient(135deg,rgba(255,107,0,0.094)_0%,rgba(255,107,0,0.08)_100%)] p-7"
+        className="relative mt-14 overflow-hidden rounded-md border border-signal-orange bg-orange-100 p-7"
       >
         <div
           className="mb-4 flex items-center gap-2 font-technical text-[10px] font-semibold uppercase tracking-[0.08em] text-signal-orange"
@@ -130,12 +130,15 @@ export default function LeftHeroSection() {
             <div className="mt-1.5 text-[11px] font-medium text-ink-muted">Updates in queue</div>
           </div>
         </div>
-        <div className="flex items-center gap-2 text-[12px] italic text-signal-orange">
+        <a 
+          className="flex items-center gap-2 text-[12px] italic text-signal-orange cursor-pointer hover:underline"
+          href="#how"
+        >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
             <path d="M8 2L4 6L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
           Scroll to see how it works
-        </div>
+        </a>
       </motion.div>
     </motion.div>
   )

@@ -16,7 +16,7 @@ const C = {
   border2: "#B8B5AF",
   ink: "#0F0F0D",
   inkMuted: "#6B6860",
-  inkFaint: "#9C9990",
+  inkFaint: "#7d7c79",
   signal: "#FF6B00",
   signalDim: "rgba(255,107,0,0.094)",
   green: "#1A7A4A",
@@ -110,10 +110,20 @@ export default function Page() {
           transition={{ delay: 0.8, duration: 0.6 }}
           className="hidden md:block absolute top-24 left-12 z-2"
         >
-          <div style={{ border: `1px solid ${C.border}`, background: "rgba(245,244,240,0.85)", padding: "8px 12px", backdropFilter: "blur(4px)" }}>
-            <div style={{ fontFamily: MONO, fontSize: 9, color: C.inkFaint, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 4 }}>Ref. Point</div>
-            <div style={{ fontFamily: MONO, fontSize: 11, color: C.inkMuted, fontWeight: 600, letterSpacing: "0.06em" }}>13°S 106°E</div>
-            <div style={{ fontFamily: MONO, fontSize: 9, color: C.inkFaint, letterSpacing: "0.08em", marginTop: 2 }}>CRYPTO TERRITORY · DAILY</div>
+          <div style={{
+             border: `1px solid ${C.border}`, 
+             background: "rgba(245,244,240,0.85)", 
+             padding: "8px 12px", 
+             backdropFilter: "blur(4px)",
+             display: 'flex',
+             gap: '8px',
+             alignItems: 'center',
+           }}
+           className="shadow-md"
+           >
+            <div style={{ fontFamily: MONO, fontSize: 12, color: C.inkFaint, letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 600 }}>Ref. Point</div>
+            <div style={{ fontFamily: MONO, fontSize: 14, color: C.inkMuted, fontWeight: 600, letterSpacing: "0.06em" }}>13°S 106°E</div>
+            <div style={{ fontFamily: MONO, fontSize: 12, color: C.inkFaint, letterSpacing: "0.08em", fontWeight: 600 }}>CRYPTO TERRITORY · DAILY</div>
           </div>
         </motion.div>
 
@@ -130,7 +140,7 @@ export default function Page() {
             <path d="M12 30L8 18H16L12 30Z" fill="none" stroke={C.ink} strokeWidth="0.8" />
             <line x1="12" y1="2" x2="12" y2="30" stroke={C.ink} strokeWidth="0.5" />
           </svg>
-          <span style={{ fontFamily: MONO, fontSize: 9, color: C.inkMuted, fontWeight: 700, letterSpacing: "0.12em" }}>N</span>
+          <span style={{ fontFamily: MONO, fontSize: 12, color: C.inkMuted, fontWeight: 700, letterSpacing: "0.12em" }}>N</span>
         </motion.div>
 
         {/* Scale bar + datum — bottom-right */}
@@ -144,13 +154,13 @@ export default function Page() {
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
             {/* Scale bar */}
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{ fontFamily: MONO, fontSize: 9, color: C.inkFaint, letterSpacing: "0.06em" }}>0</span>
+              <span style={{ fontFamily: MONO, fontSize: 12, color: C.inkFaint, letterSpacing: "0.06em" }}>0</span>
               <div style={{ width: 48, height: 4, border: `1px solid ${C.border2}`, overflow: "hidden", display: "flex" }}>
                 <div style={{ width: "50%", background: C.ink, height: "100%", opacity: 0.5 }} />
               </div>
-              <span style={{ fontFamily: MONO, fontSize: 9, color: C.inkFaint, letterSpacing: "0.06em" }}>50km</span>
+              <span style={{ fontFamily: MONO, fontSize: 12, color: C.inkFaint, letterSpacing: "0.06em" }}>50km</span>
             </div>
-            <span style={{ fontFamily: MONO, fontSize: 9, color: C.inkFaint, letterSpacing: "0.08em", textTransform: "uppercase" }}>Contour interval: 200m · WGS84</span>
+            <span style={{ fontFamily: MONO, fontSize: 12, color: C.inkFaint, letterSpacing: "0.08em", textTransform: "uppercase" }}>Contour interval: 200m · WGS84</span>
             <span style={{ fontFamily: MONO, fontSize: 10, color: C.inkMuted, letterSpacing: "0.08em", fontWeight: 600 }}>CARTA · CHART INTEL · MAPPED</span>
           </div>
         </motion.div>
@@ -184,11 +194,11 @@ export default function Page() {
                 style={{ background: C.ink, color: C.bg, padding: "10px 16px" }}
                 
               >
-                <div className="flex items-center" style={{ gap: 8, fontSize: 11, fontWeight: 600, letterSpacing: "0.08em" }}>
+                <div className="flex items-center" style={{ gap: 8, fontSize: 14, fontWeight: 600, letterSpacing: "0.08em" }}>
                   <span className="panel-dot-pulse inline-block rounded-full" style={{ width: 6, height: 6, background: C.signal }} />
                   CARTA
                 </div>
-                <span style={{ fontSize: 11, color: "#999", letterSpacing: "0.04em" }}>BTCUSDT · Daily</span>
+                <span style={{ fontSize: 14, color: "#999", letterSpacing: "0.04em" }}>BTCUSDT · Daily</span>
               </div>
 
               {/* Signal bar */}
@@ -202,7 +212,7 @@ export default function Page() {
                 >
                   ▲ BUY
                 </span>
-                <div className="text-right" style={{ fontSize: 11, color: C.inkMuted }}>
+                <div className="text-right" style={{ fontSize: 14, color: C.inkMuted }}>
                   <strong className="block" style={{ fontSize: 18, fontWeight: 600, color: C.green }}>{confidence}%</strong>
                   Confidence
                 </div>
@@ -218,7 +228,7 @@ export default function Page() {
                     key={label}
                     style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "4px 0", borderBottom: `1px solid ${C.border}` }}
                   >
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: C.inkMuted }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 14, color: C.inkMuted }}>
                       <span style={{ width: 5, height: 5, borderRadius: "50%", background: dot, flexShrink: 0, display: "inline-block" }} />
                       {label}
                     </div>
@@ -239,7 +249,7 @@ export default function Page() {
                     className="flex justify-between items-center border-b"
                     style={{ padding: "4px 0", borderColor: C.border }}
                   >
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: C.inkMuted }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 14, color: C.inkMuted }}>
                       <span style={{ width: 5, height: 5, borderRadius: "50%", background: dot, flexShrink: 0, display: "inline-block" }} />
                       {label}
                     </div>
@@ -267,7 +277,7 @@ export default function Page() {
                   Trade Setup · Long (A-Grade)
                 </div>
                 {([{ label: "Entry Zone", value: "$101,200 – $102,000", color: C.ink }, { label: "Stop (tight)", value: "$99,800 · −1.4%", color: C.red }, { label: "TP1", value: "$105,800 · +3.8R", color: C.green }, { label: "TP2", value: "$109,400 · +7.4R", color: C.green }, { label: "Invalidation", value: "4H close below $99,800", color: C.red }] as { label: string; value: string; color: string }[]).map(({ label, value, color }) => (
-                  <div key={label} className="flex justify-between items-center" style={{ padding: "5px 0", fontSize: 11 }}>
+                  <div key={label} className="flex justify-between items-center" style={{ padding: "5px 0", fontSize: 14 }}>
                     <span style={{ color: C.inkFaint }}>{label}</span>
                     <span className="font-medium" style={{ color, fontVariantNumeric: "tabular-nums" }}>{value}</span>
                   </div>
@@ -277,7 +287,7 @@ export default function Page() {
               {/* CARTA's Call */}
               <div
                 className="italic"
-                style={{ padding: "12px 16px", background: C.surface, borderTop: `2px solid ${C.signal}`, fontSize: 11, lineHeight: 1.6, color: C.inkMuted, fontFamily: BODY }}
+                style={{ padding: "12px 16px", background: C.surface, borderTop: `2px solid ${C.signal}`, fontSize: 14, lineHeight: 1.6, color: C.inkMuted, fontFamily: BODY }}
               >
                 <strong className="block uppercase" style={{ color: C.signal, fontFamily: MONO, fontSize: 10, letterSpacing: "0.08em", marginBottom: 4 }}>
                   CARTA&apos;s Call
@@ -313,10 +323,10 @@ export default function Page() {
         ] as { color: string; label: string }[]).map(({ color, label }) => (
           <div key={label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <div style={{ width: 20, height: 1.5, background: color, flexShrink: 0 }} />
-            <span style={{ fontFamily: MONO, fontSize: 9, color: C.inkFaint, letterSpacing: "0.06em", textTransform: "uppercase" }}>{label}</span>
+            <span style={{ fontFamily: MONO, fontSize: 12, color: C.inkFaint, letterSpacing: "0.06em", textTransform: "uppercase" }}>{label}</span>
           </div>
         ))}
-        <div style={{ marginLeft: "auto", fontFamily: MONO, fontSize: 9, color: C.inkFaint, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+        <div style={{ marginLeft: "auto", fontFamily: MONO, fontSize: 12, color: C.inkFaint, letterSpacing: "0.08em", textTransform: "uppercase" }}>
           Scale 1:250,000 · Projection: Mercator
         </div>
       </motion.div>
@@ -333,7 +343,7 @@ export default function Page() {
           viewport={viewportOnce}
           transition={easeOut}
         >
-          <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 500, letterSpacing: "0.12em", color: C.inkFaint, textTransform: "uppercase", marginBottom: 16 }}>The Problem</div>
+          <div style={{ fontFamily: MONO, fontSize: 14, fontWeight: 500, letterSpacing: "0.12em", color: C.inkFaint, textTransform: "uppercase", marginBottom: 16 }}>The Problem</div>
           <h2 style={{ fontFamily: SANS, fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 700, lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: 0 }}>
             You open the chart.<br />Then what?
           </h2>
@@ -385,88 +395,6 @@ export default function Page() {
         </div>
       </section>
 
-      {/* ── DIVIDER ── */}
-      <TopoDivider v={2} />
-
-      {/* ── HOW IT WORKS (dark) ── */}
-      <section id="how" style={{ background: C.ink, color: C.bg, padding: "100px 48px", position: "relative", zIndex: 1 }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
-            transition={easeOut}
-          >
-            <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 500, letterSpacing: "0.12em", color: C.signal, textTransform: "uppercase", marginBottom: 16 }}>How CARTA Works</div>
-            <h2 style={{ fontFamily: SANS, fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 700, lineHeight: 1.1, letterSpacing: "-0.02em", color: C.bg }}>
-              Install once.<br />CARTA handles the rest.
-            </h2>
-          </motion.div>
-
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-3"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
-            style={{ gap: 1, background: "#2a2a28", marginTop: 56, border: "1px solid #2a2a28" }}
-          >
-            {([{
-              num: "Step 01", title: "Install the extension",
-              desc: "Add CARTA to Chrome from the Web Store. No account required. No configuration. No terminal commands.",
-              code: [
-                { t: "comment", s: "// One click. That's it." },
-                { t: "pre", s: "chrome.extensions." },
-                { t: "keyword", s: "install" },
-                { t: "paren-string", s: '("CARTA")' },
-              ],
-            }, {
-              num: "Step 02", title: "Open any crypto chart",
-              desc: 'Navigate to TradingView and open any crypto pair ending in USDT with a marketcap above $100M. CARTA detects the symbol automatically.',
-              code: [
-                { t: "comment", s: "// CARTA reads the URL" },
-                { t: "string-arg", s: '"BINANCE:BTCUSDT"' },
-                { t: "keyword-line", s: "→ match → load analysis" },
-              ],
-            }, {
-              num: "Step 03", title: "Analysis is already there",
-              desc: "The CARTA panel appears on your chart with signal, S/R levels, indicators, trade setup, and CARTA's Call. Pre-computed, instant, no waiting.",
-              code: [
-                { t: "comment", s: "// No API call on open" },
-                { t: "keyword-line", s: "signal: BUY · 82%" },
-                { t: "string-line", s: "support: $101,400" },
-              ],
-            }] as { num: string; title: string; desc: string; code: { t: string; s: string }[] }[]).map(({ num, title, desc, code }) => (
-              <motion.div
-                key={num}
-                variants={fadeUp}
-                transition={easeOut}
-                whileHover={{ backgroundColor: "#181816" }}
-                style={{ background: C.ink, padding: "40px 32px", transition: "background 0.2s" }}
-              >
-                <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", color: C.signal, marginBottom: 20, textTransform: "uppercase" }}>{num}</div>
-                <div style={{ fontFamily: SANS, fontSize: 20, fontWeight: 600, color: C.bg, marginBottom: 12, lineHeight: 1.3 }}>{title}</div>
-                <p style={{ fontSize: 14, lineHeight: 1.65, color: "#888" }}>{desc}</p>
-                <div style={{ marginTop: 20, background: "#1a1a18", padding: "12px 14px", fontFamily: MONO, fontSize: 11, borderLeft: `2px solid ${C.signal}` }}>
-                  {code.map((line, i) => {
-                    if (line.t === "comment") return <div key={i} className="step-code-line-comment">{line.s}</div>;
-                    if (line.t === "keyword" || line.t === "keyword-line") return <div key={i} className="step-code-line-keyword">{line.s}</div>;
-                    if (line.t === "string-arg" || line.t === "string-line") return <div key={i} className="step-code-line-string">{line.s}</div>;
-                    return <div key={i} className="step-code-line-default">{line.s}</div>;
-                  })}
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── DIVIDER (dark→light) ── */}
-      <div style={{ background: C.ink }}>
-        <TopoDivider v={3} />
-      </div>
-
       {/* ── MCP SECTION ── */}
       <section id="mcp" style={{ maxWidth: 1280, margin: "0 auto", padding: "100px 48px", position: "relative", zIndex: 1 }}>
         <motion.div
@@ -476,7 +404,7 @@ export default function Page() {
           viewport={viewportOnce}
           transition={easeOut}
         >
-          <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 500, letterSpacing: "0.12em", color: C.inkFaint, textTransform: "uppercase", marginBottom: 16 }}>Claude via MCP</div>
+          <div style={{ fontFamily: MONO, fontSize: 14, fontWeight: 500, letterSpacing: "0.12em", color: C.inkFaint, textTransform: "uppercase", marginBottom: 16 }}>Claude via MCP</div>
           <h2 style={{ fontFamily: SANS, fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 700, lineHeight: 1.1, letterSpacing: "-0.02em" }}>
             How the analysis<br />actually gets made
           </h2>
@@ -548,7 +476,7 @@ export default function Page() {
                   )}
                 </div>
                 <div style={{ paddingBottom: 28 }}>
-                  <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: C.ink, marginBottom: 4 }}>{label}</div>
+                  <div style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: C.ink, marginBottom: 4 }}>{label}</div>
                   <div style={{ fontSize: 13, color: C.inkMuted, lineHeight: 1.5 }}>{desc}</div>
                 </div>
               </motion.div>
@@ -573,7 +501,7 @@ export default function Page() {
             viewport={viewportOnce}
             transition={easeOut}
           >
-            <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 500, letterSpacing: "0.12em", color: C.inkFaint, textTransform: "uppercase", marginBottom: 16 }}>Features</div>
+            <div style={{ fontFamily: MONO, fontSize: 14, fontWeight: 500, letterSpacing: "0.12em", color: C.inkFaint, textTransform: "uppercase", marginBottom: 16 }}>Features</div>
             <h2 style={{ fontFamily: SANS, fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 700, lineHeight: 1.1, letterSpacing: "-0.02em" }}>
               Everything on the chart.<br />Nothing in your way.
             </h2>
@@ -595,7 +523,7 @@ export default function Page() {
                 whileHover={{ y: -6, boxShadow: "0 12px 32px rgba(0,0,0,0.1)", zIndex: 2 }}
                 style={{ background: C.bg, padding: "32px 28px", position: "relative" }}
               >
-                <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", color: C.signal, textTransform: "uppercase", marginBottom: 16, display: "flex", alignItems: "center", gap: 6 }}>
+                <div style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, letterSpacing: "0.1em", color: C.signal, textTransform: "uppercase", marginBottom: 16, display: "flex", alignItems: "center", gap: 6 }}>
                   <span style={{ width: 4, height: 4, background: C.signal, display: "inline-block" }} />
                   {icon}
                 </div>
@@ -633,7 +561,7 @@ export default function Page() {
             transition={easeOut}
             style={{ marginBottom: 72 }}
           >
-            <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.12em", color: C.signal, textTransform: "uppercase", marginBottom: 20 }}>The Territory</div>
+            <div style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, letterSpacing: "0.12em", color: C.signal, textTransform: "uppercase", marginBottom: 20 }}>The Territory</div>
             <h2 style={{ fontFamily: SANS, fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 700, lineHeight: 1.1, color: C.bg, maxWidth: 640 }}>
               Before you trade,<br />someone has to read<br />the map.
             </h2>
@@ -675,7 +603,7 @@ export default function Page() {
                   transition={{ ...easeOut, delay: idx * 0.08 }}
                   style={{ padding: "28px 0", borderBottom: idx < arr.length - 1 ? "1px solid #2a2a28" : "none" }}
                 >
-                  <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", color: C.signal, textTransform: "uppercase", marginBottom: 10 }}>
+                  <div style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, letterSpacing: "0.1em", color: C.signal, textTransform: "uppercase", marginBottom: 10 }}>
                     {num} {title}
                   </div>
                   <p style={{ fontSize: 14, lineHeight: 1.7, color: "#888" }}>{desc}</p>
@@ -704,12 +632,12 @@ export default function Page() {
                 ] as { color: string; label: string }[]).map(({ color, label }) => (
                   <div key={label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
                     <div style={{ width: 16, height: 1.5, background: color }} />
-                    <span style={{ fontFamily: MONO, fontSize: 9, color: "#555", letterSpacing: "0.06em", textTransform: "uppercase" }}>{label}</span>
+                    <span style={{ fontFamily: MONO, fontSize: 12, color: "#555", letterSpacing: "0.06em", textTransform: "uppercase" }}>{label}</span>
                   </div>
                 ))}
               </div>
               {/* Projection note */}
-              <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.06em", color: "#444", maxWidth: 480, textAlign: "center", lineHeight: 1.9 }}>
+              <p style={{ fontFamily: MONO, fontSize: 14, letterSpacing: "0.06em", color: "#444", maxWidth: 480, textAlign: "center", lineHeight: 1.9 }}>
                 <span style={{ color: "#666" }}>Datum: WGS84 · Projection: Mercator · Scale 1:250,000</span><br />
                 CARTA · CARTOGRAPHY TRADING AGENT<br />
                 <span style={{ color: "#333" }}>The chart always speaks.</span>
@@ -752,29 +680,63 @@ export default function Page() {
           whileInView="visible"
           viewport={viewportOnce}
         >
-          <motion.div variants={fadeUp} transition={easeOut} style={{ fontFamily: MONO, fontSize: 11, fontWeight: 500, letterSpacing: "0.12em", color: C.inkFaint, textTransform: "uppercase", marginBottom: 16 }}>Ready</motion.div>
+          <motion.div variants={fadeUp} transition={easeOut} style={{ fontFamily: MONO, fontSize: 14, fontWeight: 500, letterSpacing: "0.12em", color: C.inkFaint, textTransform: "uppercase", marginBottom: 16 }}>Ready</motion.div>
           <motion.h2 variants={fadeUp} transition={easeOut} style={{ fontFamily: SANS, fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 700, lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: 16 }}>
             Add CARTA to<br />your TradingView.
           </motion.h2>
           <motion.p variants={fadeUp} transition={easeOut} style={{ fontSize: 16, color: C.inkMuted, marginBottom: 40, maxWidth: 480, marginLeft: "auto", marginRight: "auto" }}>
-            Free to install. Works immediately. No account, no API key, no setup.
+            Free. No account, no API key, no setup. Load it manually in 30 seconds.
           </motion.p>
+
+          {/* Download button */}
           <motion.div variants={fadeUp} transition={easeOut} style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
             <motion.a
-              href="#"
+              href="/carta-extension.zip"
               className="btn-signal"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
               style={{ fontFamily: MONO, fontSize: 13, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", color: C.bg, background: C.signal, padding: "16px 36px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 10, transition: "background 0.15s" }}
+              download
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path d="M8 2v9M5 8l3 3 3-3M2 12h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
-              Add to Chrome – Free
+              Download CARTA – Free
             </motion.a>
           </motion.div>
-          <motion.div variants={fadeUp} transition={easeOut} style={{ fontFamily: MONO, fontSize: 11, color: C.inkFaint, letterSpacing: "0.04em", marginTop: 20 }}>
+          <motion.div variants={fadeUp} transition={easeOut} style={{ fontFamily: MONO, fontSize: 14, color: C.inkFaint, letterSpacing: "0.04em", marginTop: 12 }}>
             Chrome · Manifest V3 · No data collected
+          </motion.div>
+
+          {/* Manual install steps */}
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            style={{ maxWidth: 480, margin: "40px auto 0", textAlign: "left" }}
+            className="bg-white p-4 rounded-md shadow-md"
+          >
+            <motion.div variants={fadeUp} transition={easeOut} style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: C.inkFaint, marginBottom: 16 }}>
+              How to install manually
+            </motion.div>
+            {([
+              { step: "01", text: "Download the .zip above and extract it to a permanent folder" },
+              { step: "02", text: "Open Chrome and go to chrome://extensions" },
+              { step: "03", text: 'Enable "Developer mode" toggle (top-right corner)' },
+              { step: "04", text: 'Click "Load unpacked" and select the extracted folder' },
+              { step: "05", text: "Open TradingView, navigate to any USDT pair — CARTA appears" },
+            ] as { step: string; text: string }[]).map(({ step, text }) => (
+              <motion.div
+                key={step}
+                variants={fadeUp}
+                transition={easeOutFast}
+                style={{ display: "flex", gap: 16, alignItems: "flex-start", padding: "10px 0", borderBottom: `1px solid ${C.border}` }}
+              >
+                <span style={{ fontFamily: MONO, fontSize: 14, fontWeight: 700, color: C.signal, flexShrink: 0, minWidth: 24 }}>{step}</span>
+                <span style={{ fontSize: 13, color: C.inkMuted, lineHeight: 1.5 }}>{text}</span>
+              </motion.div>
+            ))}
           </motion.div>
 
           <motion.div
@@ -788,7 +750,7 @@ export default function Page() {
                 variants={fadeUp}
                 transition={easeOutFast}
                 whileHover={{ scale: 1.05, borderColor: C.border2 }}
-                style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, color: C.inkMuted, padding: "5px 12px", border: `1px solid ${C.border}`, letterSpacing: "0.06em", display: "inline-block" }}
+                style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, color: C.inkMuted, padding: "5px 12px", border: `1px solid ${C.border}`, letterSpacing: "0.06em", display: "inline-block" }}
               >
                 {badge}
               </motion.span>
@@ -797,6 +759,87 @@ export default function Page() {
         </motion.div>
       </section>
 
+      {/* ── DIVIDER ── */}
+      <TopoDivider v={2} />
+
+      {/* ── HOW IT WORKS (dark) ── */}
+      <section id="how" style={{ background: C.ink, color: C.bg, padding: "100px 48px", position: "relative", zIndex: 1 }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            transition={easeOut}
+          >
+            <div style={{ fontFamily: MONO, fontSize: 14, fontWeight: 500, letterSpacing: "0.12em", color: C.signal, textTransform: "uppercase", marginBottom: 16 }}>How CARTA Works</div>
+            <h2 style={{ fontFamily: SANS, fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 700, lineHeight: 1.1, letterSpacing: "-0.02em", color: C.bg }}>
+              Install once.<br />CARTA handles the rest.
+            </h2>
+          </motion.div>
+
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-3"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            style={{ gap: 1, background: "#2a2a28", marginTop: 56, border: "1px solid #2a2a28" }}
+          >
+            {([{
+              num: "Step 01", title: "Download & load the extension",
+              desc: "Download the .zip, extract it, then load it into Chrome manually. No Web Store. No account. No terminal.",
+              code: [
+                { t: "comment", s: "// Load unpacked — 30 seconds" },
+                { t: "keyword", s: "chrome://extensions" },
+                { t: "string-arg", s: '"Load unpacked" → select folder' },
+              ],
+            }, {
+              num: "Step 02", title: "Open any crypto chart",
+              desc: 'Navigate to TradingView and open any crypto pair ending in USDT with a marketcap above $100M. CARTA detects the symbol automatically.',
+              code: [
+                { t: "comment", s: "// CARTA reads the URL" },
+                { t: "string-arg", s: '"BINANCE:BTCUSDT"' },
+                { t: "keyword-line", s: "→ match → load analysis" },
+              ],
+            }, {
+              num: "Step 03", title: "Analysis is already there",
+              desc: "The CARTA panel appears instantly on your chart with live signals, key S/R levels, indicators, trade setups, and CARTA's Call—all updated in real time, with no waiting.",
+              code: [
+                { t: "comment", s: "// No API call on open" },
+                { t: "keyword-line", s: "signal: BUY · 82%" },
+                { t: "string-line", s: "support: $101,400" },
+              ],
+            }] as { num: string; title: string; desc: string; code: { t: string; s: string }[] }[]).map(({ num, title, desc, code }) => (
+              <motion.div
+                key={num}
+                variants={fadeUp}
+                transition={easeOut}
+                whileHover={{ backgroundColor: "#181816" }}
+                style={{ background: C.ink, padding: "40px 32px", transition: "background 0.2s" }}
+              >
+                <div style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, letterSpacing: "0.1em", color: C.signal, marginBottom: 20, textTransform: "uppercase" }}>{num}</div>
+                <div style={{ fontFamily: SANS, fontSize: 20, fontWeight: 600, color: C.bg, marginBottom: 12, lineHeight: 1.3 }}>{title}</div>
+                <p style={{ fontSize: 14, lineHeight: 1.65, color: "#888" }}>{desc}</p>
+                <div style={{ marginTop: 20, background: "#1a1a18", padding: "12px 14px", fontFamily: MONO, fontSize: 14, borderLeft: `2px solid ${C.signal}` }}>
+                  {code.map((line, i) => {
+                    if (line.t === "comment") return <div key={i} className="step-code-line-comment">{line.s}</div>;
+                    if (line.t === "keyword" || line.t === "keyword-line") return <div key={i} className="step-code-line-keyword">{line.s}</div>;
+                    if (line.t === "string-arg" || line.t === "string-line") return <div key={i} className="step-code-line-string">{line.s}</div>;
+                    return <div key={i} className="step-code-line-default">{line.s}</div>;
+                  })}
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── DIVIDER (dark→light) ── */}
+      <div style={{ background: C.ink }}>
+        <TopoDivider v={3} />
+      </div>
+
       {/* ── FOOTER ── */}
       <motion.footer
         initial={{ opacity: 0 }}
@@ -804,7 +847,7 @@ export default function Page() {
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
         className="flex flex-col md:flex-row items-center justify-between"
-        style={{ background: C.ink, color: "#555", padding: "40px 48px", fontFamily: MONO, fontSize: 11, letterSpacing: "0.06em", gap: 20 }}
+        style={{ background: C.ink, color: "#555", padding: "40px 48px", fontFamily: MONO, fontSize: 14, letterSpacing: "0.06em", gap: 20 }}
       >
         <div style={{ color: C.bg, fontWeight: 600, letterSpacing: "0.1em" }}>
           CARTA<span style={{ color: C.signal }}>.</span>

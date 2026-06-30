@@ -36,11 +36,6 @@ export default function Panel() {
 
   return (
     <>
-      {/* Toggle button — selalu visible di luar panel */}
-      <button id="carta-toggle" className="carta-toggle-btn" onClick={toggle}>
-        {visible ? '◀' : '▶'} CARTA
-      </button>
-
       {/* Panel utama */}
       <div id="carta-panel" className={visible ? '' : 'carta-hidden'}>
         <Header symbol={symbol} onClose={toggle} />
@@ -103,6 +98,11 @@ export default function Panel() {
           </>
         )}
       </div>
+
+      {/* Toggle button — selalu visible di luar panel */}
+      <button id="carta-toggle" onClick={toggle}>
+        {visible ? '▶' : '◀'} CARTA
+      </button>
     </>
   )
 }
