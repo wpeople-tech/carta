@@ -2,10 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import { prisma } from '@/lib/prisma'
 import { fetchOhlcv, fetchMarketBatch } from '@/lib/cron/coingecko'
-import { computeTechnicalAnalysis, buildNarasiPrompt } from '@/lib/cron/analysis'
-import { BATCH_SIZE, ANALYSIS_TTL_HOURS, COINGECKO_DELAY_MS } from '@/lib/cron/constants'
+import {
+  computeTechnicalAnalysis,
+  computeMarketScore,
+  calculateTradeSetup,
+  buildInterpretationPrompt,
+  type TradeSetupResult,
+  type AIInterpretation,
+  type MarketScore,
+} from '@/lib/cron/analysis'
+import { BATCH_SIZE, ANALYSIS_TTL_HOURS, COINGECKO_DELAY_MS, TV_SYMBOL_MAP } from '@/lib/cron/constants'
 
-export const maxDuration = 300  // Vercel Pro max (seconds)
+export const maxDuration = 300
 export const dynamic = 'force-dynamic'
 
 const ai = new OpenAI({
@@ -17,8 +25,57 @@ function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
+function extractAndSanitizeJson(raw: string): string {
+  // Strip markdown code fences
+  let s = raw.replace(/^```(?:json)?\n?/m, '').replace(/\n?```$/m, '').trim()
+  // Extract outermost JSON object
+  const start = s.indexOf('{')
+  const end = s.lastIndexOf('}')
+  if (start !== -1 && end !== -1) s = s.slice(start, end + 1)
+  // Strip non-ASCII annotations injected between ":" and the real value
+  // e.g. `"confidence_pct": 補足説明: 40` → `"confidence_pct": 40`
+  // Pattern: after a colon+space, any run of non-ASCII chars followed by another colon
+  s = s.replace(/:\s*[^\x00-\x7F\s][^:"\[\{]*:\s*/g, ': ')
+  return s
+}
+
+async function callAI(
+  coinName: string,
+  currentPrice: number,
+  ta: import('@/lib/cron/analysis').TechnicalAnalysis,
+  setups: TradeSetupResult[],
+  marketScore: MarketScore,
+  client: OpenAI,
+): Promise<AIInterpretation> {
+  const prompt = buildInterpretationPrompt(coinName, currentPrice, ta, setups, marketScore)
+  const msg = await client.chat.completions.create({
+    model: 'deepseek/deepseek-v3.2',
+    max_tokens: 1000,
+    messages: [
+      { role: 'system', content: 'Respond with valid JSON only. No annotations, no comments, no non-ASCII characters outside string values.' },
+      { role: 'user', content: prompt },
+    ],
+  })
+  const raw = msg.choices[0].message.content?.trim() ?? '{}'
+
+  let parsed: AIInterpretation
+  try {
+    parsed = JSON.parse(extractAndSanitizeJson(raw)) as AIInterpretation
+  } catch (err) {
+    console.error(`[callAI] JSON parse failed for ${coinName}. raw:\n${raw}\nerr:`, err)
+    // Fallback: neutral interpretation so the coin is not skipped
+    parsed = {
+      confidence_pct: marketScore.confidence_ceiling - 10,
+      setup_grades: { LONG: 'C', SHORT: 'C' },
+      claude_call: 'Unable to parse AI interpretation. Using conservative defaults.',
+    }
+  }
+
+  parsed.confidence_pct = Math.min(parsed.confidence_pct ?? 40, marketScore.confidence_ceiling)
+  return parsed
+}
+
 export async function GET(req: NextRequest) {
-  // Vercel cron injects Authorization header — verify it
   const authHeader = req.headers.get('authorization')
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -33,7 +90,8 @@ export async function GET(req: NextRequest) {
   const cursor = cursorRow.value as { offset: number }
   const offset = cursor.offset ?? 0
 
-  // ── 2. Load active coins for this batch ──
+  // ── 2. Load active coins for this batch
+  // const mappedCoinIds = Object.keys(TV_SYMBOL_MAP)
   const coins = await prisma.coin.findMany({
     where: { is_active: true },
     orderBy: { market_cap_rank: 'asc' },
@@ -42,7 +100,6 @@ export async function GET(req: NextRequest) {
   })
 
   if (coins.length === 0) {
-    // Full cycle done — reset cursor to 0
     await prisma.cronState.update({
       where: { key: 'refresh_analysis_cursor' },
       data: { value: { offset: 0 } },
@@ -53,7 +110,7 @@ export async function GET(req: NextRequest) {
   // ── 3. Fetch fresh market prices in one batch call ──
   const marketMap = await fetchMarketBatch(coins.map(c => c.coin_id))
 
-  // ── 4. Fetch latest analysis for each coin (untuk skip-if-unchanged check) ──
+  // ── 4. Fetch latest analysis for each coin (skip-if-unchanged check) ──
   const latestAnalyses = await prisma.analysis.findMany({
     where: { coin_id: { in: coins.map(c => c.coin_id) } },
     orderBy: { generated_at: 'desc' },
@@ -80,129 +137,146 @@ export async function GET(req: NextRequest) {
       const latest = latestMap.get(coin.coin_id)
       const currentPrice = mkt?.current_price ?? 0
 
-      // ── 5. Skip AI call if signal + trend unchanged ──
-      const signalUnchanged = latest?.signal === ta.signal
-      const trendUnchanged = latest?.trend_prev === ta.trend
-      let claudeCall: string
+      if (!currentPrice || currentPrice <= 0) {
+        results[coin.coin_id] = 'SKIP: no price data'
+        continue
+      }
 
-      if (signalUnchanged && trendUnchanged && latest) {
-        // Reuse last claude_call — fetch it
+      // ── 5. Deterministic market score (Layer 1) ──
+      const marketScore = computeMarketScore(ta, currentPrice)
+
+      // ── 6. Pre-compute both trade setups (deterministic, no AI) ──
+      const longSetup  = calculateTradeSetup(ta.srLevels, 'LONG', currentPrice, ta.atr_value)
+      const shortSetup = calculateTradeSetup(ta.srLevels, 'SHORT', currentPrice, ta.atr_value)
+      const validatedSetups: TradeSetupResult[] = [longSetup, shortSetup]
+
+      // ── 7. AI interpretation (Layer 2) — confidence + grades + narrative only ──
+      // Skip AI call when signal is unchanged (score-based, not trend-based).
+      const signalUnchanged = latest?.signal === marketScore.signal
+      let interpretation: AIInterpretation
+      let aiUsed = true
+
+      if (signalUnchanged && latest) {
         const prev = await prisma.analysis.findFirst({
           where: { coin_id: coin.coin_id },
           orderBy: { generated_at: 'desc' },
-          select: { claude_call: true },
+          select: { confidence_pct: true, claude_call: true },
         })
-        claudeCall = prev?.claude_call ?? ''
+        if (prev) {
+          aiUsed = false
+          const conf = Math.min(prev.confidence_pct, marketScore.confidence_ceiling)
+          interpretation = {
+            confidence_pct: conf,
+            setup_grades: {
+              LONG:  validatedSetups.find(s => s.direction === 'LONG')
+                ? (marketScore.signal === 'BUY'  ? (conf >= 70 ? 'A' : 'B') : 'C') : null,
+              SHORT: validatedSetups.find(s => s.direction === 'SHORT')
+                ? (marketScore.signal === 'SELL' ? (conf >= 70 ? 'A' : 'B') : 'C') : null,
+            },
+            claude_call: prev.claude_call,
+          }
+        } else {
+          interpretation = await callAI(coin.name, currentPrice, ta, validatedSetups, marketScore, ai)
+        }
       } else {
-        // Generate new narrative via OpenRouter
-        const prompt = buildNarasiPrompt(coin.name, ta, currentPrice)
-        const msg = await ai.chat.completions.create({
-          model: 'deepseek/deepseek-v3.2',
-          max_tokens: 200,
-          messages: [{ role: 'user', content: prompt }],
-        })
-        claudeCall = msg.choices[0].message.content?.trim() ?? ''
+        interpretation = await callAI(coin.name, currentPrice, ta, validatedSetups, marketScore, ai)
       }
 
       const now = new Date()
       const expiresAt = new Date(now.getTime() + ANALYSIS_TTL_HOURS * 60 * 60 * 1000)
 
-      // ── 6. Upsert analysis + related records ──
+      // ── 8. Persist analysis + related records ──
       await prisma.$transaction(async (tx) => {
         const analysis = await tx.analysis.create({
           data: {
-            coin_id: coin.coin_id,
-            current_price: currentPrice,
+            coin_id:          coin.coin_id,
+            current_price:    currentPrice,
             price_change_24h: mkt?.price_change_percentage_24h ?? 0,
-            signal: ta.signal,
-            confidence_pct: ta.confidence_pct,
-            weekly_bias: ta.signal === 'BUY' ? 'BULLISH' : ta.signal === 'SELL' ? 'BEARISH' : 'NEUTRAL',
-            claude_call: claudeCall,
-            signal_prev: latest?.signal ?? null,
-            trend_prev: ta.trend,
-            generated_at: now,
-            expires_at: expiresAt,
+            signal:           marketScore.signal,       // deterministic
+            confidence_pct:   interpretation.confidence_pct,
+            weekly_bias:      marketScore.weekly_bias,  // deterministic
+            claude_call:      interpretation.claude_call,
+            signal_prev:      latest?.signal ?? null,
+            trend_prev:       ta.trend,
+            generated_at:     now,
+            expires_at:       expiresAt,
           },
         })
 
-        // S/R levels
-        const srData = [
-          ...ta.resistance.map((price, i) => ({
-            analysis_id: analysis.id,
-            level_type: 'RESISTANCE' as const,
-            strength: i === 0 ? 'STRONG' as const : 'WEAK' as const,
-            price,
-            sort_order: i,
-          })),
-          ...ta.support.map((price, i) => ({
-            analysis_id: analysis.id,
-            level_type: 'SUPPORT' as const,
-            strength: i === ta.support.length - 1 ? 'STRONG' as const : 'WEAK' as const,
-            price,
-            sort_order: i,
-          })),
-        ]
-        if (srData.length) await tx.supportResistance.createMany({ data: srData })
+        // S/R levels — skip zero-price fallback placeholders
+        const srToSave = ta.srLevels.filter(lv => lv.price > 0)
+        if (srToSave.length > 0) {
+          await tx.supportResistance.createMany({
+            data: srToSave.map(lv => ({
+              analysis_id:     analysis.id,
+              level_type:      lv.level_type,
+              strength:        lv.strength,
+              price:           lv.price,
+              confluence_note: lv.confluence_note,
+              sort_order:      lv.sort_order,
+            })),
+          })
+        }
 
         // Indicators
         await tx.indicator.create({
           data: {
-            analysis_id: analysis.id,
-            rsi_value: ta.rsi,
-            rsi_status: ta.rsi_status,
-            macd_line: ta.macd_line,
-            macd_signal: ta.macd_signal_line,
-            macd_histogram: ta.macd_histogram,
-            macd_cross: ta.macd_cross,
-            ema20: ta.ema20,
-            ema200: ta.ema200,
-            price_vs_ema20: ta.price_vs_ema20,
+            analysis_id:     analysis.id,
+            rsi_value:       ta.rsi,
+            rsi_status:      ta.rsi_status,
+            macd_line:       ta.macd_line,
+            macd_signal:     ta.macd_signal_line,
+            macd_histogram:  ta.macd_histogram,
+            macd_cross:      ta.macd_cross,
+            ema20:           ta.ema20,
+            ema200:          ta.ema200,
+            price_vs_ema20:  ta.price_vs_ema20,
             price_vs_ema200: ta.price_vs_ema200,
-            bb_upper: ta.bb_upper,
-            bb_middle: ta.bb_middle,
-            bb_lower: ta.bb_lower,
-            bb_status: ta.bb_status,
-            atr_value: ta.atr_value,
-            volume_status: ta.volume_status,
+            bb_upper:        ta.bb_upper,
+            bb_middle:       ta.bb_middle,
+            bb_lower:        ta.bb_lower,
+            bb_status:       ta.bb_status,
+            atr_value:       ta.atr_value,
+            volume_status:   ta.volume_status,
           },
         })
 
-        // Trade setups — placeholder grade B setups derived from S/R
-        const closestSupport = ta.support[ta.support.length - 1]
-        const closestResistance = ta.resistance[0]
-        if (closestSupport && closestResistance) {
-          const entryLow = closestSupport * 1.005
-          const entryHigh = closestSupport * 1.015
-          const stopTight = closestSupport * 0.985
-          const stopSafe = closestSupport * 0.97
-          const tp1 = currentPrice + (currentPrice - closestSupport) * 1.5
-          const tp2 = currentPrice + (currentPrice - closestSupport) * 2.5
-          const tp3 = closestResistance
-
+        // Trade setups — grade and conviction from AI interpretation
+        if (validatedSetups.length > 0) {
           await tx.tradeSetup.createMany({
-            data: [
-              {
-                analysis_id: analysis.id,
-                direction: 'LONG',
-                grade: ta.signal === 'BUY' ? 'A' : 'B',
-                conviction: ta.confidence_pct >= 70 ? 'HIGH' : ta.confidence_pct >= 55 ? 'MEDIUM' : 'LOW',
-                entry_zone_low: entryLow,
-                entry_zone_high: entryHigh,
-                stop_tight: stopTight,
-                stop_safe: stopSafe,
-                risk_pct_tight: ((entryLow - stopTight) / entryLow) * 100,
-                risk_pct_safe: ((entryLow - stopSafe) / entryLow) * 100,
-                tp1_price: tp1,
-                tp1_rr: (tp1 - entryLow) / (entryLow - stopTight),
-                tp2_price: tp2,
-                tp2_rr: (tp2 - entryLow) / (entryLow - stopTight),
-                tp3_price: tp3,
-                tp3_rr: (tp3 - entryLow) / (entryLow - stopTight),
-                trigger_note: `Break and close above ${entryHigh.toFixed(4)}`,
-                invalidation: `Daily close below ${stopSafe.toFixed(4)}`,
-                setup_note: null,
-              },
-            ],
+            data: validatedSetups.map((setup: TradeSetupResult) => {
+              const alignedSignal = setup.direction === 'LONG' ? 'BUY' : 'SELL'
+              const isCounterTrend = marketScore.signal !== 'NEUTRAL' && marketScore.signal !== alignedSignal
+              // Counter-trend setups are capped at grade C regardless of AI grade
+              const aiGrade = interpretation.setup_grades[setup.direction] ?? 'C'
+              const grade = isCounterTrend ? 'C' : aiGrade
+              const conviction: 'HIGH' | 'MEDIUM' | 'LOW' =
+                grade === 'A' ? 'HIGH' : grade === 'B' ? 'MEDIUM' : 'LOW'
+              const setupNote = isCounterTrend
+                ? `Counter-trend ${setup.direction.toLowerCase()}. Reduce size, confirm reversal first.`
+                : null
+              return {
+                analysis_id:     analysis.id,
+                direction:       setup.direction,
+                grade,
+                conviction,
+                entry_zone_low:  setup.entry_zone_low,
+                entry_zone_high: setup.entry_zone_high,
+                stop_tight:      setup.stop_tight,
+                stop_safe:       setup.stop_safe,
+                risk_pct_tight:  setup.risk_pct_tight,
+                risk_pct_safe:   setup.risk_pct_safe,
+                tp1_price:       setup.tp1_price,
+                tp1_rr:          setup.tp1_rr,
+                tp2_price:       setup.tp2_price,
+                tp2_rr:          setup.tp2_rr,
+                tp3_price:       setup.tp3_price,
+                tp3_rr:          setup.tp3_rr,
+                trigger_note:    setup.trigger_note,
+                invalidation:    setup.invalidation,
+                setup_note:      setupNote,
+              }
+            }),
           })
         }
 
@@ -211,21 +285,21 @@ export async function GET(req: NextRequest) {
           where: { coin_id: coin.coin_id },
           data: {
             market_cap_rank: mkt?.market_cap_rank ?? coin.market_cap_rank,
-            marketcap_usd: mkt?.market_cap ?? coin.marketcap_usd,
+            marketcap_usd:   mkt?.market_cap     ?? coin.marketcap_usd,
           },
         })
       })
 
-      const aiUsed = !(signalUnchanged && trendUnchanged && latest)
-      results[coin.coin_id] = `OK ${ta.signal} ${ta.confidence_pct}/100 AI=${aiUsed}`
-      console.log(results[coin.coin_id]);
+      const setupCount = validatedSetups.length
+      results[coin.coin_id] = `OK ${marketScore.signal}(score=${marketScore.score}) conf=${interpretation.confidence_pct}/100 AI=${aiUsed} setups=${setupCount}`
+      console.log(results[coin.coin_id])
     } catch (err) {
       results[coin.coin_id] = `ERR: ${String(err).slice(0, 80)}`
-      console.error(results[coin.coin_id]);
+      console.error(results[coin.coin_id])
     }
   }
 
-  // ── 7. Advance cursor ──
+  // ── 9. Advance cursor ──
   const nextOffset = offset + coins.length
   await prisma.cronState.update({
     where: { key: 'refresh_analysis_cursor' },
@@ -235,7 +309,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     processed: coins.length,
     offset_before: offset,
-    offset_after: nextOffset,
+    offset_after:  nextOffset,
     results,
   })
 }

@@ -1,5 +1,5 @@
 export const BATCH_SIZE = 10  // koin per cron tick (10 koin × 8s = ~80s, aman di bawah Vercel Pro 300s)
-export const ANALYSIS_TTL_HOURS = 4
+export const ANALYSIS_TTL_HOURS = 24
 export const COINGECKO_DELAY_MS = 8_000  // 7 req/min safe zone untuk free tier
 export const COINGECKO_RATE_LIMIT_WAIT_MS = 30_000
 

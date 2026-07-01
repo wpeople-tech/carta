@@ -214,22 +214,22 @@ model TradeSetup {
   grade           Grade
   conviction      Conviction
 
-  entry_zone_low  Float
-  entry_zone_high Float
-  stop_tight      Float
-  stop_safe       Float
-  risk_pct_tight  Float
-  risk_pct_safe   Float
+  entry_zone_low  Float?
+  entry_zone_high Float?
+  stop_tight      Float?
+  stop_safe       Float?
+  risk_pct_tight  Float?
+  risk_pct_safe   Float?
 
-  tp1_price       Float
-  tp1_rr          Float
-  tp2_price       Float
-  tp2_rr          Float
+  tp1_price       Float?
+  tp1_rr          Float?
+  tp2_price       Float?
+  tp2_rr          Float?
   tp3_price       Float?
   tp3_rr          Float?
 
-  trigger_note    String
-  invalidation    String
+  trigger_note    String?
+  invalidation    String?
   setup_note      String?
 
   analysis        Analysis   @relation(fields: [analysis_id], references: [id], onDelete: Cascade)

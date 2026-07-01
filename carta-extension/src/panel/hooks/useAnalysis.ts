@@ -46,6 +46,7 @@ export function useAnalysis(symbol: string | null): AnalysisState {
         return r.json() as Promise<Analysis[]>
       })
       .then(data => {
+        console.log('data', data);
         if (data?.[0]) setState({ status: 'success', data: data[0] })
         else setState({ status: 'uncharted', reason: `${symbol} is not in CARTA's coverage.` })
       })

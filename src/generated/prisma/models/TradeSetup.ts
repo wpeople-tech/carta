@@ -323,20 +323,20 @@ export type TradeSetupGroupByOutputType = {
   direction: $Enums.Direction
   grade: $Enums.Grade
   conviction: $Enums.Conviction
-  entry_zone_low: number
-  entry_zone_high: number
-  stop_tight: number
-  stop_safe: number
-  risk_pct_tight: number
-  risk_pct_safe: number
-  tp1_price: number
-  tp1_rr: number
-  tp2_price: number
-  tp2_rr: number
+  entry_zone_low: number | null
+  entry_zone_high: number | null
+  stop_tight: number | null
+  stop_safe: number | null
+  risk_pct_tight: number | null
+  risk_pct_safe: number | null
+  tp1_price: number | null
+  tp1_rr: number | null
+  tp2_price: number | null
+  tp2_rr: number | null
   tp3_price: number | null
   tp3_rr: number | null
-  trigger_note: string
-  invalidation: string
+  trigger_note: string | null
+  invalidation: string | null
   setup_note: string | null
   _count: TradeSetupCountAggregateOutputType | null
   _avg: TradeSetupAvgAggregateOutputType | null
@@ -369,20 +369,20 @@ export type TradeSetupWhereInput = {
   direction?: Prisma.EnumDirectionFilter<"TradeSetup"> | $Enums.Direction
   grade?: Prisma.EnumGradeFilter<"TradeSetup"> | $Enums.Grade
   conviction?: Prisma.EnumConvictionFilter<"TradeSetup"> | $Enums.Conviction
-  entry_zone_low?: Prisma.FloatFilter<"TradeSetup"> | number
-  entry_zone_high?: Prisma.FloatFilter<"TradeSetup"> | number
-  stop_tight?: Prisma.FloatFilter<"TradeSetup"> | number
-  stop_safe?: Prisma.FloatFilter<"TradeSetup"> | number
-  risk_pct_tight?: Prisma.FloatFilter<"TradeSetup"> | number
-  risk_pct_safe?: Prisma.FloatFilter<"TradeSetup"> | number
-  tp1_price?: Prisma.FloatFilter<"TradeSetup"> | number
-  tp1_rr?: Prisma.FloatFilter<"TradeSetup"> | number
-  tp2_price?: Prisma.FloatFilter<"TradeSetup"> | number
-  tp2_rr?: Prisma.FloatFilter<"TradeSetup"> | number
+  entry_zone_low?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  entry_zone_high?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  stop_tight?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  stop_safe?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  risk_pct_tight?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  risk_pct_safe?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  tp1_price?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  tp1_rr?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  tp2_price?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  tp2_rr?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
   tp3_price?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
   tp3_rr?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
-  trigger_note?: Prisma.StringFilter<"TradeSetup"> | string
-  invalidation?: Prisma.StringFilter<"TradeSetup"> | string
+  trigger_note?: Prisma.StringNullableFilter<"TradeSetup"> | string | null
+  invalidation?: Prisma.StringNullableFilter<"TradeSetup"> | string | null
   setup_note?: Prisma.StringNullableFilter<"TradeSetup"> | string | null
   analysis?: Prisma.XOR<Prisma.AnalysisScalarRelationFilter, Prisma.AnalysisWhereInput>
 }
@@ -393,20 +393,20 @@ export type TradeSetupOrderByWithRelationInput = {
   direction?: Prisma.SortOrder
   grade?: Prisma.SortOrder
   conviction?: Prisma.SortOrder
-  entry_zone_low?: Prisma.SortOrder
-  entry_zone_high?: Prisma.SortOrder
-  stop_tight?: Prisma.SortOrder
-  stop_safe?: Prisma.SortOrder
-  risk_pct_tight?: Prisma.SortOrder
-  risk_pct_safe?: Prisma.SortOrder
-  tp1_price?: Prisma.SortOrder
-  tp1_rr?: Prisma.SortOrder
-  tp2_price?: Prisma.SortOrder
-  tp2_rr?: Prisma.SortOrder
+  entry_zone_low?: Prisma.SortOrderInput | Prisma.SortOrder
+  entry_zone_high?: Prisma.SortOrderInput | Prisma.SortOrder
+  stop_tight?: Prisma.SortOrderInput | Prisma.SortOrder
+  stop_safe?: Prisma.SortOrderInput | Prisma.SortOrder
+  risk_pct_tight?: Prisma.SortOrderInput | Prisma.SortOrder
+  risk_pct_safe?: Prisma.SortOrderInput | Prisma.SortOrder
+  tp1_price?: Prisma.SortOrderInput | Prisma.SortOrder
+  tp1_rr?: Prisma.SortOrderInput | Prisma.SortOrder
+  tp2_price?: Prisma.SortOrderInput | Prisma.SortOrder
+  tp2_rr?: Prisma.SortOrderInput | Prisma.SortOrder
   tp3_price?: Prisma.SortOrderInput | Prisma.SortOrder
   tp3_rr?: Prisma.SortOrderInput | Prisma.SortOrder
-  trigger_note?: Prisma.SortOrder
-  invalidation?: Prisma.SortOrder
+  trigger_note?: Prisma.SortOrderInput | Prisma.SortOrder
+  invalidation?: Prisma.SortOrderInput | Prisma.SortOrder
   setup_note?: Prisma.SortOrderInput | Prisma.SortOrder
   analysis?: Prisma.AnalysisOrderByWithRelationInput
 }
@@ -420,20 +420,20 @@ export type TradeSetupWhereUniqueInput = Prisma.AtLeast<{
   direction?: Prisma.EnumDirectionFilter<"TradeSetup"> | $Enums.Direction
   grade?: Prisma.EnumGradeFilter<"TradeSetup"> | $Enums.Grade
   conviction?: Prisma.EnumConvictionFilter<"TradeSetup"> | $Enums.Conviction
-  entry_zone_low?: Prisma.FloatFilter<"TradeSetup"> | number
-  entry_zone_high?: Prisma.FloatFilter<"TradeSetup"> | number
-  stop_tight?: Prisma.FloatFilter<"TradeSetup"> | number
-  stop_safe?: Prisma.FloatFilter<"TradeSetup"> | number
-  risk_pct_tight?: Prisma.FloatFilter<"TradeSetup"> | number
-  risk_pct_safe?: Prisma.FloatFilter<"TradeSetup"> | number
-  tp1_price?: Prisma.FloatFilter<"TradeSetup"> | number
-  tp1_rr?: Prisma.FloatFilter<"TradeSetup"> | number
-  tp2_price?: Prisma.FloatFilter<"TradeSetup"> | number
-  tp2_rr?: Prisma.FloatFilter<"TradeSetup"> | number
+  entry_zone_low?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  entry_zone_high?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  stop_tight?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  stop_safe?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  risk_pct_tight?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  risk_pct_safe?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  tp1_price?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  tp1_rr?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  tp2_price?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  tp2_rr?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
   tp3_price?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
   tp3_rr?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
-  trigger_note?: Prisma.StringFilter<"TradeSetup"> | string
-  invalidation?: Prisma.StringFilter<"TradeSetup"> | string
+  trigger_note?: Prisma.StringNullableFilter<"TradeSetup"> | string | null
+  invalidation?: Prisma.StringNullableFilter<"TradeSetup"> | string | null
   setup_note?: Prisma.StringNullableFilter<"TradeSetup"> | string | null
   analysis?: Prisma.XOR<Prisma.AnalysisScalarRelationFilter, Prisma.AnalysisWhereInput>
 }, "id">
@@ -444,20 +444,20 @@ export type TradeSetupOrderByWithAggregationInput = {
   direction?: Prisma.SortOrder
   grade?: Prisma.SortOrder
   conviction?: Prisma.SortOrder
-  entry_zone_low?: Prisma.SortOrder
-  entry_zone_high?: Prisma.SortOrder
-  stop_tight?: Prisma.SortOrder
-  stop_safe?: Prisma.SortOrder
-  risk_pct_tight?: Prisma.SortOrder
-  risk_pct_safe?: Prisma.SortOrder
-  tp1_price?: Prisma.SortOrder
-  tp1_rr?: Prisma.SortOrder
-  tp2_price?: Prisma.SortOrder
-  tp2_rr?: Prisma.SortOrder
+  entry_zone_low?: Prisma.SortOrderInput | Prisma.SortOrder
+  entry_zone_high?: Prisma.SortOrderInput | Prisma.SortOrder
+  stop_tight?: Prisma.SortOrderInput | Prisma.SortOrder
+  stop_safe?: Prisma.SortOrderInput | Prisma.SortOrder
+  risk_pct_tight?: Prisma.SortOrderInput | Prisma.SortOrder
+  risk_pct_safe?: Prisma.SortOrderInput | Prisma.SortOrder
+  tp1_price?: Prisma.SortOrderInput | Prisma.SortOrder
+  tp1_rr?: Prisma.SortOrderInput | Prisma.SortOrder
+  tp2_price?: Prisma.SortOrderInput | Prisma.SortOrder
+  tp2_rr?: Prisma.SortOrderInput | Prisma.SortOrder
   tp3_price?: Prisma.SortOrderInput | Prisma.SortOrder
   tp3_rr?: Prisma.SortOrderInput | Prisma.SortOrder
-  trigger_note?: Prisma.SortOrder
-  invalidation?: Prisma.SortOrder
+  trigger_note?: Prisma.SortOrderInput | Prisma.SortOrder
+  invalidation?: Prisma.SortOrderInput | Prisma.SortOrder
   setup_note?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.TradeSetupCountOrderByAggregateInput
   _avg?: Prisma.TradeSetupAvgOrderByAggregateInput
@@ -475,20 +475,20 @@ export type TradeSetupScalarWhereWithAggregatesInput = {
   direction?: Prisma.EnumDirectionWithAggregatesFilter<"TradeSetup"> | $Enums.Direction
   grade?: Prisma.EnumGradeWithAggregatesFilter<"TradeSetup"> | $Enums.Grade
   conviction?: Prisma.EnumConvictionWithAggregatesFilter<"TradeSetup"> | $Enums.Conviction
-  entry_zone_low?: Prisma.FloatWithAggregatesFilter<"TradeSetup"> | number
-  entry_zone_high?: Prisma.FloatWithAggregatesFilter<"TradeSetup"> | number
-  stop_tight?: Prisma.FloatWithAggregatesFilter<"TradeSetup"> | number
-  stop_safe?: Prisma.FloatWithAggregatesFilter<"TradeSetup"> | number
-  risk_pct_tight?: Prisma.FloatWithAggregatesFilter<"TradeSetup"> | number
-  risk_pct_safe?: Prisma.FloatWithAggregatesFilter<"TradeSetup"> | number
-  tp1_price?: Prisma.FloatWithAggregatesFilter<"TradeSetup"> | number
-  tp1_rr?: Prisma.FloatWithAggregatesFilter<"TradeSetup"> | number
-  tp2_price?: Prisma.FloatWithAggregatesFilter<"TradeSetup"> | number
-  tp2_rr?: Prisma.FloatWithAggregatesFilter<"TradeSetup"> | number
+  entry_zone_low?: Prisma.FloatNullableWithAggregatesFilter<"TradeSetup"> | number | null
+  entry_zone_high?: Prisma.FloatNullableWithAggregatesFilter<"TradeSetup"> | number | null
+  stop_tight?: Prisma.FloatNullableWithAggregatesFilter<"TradeSetup"> | number | null
+  stop_safe?: Prisma.FloatNullableWithAggregatesFilter<"TradeSetup"> | number | null
+  risk_pct_tight?: Prisma.FloatNullableWithAggregatesFilter<"TradeSetup"> | number | null
+  risk_pct_safe?: Prisma.FloatNullableWithAggregatesFilter<"TradeSetup"> | number | null
+  tp1_price?: Prisma.FloatNullableWithAggregatesFilter<"TradeSetup"> | number | null
+  tp1_rr?: Prisma.FloatNullableWithAggregatesFilter<"TradeSetup"> | number | null
+  tp2_price?: Prisma.FloatNullableWithAggregatesFilter<"TradeSetup"> | number | null
+  tp2_rr?: Prisma.FloatNullableWithAggregatesFilter<"TradeSetup"> | number | null
   tp3_price?: Prisma.FloatNullableWithAggregatesFilter<"TradeSetup"> | number | null
   tp3_rr?: Prisma.FloatNullableWithAggregatesFilter<"TradeSetup"> | number | null
-  trigger_note?: Prisma.StringWithAggregatesFilter<"TradeSetup"> | string
-  invalidation?: Prisma.StringWithAggregatesFilter<"TradeSetup"> | string
+  trigger_note?: Prisma.StringNullableWithAggregatesFilter<"TradeSetup"> | string | null
+  invalidation?: Prisma.StringNullableWithAggregatesFilter<"TradeSetup"> | string | null
   setup_note?: Prisma.StringNullableWithAggregatesFilter<"TradeSetup"> | string | null
 }
 
@@ -496,20 +496,20 @@ export type TradeSetupCreateInput = {
   direction: $Enums.Direction
   grade: $Enums.Grade
   conviction: $Enums.Conviction
-  entry_zone_low: number
-  entry_zone_high: number
-  stop_tight: number
-  stop_safe: number
-  risk_pct_tight: number
-  risk_pct_safe: number
-  tp1_price: number
-  tp1_rr: number
-  tp2_price: number
-  tp2_rr: number
+  entry_zone_low?: number | null
+  entry_zone_high?: number | null
+  stop_tight?: number | null
+  stop_safe?: number | null
+  risk_pct_tight?: number | null
+  risk_pct_safe?: number | null
+  tp1_price?: number | null
+  tp1_rr?: number | null
+  tp2_price?: number | null
+  tp2_rr?: number | null
   tp3_price?: number | null
   tp3_rr?: number | null
-  trigger_note: string
-  invalidation: string
+  trigger_note?: string | null
+  invalidation?: string | null
   setup_note?: string | null
   analysis: Prisma.AnalysisCreateNestedOneWithoutTrade_setupsInput
 }
@@ -520,20 +520,20 @@ export type TradeSetupUncheckedCreateInput = {
   direction: $Enums.Direction
   grade: $Enums.Grade
   conviction: $Enums.Conviction
-  entry_zone_low: number
-  entry_zone_high: number
-  stop_tight: number
-  stop_safe: number
-  risk_pct_tight: number
-  risk_pct_safe: number
-  tp1_price: number
-  tp1_rr: number
-  tp2_price: number
-  tp2_rr: number
+  entry_zone_low?: number | null
+  entry_zone_high?: number | null
+  stop_tight?: number | null
+  stop_safe?: number | null
+  risk_pct_tight?: number | null
+  risk_pct_safe?: number | null
+  tp1_price?: number | null
+  tp1_rr?: number | null
+  tp2_price?: number | null
+  tp2_rr?: number | null
   tp3_price?: number | null
   tp3_rr?: number | null
-  trigger_note: string
-  invalidation: string
+  trigger_note?: string | null
+  invalidation?: string | null
   setup_note?: string | null
 }
 
@@ -541,20 +541,20 @@ export type TradeSetupUpdateInput = {
   direction?: Prisma.EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
   grade?: Prisma.EnumGradeFieldUpdateOperationsInput | $Enums.Grade
   conviction?: Prisma.EnumConvictionFieldUpdateOperationsInput | $Enums.Conviction
-  entry_zone_low?: Prisma.FloatFieldUpdateOperationsInput | number
-  entry_zone_high?: Prisma.FloatFieldUpdateOperationsInput | number
-  stop_tight?: Prisma.FloatFieldUpdateOperationsInput | number
-  stop_safe?: Prisma.FloatFieldUpdateOperationsInput | number
-  risk_pct_tight?: Prisma.FloatFieldUpdateOperationsInput | number
-  risk_pct_safe?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp1_price?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp1_rr?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp2_price?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp2_rr?: Prisma.FloatFieldUpdateOperationsInput | number
+  entry_zone_low?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  entry_zone_high?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  stop_tight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  stop_safe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  risk_pct_tight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  risk_pct_safe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp1_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp1_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp2_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp2_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tp3_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tp3_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  trigger_note?: Prisma.StringFieldUpdateOperationsInput | string
-  invalidation?: Prisma.StringFieldUpdateOperationsInput | string
+  trigger_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invalidation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   setup_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysis?: Prisma.AnalysisUpdateOneRequiredWithoutTrade_setupsNestedInput
 }
@@ -565,20 +565,20 @@ export type TradeSetupUncheckedUpdateInput = {
   direction?: Prisma.EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
   grade?: Prisma.EnumGradeFieldUpdateOperationsInput | $Enums.Grade
   conviction?: Prisma.EnumConvictionFieldUpdateOperationsInput | $Enums.Conviction
-  entry_zone_low?: Prisma.FloatFieldUpdateOperationsInput | number
-  entry_zone_high?: Prisma.FloatFieldUpdateOperationsInput | number
-  stop_tight?: Prisma.FloatFieldUpdateOperationsInput | number
-  stop_safe?: Prisma.FloatFieldUpdateOperationsInput | number
-  risk_pct_tight?: Prisma.FloatFieldUpdateOperationsInput | number
-  risk_pct_safe?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp1_price?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp1_rr?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp2_price?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp2_rr?: Prisma.FloatFieldUpdateOperationsInput | number
+  entry_zone_low?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  entry_zone_high?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  stop_tight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  stop_safe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  risk_pct_tight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  risk_pct_safe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp1_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp1_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp2_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp2_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tp3_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tp3_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  trigger_note?: Prisma.StringFieldUpdateOperationsInput | string
-  invalidation?: Prisma.StringFieldUpdateOperationsInput | string
+  trigger_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invalidation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   setup_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -588,20 +588,20 @@ export type TradeSetupCreateManyInput = {
   direction: $Enums.Direction
   grade: $Enums.Grade
   conviction: $Enums.Conviction
-  entry_zone_low: number
-  entry_zone_high: number
-  stop_tight: number
-  stop_safe: number
-  risk_pct_tight: number
-  risk_pct_safe: number
-  tp1_price: number
-  tp1_rr: number
-  tp2_price: number
-  tp2_rr: number
+  entry_zone_low?: number | null
+  entry_zone_high?: number | null
+  stop_tight?: number | null
+  stop_safe?: number | null
+  risk_pct_tight?: number | null
+  risk_pct_safe?: number | null
+  tp1_price?: number | null
+  tp1_rr?: number | null
+  tp2_price?: number | null
+  tp2_rr?: number | null
   tp3_price?: number | null
   tp3_rr?: number | null
-  trigger_note: string
-  invalidation: string
+  trigger_note?: string | null
+  invalidation?: string | null
   setup_note?: string | null
 }
 
@@ -609,20 +609,20 @@ export type TradeSetupUpdateManyMutationInput = {
   direction?: Prisma.EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
   grade?: Prisma.EnumGradeFieldUpdateOperationsInput | $Enums.Grade
   conviction?: Prisma.EnumConvictionFieldUpdateOperationsInput | $Enums.Conviction
-  entry_zone_low?: Prisma.FloatFieldUpdateOperationsInput | number
-  entry_zone_high?: Prisma.FloatFieldUpdateOperationsInput | number
-  stop_tight?: Prisma.FloatFieldUpdateOperationsInput | number
-  stop_safe?: Prisma.FloatFieldUpdateOperationsInput | number
-  risk_pct_tight?: Prisma.FloatFieldUpdateOperationsInput | number
-  risk_pct_safe?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp1_price?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp1_rr?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp2_price?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp2_rr?: Prisma.FloatFieldUpdateOperationsInput | number
+  entry_zone_low?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  entry_zone_high?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  stop_tight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  stop_safe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  risk_pct_tight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  risk_pct_safe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp1_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp1_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp2_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp2_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tp3_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tp3_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  trigger_note?: Prisma.StringFieldUpdateOperationsInput | string
-  invalidation?: Prisma.StringFieldUpdateOperationsInput | string
+  trigger_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invalidation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   setup_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -632,20 +632,20 @@ export type TradeSetupUncheckedUpdateManyInput = {
   direction?: Prisma.EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
   grade?: Prisma.EnumGradeFieldUpdateOperationsInput | $Enums.Grade
   conviction?: Prisma.EnumConvictionFieldUpdateOperationsInput | $Enums.Conviction
-  entry_zone_low?: Prisma.FloatFieldUpdateOperationsInput | number
-  entry_zone_high?: Prisma.FloatFieldUpdateOperationsInput | number
-  stop_tight?: Prisma.FloatFieldUpdateOperationsInput | number
-  stop_safe?: Prisma.FloatFieldUpdateOperationsInput | number
-  risk_pct_tight?: Prisma.FloatFieldUpdateOperationsInput | number
-  risk_pct_safe?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp1_price?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp1_rr?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp2_price?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp2_rr?: Prisma.FloatFieldUpdateOperationsInput | number
+  entry_zone_low?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  entry_zone_high?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  stop_tight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  stop_safe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  risk_pct_tight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  risk_pct_safe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp1_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp1_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp2_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp2_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tp3_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tp3_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  trigger_note?: Prisma.StringFieldUpdateOperationsInput | string
-  invalidation?: Prisma.StringFieldUpdateOperationsInput | string
+  trigger_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invalidation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   setup_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -818,20 +818,20 @@ export type TradeSetupCreateWithoutAnalysisInput = {
   direction: $Enums.Direction
   grade: $Enums.Grade
   conviction: $Enums.Conviction
-  entry_zone_low: number
-  entry_zone_high: number
-  stop_tight: number
-  stop_safe: number
-  risk_pct_tight: number
-  risk_pct_safe: number
-  tp1_price: number
-  tp1_rr: number
-  tp2_price: number
-  tp2_rr: number
+  entry_zone_low?: number | null
+  entry_zone_high?: number | null
+  stop_tight?: number | null
+  stop_safe?: number | null
+  risk_pct_tight?: number | null
+  risk_pct_safe?: number | null
+  tp1_price?: number | null
+  tp1_rr?: number | null
+  tp2_price?: number | null
+  tp2_rr?: number | null
   tp3_price?: number | null
   tp3_rr?: number | null
-  trigger_note: string
-  invalidation: string
+  trigger_note?: string | null
+  invalidation?: string | null
   setup_note?: string | null
 }
 
@@ -840,20 +840,20 @@ export type TradeSetupUncheckedCreateWithoutAnalysisInput = {
   direction: $Enums.Direction
   grade: $Enums.Grade
   conviction: $Enums.Conviction
-  entry_zone_low: number
-  entry_zone_high: number
-  stop_tight: number
-  stop_safe: number
-  risk_pct_tight: number
-  risk_pct_safe: number
-  tp1_price: number
-  tp1_rr: number
-  tp2_price: number
-  tp2_rr: number
+  entry_zone_low?: number | null
+  entry_zone_high?: number | null
+  stop_tight?: number | null
+  stop_safe?: number | null
+  risk_pct_tight?: number | null
+  risk_pct_safe?: number | null
+  tp1_price?: number | null
+  tp1_rr?: number | null
+  tp2_price?: number | null
+  tp2_rr?: number | null
   tp3_price?: number | null
   tp3_rr?: number | null
-  trigger_note: string
-  invalidation: string
+  trigger_note?: string | null
+  invalidation?: string | null
   setup_note?: string | null
 }
 
@@ -892,20 +892,20 @@ export type TradeSetupScalarWhereInput = {
   direction?: Prisma.EnumDirectionFilter<"TradeSetup"> | $Enums.Direction
   grade?: Prisma.EnumGradeFilter<"TradeSetup"> | $Enums.Grade
   conviction?: Prisma.EnumConvictionFilter<"TradeSetup"> | $Enums.Conviction
-  entry_zone_low?: Prisma.FloatFilter<"TradeSetup"> | number
-  entry_zone_high?: Prisma.FloatFilter<"TradeSetup"> | number
-  stop_tight?: Prisma.FloatFilter<"TradeSetup"> | number
-  stop_safe?: Prisma.FloatFilter<"TradeSetup"> | number
-  risk_pct_tight?: Prisma.FloatFilter<"TradeSetup"> | number
-  risk_pct_safe?: Prisma.FloatFilter<"TradeSetup"> | number
-  tp1_price?: Prisma.FloatFilter<"TradeSetup"> | number
-  tp1_rr?: Prisma.FloatFilter<"TradeSetup"> | number
-  tp2_price?: Prisma.FloatFilter<"TradeSetup"> | number
-  tp2_rr?: Prisma.FloatFilter<"TradeSetup"> | number
+  entry_zone_low?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  entry_zone_high?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  stop_tight?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  stop_safe?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  risk_pct_tight?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  risk_pct_safe?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  tp1_price?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  tp1_rr?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  tp2_price?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
+  tp2_rr?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
   tp3_price?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
   tp3_rr?: Prisma.FloatNullableFilter<"TradeSetup"> | number | null
-  trigger_note?: Prisma.StringFilter<"TradeSetup"> | string
-  invalidation?: Prisma.StringFilter<"TradeSetup"> | string
+  trigger_note?: Prisma.StringNullableFilter<"TradeSetup"> | string | null
+  invalidation?: Prisma.StringNullableFilter<"TradeSetup"> | string | null
   setup_note?: Prisma.StringNullableFilter<"TradeSetup"> | string | null
 }
 
@@ -914,20 +914,20 @@ export type TradeSetupCreateManyAnalysisInput = {
   direction: $Enums.Direction
   grade: $Enums.Grade
   conviction: $Enums.Conviction
-  entry_zone_low: number
-  entry_zone_high: number
-  stop_tight: number
-  stop_safe: number
-  risk_pct_tight: number
-  risk_pct_safe: number
-  tp1_price: number
-  tp1_rr: number
-  tp2_price: number
-  tp2_rr: number
+  entry_zone_low?: number | null
+  entry_zone_high?: number | null
+  stop_tight?: number | null
+  stop_safe?: number | null
+  risk_pct_tight?: number | null
+  risk_pct_safe?: number | null
+  tp1_price?: number | null
+  tp1_rr?: number | null
+  tp2_price?: number | null
+  tp2_rr?: number | null
   tp3_price?: number | null
   tp3_rr?: number | null
-  trigger_note: string
-  invalidation: string
+  trigger_note?: string | null
+  invalidation?: string | null
   setup_note?: string | null
 }
 
@@ -935,20 +935,20 @@ export type TradeSetupUpdateWithoutAnalysisInput = {
   direction?: Prisma.EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
   grade?: Prisma.EnumGradeFieldUpdateOperationsInput | $Enums.Grade
   conviction?: Prisma.EnumConvictionFieldUpdateOperationsInput | $Enums.Conviction
-  entry_zone_low?: Prisma.FloatFieldUpdateOperationsInput | number
-  entry_zone_high?: Prisma.FloatFieldUpdateOperationsInput | number
-  stop_tight?: Prisma.FloatFieldUpdateOperationsInput | number
-  stop_safe?: Prisma.FloatFieldUpdateOperationsInput | number
-  risk_pct_tight?: Prisma.FloatFieldUpdateOperationsInput | number
-  risk_pct_safe?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp1_price?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp1_rr?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp2_price?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp2_rr?: Prisma.FloatFieldUpdateOperationsInput | number
+  entry_zone_low?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  entry_zone_high?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  stop_tight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  stop_safe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  risk_pct_tight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  risk_pct_safe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp1_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp1_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp2_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp2_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tp3_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tp3_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  trigger_note?: Prisma.StringFieldUpdateOperationsInput | string
-  invalidation?: Prisma.StringFieldUpdateOperationsInput | string
+  trigger_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invalidation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   setup_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -957,20 +957,20 @@ export type TradeSetupUncheckedUpdateWithoutAnalysisInput = {
   direction?: Prisma.EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
   grade?: Prisma.EnumGradeFieldUpdateOperationsInput | $Enums.Grade
   conviction?: Prisma.EnumConvictionFieldUpdateOperationsInput | $Enums.Conviction
-  entry_zone_low?: Prisma.FloatFieldUpdateOperationsInput | number
-  entry_zone_high?: Prisma.FloatFieldUpdateOperationsInput | number
-  stop_tight?: Prisma.FloatFieldUpdateOperationsInput | number
-  stop_safe?: Prisma.FloatFieldUpdateOperationsInput | number
-  risk_pct_tight?: Prisma.FloatFieldUpdateOperationsInput | number
-  risk_pct_safe?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp1_price?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp1_rr?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp2_price?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp2_rr?: Prisma.FloatFieldUpdateOperationsInput | number
+  entry_zone_low?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  entry_zone_high?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  stop_tight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  stop_safe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  risk_pct_tight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  risk_pct_safe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp1_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp1_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp2_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp2_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tp3_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tp3_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  trigger_note?: Prisma.StringFieldUpdateOperationsInput | string
-  invalidation?: Prisma.StringFieldUpdateOperationsInput | string
+  trigger_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invalidation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   setup_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -979,20 +979,20 @@ export type TradeSetupUncheckedUpdateManyWithoutAnalysisInput = {
   direction?: Prisma.EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
   grade?: Prisma.EnumGradeFieldUpdateOperationsInput | $Enums.Grade
   conviction?: Prisma.EnumConvictionFieldUpdateOperationsInput | $Enums.Conviction
-  entry_zone_low?: Prisma.FloatFieldUpdateOperationsInput | number
-  entry_zone_high?: Prisma.FloatFieldUpdateOperationsInput | number
-  stop_tight?: Prisma.FloatFieldUpdateOperationsInput | number
-  stop_safe?: Prisma.FloatFieldUpdateOperationsInput | number
-  risk_pct_tight?: Prisma.FloatFieldUpdateOperationsInput | number
-  risk_pct_safe?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp1_price?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp1_rr?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp2_price?: Prisma.FloatFieldUpdateOperationsInput | number
-  tp2_rr?: Prisma.FloatFieldUpdateOperationsInput | number
+  entry_zone_low?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  entry_zone_high?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  stop_tight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  stop_safe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  risk_pct_tight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  risk_pct_safe?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp1_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp1_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp2_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tp2_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tp3_price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tp3_rr?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  trigger_note?: Prisma.StringFieldUpdateOperationsInput | string
-  invalidation?: Prisma.StringFieldUpdateOperationsInput | string
+  trigger_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invalidation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   setup_note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -1115,20 +1115,20 @@ export type $TradeSetupPayload<ExtArgs extends runtime.Types.Extensions.Internal
     direction: $Enums.Direction
     grade: $Enums.Grade
     conviction: $Enums.Conviction
-    entry_zone_low: number
-    entry_zone_high: number
-    stop_tight: number
-    stop_safe: number
-    risk_pct_tight: number
-    risk_pct_safe: number
-    tp1_price: number
-    tp1_rr: number
-    tp2_price: number
-    tp2_rr: number
+    entry_zone_low: number | null
+    entry_zone_high: number | null
+    stop_tight: number | null
+    stop_safe: number | null
+    risk_pct_tight: number | null
+    risk_pct_safe: number | null
+    tp1_price: number | null
+    tp1_rr: number | null
+    tp2_price: number | null
+    tp2_rr: number | null
     tp3_price: number | null
     tp3_rr: number | null
-    trigger_note: string
-    invalidation: string
+    trigger_note: string | null
+    invalidation: string | null
     setup_note: string | null
   }, ExtArgs["result"]["tradeSetup"]>
   composites: {}
