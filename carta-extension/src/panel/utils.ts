@@ -1,8 +1,16 @@
 export function formatPrice(price: number | null | undefined): string {
-  if (price === null || price === undefined) return '--'
-  return Number(price).toLocaleString('en-US', {
-    minimumFractionDigits: price < 1 ? 4 : 0,
-    maximumFractionDigits: price < 1 ? 6 : 0,
+  if (price == null) return '--'
+
+  let fractionDigits = 0
+
+  if (price < 0.0001) fractionDigits = 8
+  else if (price < 0.01) fractionDigits = 6
+  else if (price < 1) fractionDigits = 4
+  else if (price < 1000) fractionDigits = 2
+
+  return price.toLocaleString('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: fractionDigits,
   })
 }
 

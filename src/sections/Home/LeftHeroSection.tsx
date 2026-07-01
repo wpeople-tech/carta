@@ -3,28 +3,8 @@
 import TextType from "@/components/TextType";
 import { easeOut, easeOutFast, fadeUp, slideFromLeft, staggerContainer, staggerFast } from "@/design.config";
 import { motion } from "motion/react";
-import { useEffect, useState } from "react";
 
 export default function LeftHeroSection() {
-  const [coinsAnalyzed, setCoinsAnalyzed] = useState(0);
-  const [updatesQueue, setUpdatesQueue] = useState(0);
-
-  useEffect(() => {
-    let coins = 0;
-    const ci = setInterval(() => {
-      coins += Math.floor(Math.random() * 5) + 3;
-      if (coins >= 150) { coins = 150; clearInterval(ci); }
-      setCoinsAnalyzed(coins);
-    }, 80);
-    let updates = 0;
-    const ui = setInterval(() => {
-      updates += Math.floor(Math.random() * 3) + 1;
-      if (updates >= 47) { updates = 47; clearInterval(ui); }
-      setUpdatesQueue(updates);
-    }, 120);
-    return () => { clearInterval(ci); clearInterval(ui); };
-  }, []);
-  
   return (
     <motion.div
       variants={staggerContainer}
@@ -108,38 +88,20 @@ export default function LeftHeroSection() {
         ))}
       </motion.div>
 
-      {/* Live metric box */}
+      {/* Agent image */}
       <motion.div
         variants={fadeUp}
-        transition={{ ...easeOut, delay: 0.35 }}
-        className="relative mt-14 overflow-hidden rounded-md border border-signal-orange bg-orange-100 p-7"
+        transition={{ ...easeOut, delay: 0.4 }}
+        className="mt-10 overflow-hidden"
       >
-        <div
-          className="mb-4 flex items-center gap-2 font-technical text-[10px] font-semibold uppercase tracking-[0.08em] text-signal-orange"
-        >
-          <span className="panel-dot-pulse inline-block h-2 w-2 rounded-full bg-signal-orange" />
-          Live Metric
-        </div>
-        <div className="mb-4 grid grid-cols-2 gap-5">
-          <div className="rounded border-l-[3px] border-signal-orange bg-white/40 p-4">
-            <div className="text-[32px] font-bold tabular-nums text-signal-orange">{coinsAnalyzed}</div>
-            <div className="mt-1.5 text-[11px] font-medium text-ink-muted">Coins analyzed today</div>
-          </div>
-          <div className="rounded border-l-[3px] border-signal-orange bg-white/40 p-4">
-            <div className="text-[32px] font-bold tabular-nums text-signal-orange">{updatesQueue}</div>
-            <div className="mt-1.5 text-[11px] font-medium text-ink-muted">Updates in queue</div>
-          </div>
-        </div>
-        <a 
-          className="flex items-center gap-2 text-[12px] italic text-signal-orange cursor-pointer hover:underline"
-          href="#how"
-        >
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M8 2L4 6L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-          Scroll to see how it works
-        </a>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/carta-agent.jpeg"
+          alt="CARTA Agent"
+          style={{ width: '100%', display: 'block', objectFit: 'cover' }}
+        />
       </motion.div>
+
     </motion.div>
   )
 }

@@ -10,7 +10,7 @@
 
 import 'dotenv/config'
 
-const BASE_URL   = process.env.INIT_BASE_URL ?? 'http://localhost:3000'
+const BASE_URL = process.env.INIT_BASE_URL ?? 'http://localhost:3000'
 const CRON_SECRET = process.env.CRON_SECRET!
 
 if (!CRON_SECRET) {
@@ -82,7 +82,7 @@ async function main() {
     }
 
     console.log(`\n  Waiting ${TICK_PAUSE_MS / 1000}s before next tick...\n`)
-    await sleep(TICK_PAUSE_MS)
+    if (!BASE_URL.includes('http://localhost:')) await sleep(TICK_PAUSE_MS)
     tick++
   }
 

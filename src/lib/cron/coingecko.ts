@@ -30,7 +30,9 @@ export async function fetchMarketBatch(coinIds: string[]): Promise<Map<string, M
       }
       if (!r.ok) break
       const data: MarketCoin[] = await r.json()
-      for (const coin of data) result.set(coin.id, coin)
+      for (const coin of data) {
+        if (coin.market_cap >= 1_000_000) result.set(coin.id, coin)
+      }
       break
     }
     if (i + 50 < coinIds.length) await sleep(1_500)
@@ -45,7 +47,7 @@ export interface OhlcvData {
 }
 
 export async function fetchOhlcv(coinId: string): Promise<OhlcvData | null> {
-  const url = `${BASE}/coins/${coinId}/market_chart?vs_currency=usd&days=365&interval=daily`
+  const url = `${BASE}/coins/${coinId}/ohlc?vs_currency=usd&days=365`
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const r = await fetch(url, { signal: AbortSignal.timeout(15_000) })
@@ -55,9 +57,13 @@ export async function fetchOhlcv(coinId: string): Promise<OhlcvData | null> {
       }
       if (!r.ok) return null
       const data = await r.json()
-      if (!data.prices || data.prices.length < 30) return null
-      const prices: number[] = data.prices.map((p: [number, number]) => p[1])
-      return { close: prices, high: prices, low: prices }
+      if (!Array.isArray(data) || data.length < 30) return null
+      // data is [[timestamp, open, high, low, close], ...]
+      return {
+        close: data.map((d: [number, number, number, number, number]) => d[4]),
+        high: data.map((d: [number, number, number, number, number]) => d[2]),
+        low: data.map((d: [number, number, number, number, number]) => d[3]),
+      }
     } catch {
       await sleep(5_000)
     }
