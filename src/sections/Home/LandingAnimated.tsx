@@ -27,7 +27,7 @@ export default function LandingAnimated({ children }: { children: React.ReactNod
   return (
     <div className="relative">
       {/* Map reference box — top-left */}
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8, duration: 0.6 }}
@@ -49,10 +49,10 @@ export default function LandingAnimated({ children }: { children: React.ReactNod
           <div style={{ fontFamily: MONO, fontSize: 14, color: C.inkMuted, fontWeight: 600, letterSpacing: '0.06em' }}>13°S 106°E</div>
           <div style={{ fontFamily: MONO, fontSize: 12, color: C.inkFaint, letterSpacing: '0.08em', fontWeight: 600 }}>CRYPTO TERRITORY · DAILY</div>
         </div>
-      </motion.div>
+      </motion.div> */}
 
       {/* North arrow — top-right */}
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.85, duration: 0.6 }}
@@ -65,10 +65,10 @@ export default function LandingAnimated({ children }: { children: React.ReactNod
           <line x1="12" y1="2" x2="12" y2="30" stroke={C.ink} strokeWidth="0.5" />
         </svg>
         <span style={{ fontFamily: MONO, fontSize: 12, color: C.inkMuted, fontWeight: 700, letterSpacing: '0.12em' }}>N</span>
-      </motion.div>
+      </motion.div> */}
 
       {/* Scale bar + datum — bottom-right */}
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.9, duration: 0.6 }}
@@ -86,7 +86,7 @@ export default function LandingAnimated({ children }: { children: React.ReactNod
           <span style={{ fontFamily: MONO, fontSize: 12, color: C.inkFaint, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Contour interval: 200m · WGS84</span>
           <span style={{ fontFamily: MONO, fontSize: 10, color: C.inkMuted, letterSpacing: '0.08em', fontWeight: 600 }}>CARTA · CHART INTEL · MAPPED</span>
         </div>
-      </motion.div>
+      </motion.div> */}
 
       {children}
     </div>
@@ -177,23 +177,23 @@ export function McpClient() {
   return (
     <section id="mcp" style={{ maxWidth: 1280, margin: '0 auto', padding: '100px 48px', position: 'relative', zIndex: 1 }}>
       <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={viewportOnce} transition={easeOut}>
-        <div style={{ fontFamily: MONO, fontSize: 14, fontWeight: 500, letterSpacing: '0.12em', color: C.inkFaint, textTransform: 'uppercase', marginBottom: 16 }}>Claude via MCP</div>
+        <div style={{ fontFamily: MONO, fontSize: 14, fontWeight: 500, letterSpacing: '0.12em', color: C.inkFaint, textTransform: 'uppercase', marginBottom: 16 }}>CARTA Intelligence</div>
         <h2 style={{ fontFamily: SANS, fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.02em' }}>
-          How the analysis<br />actually gets made
+          A real AI agent.<br />Running live on every chart.
         </h2>
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 64, marginTop: 56, alignItems: 'start' }}>
         <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={viewportOnce} transition={{ ...easeOut, delay: 0.1 }}>
           {[
-            "CARTA's analysis is not rule-based. Every coin is read by Claude Sonnet via the Model Context Protocol, the same infrastructure that powers serious trading workflows, running automatically in the background every 4 hours.",
-            "Claude looks at price action, indicator values, historical S/R confluence, and volume context. From that it produces a structured output: signal, levels, a full trade setup with entry, stop, and targets, plus a plain read of what the chart is actually doing right now.",
-            "When you open a chart, CARTA pulls that pre-computed analysis from the database instantly. No API call on open. No waiting. The work was already done before you arrived.",
+            "CARTA is not a screener. It\'s an AI agent — powered by Claude Sonnet via the Model Context Protocol — that actively reads the market across 150+ coins and builds a complete trading view for each one.",
+            "For every chart, Claude analyzes price structure, indicator confluence, S/R geometry, and volume dynamics the way a professional analyst would. It then produces a structured verdict: signal, confidence, key levels, a graded trade setup, and its own plain-English read of what the market is doing.",
+            "The moment you open TradingView, CARTA\'s analysis is already there. Not a template. Not a rule-based alert. A live AI read — waiting on your chart.",
           ].map((p, i) => (
             <p key={i} style={{ fontSize: 16, lineHeight: 1.75, color: C.inkMuted, marginBottom: 20 }}>{p}</p>
           ))}
           <motion.div variants={staggerFast} initial="hidden" whileInView="visible" viewport={viewportOnce} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 32 }}>
-            {([['4h', 'Refresh cycle'], ['150+', 'Coins analyzed'], ['7', 'Indicators tracked'], ['Daily', 'Primary timeframe']] as [string, string][]).map(([num, label]) => (
+            {([['Live', 'AI analysis'], ['150+', 'Coins monitored'], ['7', 'Indicators tracked'], ['Daily', 'Primary timeframe']] as [string, string][]).map(([num, label]) => (
               <motion.div key={label} variants={fadeUp} transition={easeOutFast} whileHover={{ scale: 1.02, transition: { duration: 0.2 } }} style={{ background: C.surface, padding: 20, border: `1px solid ${C.border}` }}>
                 <div style={{ fontFamily: MONO, fontSize: 28, fontWeight: 600, color: C.ink, marginBottom: 4 }}>{num}</div>
                 <div style={{ fontFamily: MONO, fontSize: 10, color: C.inkFaint, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{label}</div>
@@ -204,11 +204,11 @@ export function McpClient() {
 
         <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={viewportOnce} style={{ display: 'flex', flexDirection: 'column' }}>
           {([
-            { label: 'CoinGecko API', desc: 'Filter all coins with marketcap above $100M. Build the analysis queue.' },
-            { label: 'Claude Sonnet via MCP', desc: 'Claude reads chart data per coin: S/R levels, indicator values, volume, weekly bias. Outputs structured analysis ready for the database.' },
-            { label: 'Supabase Database', desc: 'Analysis stored per coin with timestamp. Cron job refreshes every 4 hours.' },
-            { label: 'Chrome Extension', desc: 'Detects the symbol you\'re viewing. Queries the database. Renders the panel instantly.' },
-            { label: 'CARTA Panel', desc: 'Signal, levels, trade setup, and CARTA\'s Call. On your chart, every time you open it.' },
+            { label: 'Market Coverage', desc: 'CARTA monitors the entire crypto market — every coin worth trading. It knows what\'s moving before you look.' },
+            { label: 'Claude Sonnet via MCP', desc: 'Claude reads each chart as an analyst would: price structure, indicator state, S/R confluence, volume context. It reasons through the chart, not just scans it.' },
+            { label: 'Structured Intelligence', desc: 'Every coin gets a complete verdict: signal direction, confidence score, key levels, a graded trade setup with entry and stops, and CARTA\'s own narrative read.' },
+            { label: 'Chrome Extension', desc: 'Detects the symbol on your chart the instant you open it. CARTA\'s analysis surfaces immediately, inline — no search, no switching tabs.' },
+            { label: 'CARTA Panel', desc: 'Signal, levels, full trade setup, and CARTA\'s Call. Live on every chart, every time you look.' },
           ] as { label: string; desc: string }[]).map(({ label, desc }, idx, arr) => (
             <motion.div key={label} variants={slideFromLeft} transition={{ ...easeOut, delay: idx * 0.06 }} style={{ display: 'flex', gap: 16 }}>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, width: 24 }}>
@@ -463,9 +463,9 @@ export function HowItWorksClient() {
             desc: 'Navigate to TradingView and open any crypto pair ending in USDT with a marketcap above $100M. CARTA detects the symbol automatically.',
             code: [{ t: 'comment', s: '// CARTA reads the URL' }, { t: 'string-arg', s: '"BINANCE:BTCUSDT"' }, { t: 'keyword-line', s: '→ match → load analysis' }],
           }, {
-            num: 'Step 03', title: 'Real Time Technical Analysis',
-            desc: "The CARTA panel appears instantly on your chart with live signals, key S/R levels, indicators, trade setups, and CARTA's Call—all updated in real time, with no waiting.",
-            code: [{ t: 'comment', s: '// No API call on open' }, { t: 'keyword-line', s: 'signal: BUY · 82%' }, { t: 'string-line', s: 'support: $101,400' }],
+            num: 'Step 03', title: 'AI Analysis. On your chart.',
+            desc: "The CARTA panel surfaces instantly — live signal, key S/R levels, indicators, a graded trade setup, and CARTA's own take on the chart. All from Claude. All on your screen.",
+            code: [{ t: 'comment', s: '// CARTA reads it live' }, { t: 'keyword-line', s: 'signal: BUY · 82%' }, { t: 'string-line', s: 'support: $101,400' }],
           }] as { num: string; title: string; desc: string; code: { t: string; s: string }[] }[]).map(({ num, title, desc, code }) => (
             <motion.div key={num} variants={fadeUp} transition={easeOut} whileHover={{ backgroundColor: '#181816' }} style={{ background: C.ink, padding: '40px 32px', transition: 'background 0.2s' }}>
               <div style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, letterSpacing: '0.1em', color: C.signal, marginBottom: 20, textTransform: 'uppercase' }}>{num}</div>

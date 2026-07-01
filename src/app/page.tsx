@@ -61,13 +61,48 @@ export default async function Page() {
       <Navbar />
 
       <LandingAnimated>
-        <section
-          className="grid grid-cols-1 lg:grid-cols-2 items-center px-8 md:px-16 py-28"
-          style={{ minHeight: '100vh', gap: 64, maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}
-        >
-          <LeftHeroSection />
-          <HeroPanel />
-        </section>
+        {/* Background image fills the whole hero */}
+        <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/carta-agent.jpeg"
+            alt=""
+            aria-hidden="true"
+            style={{
+              position: 'absolute', inset: 0,
+              width: '100%', height: '100%',
+              objectFit: 'cover', objectPosition: 'center',
+            }}
+          />
+          {/* Dark gradient overlay — uniform dark for centered layout */}
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(to bottom, rgba(10,10,8,0.72) 0%, rgba(10,10,8,0.58) 50%, rgba(10,10,8,0.80) 100%)',
+          }} />
+
+          {/* Center: hero wording */}
+          <div style={{
+            position: 'relative', zIndex: 1, flex: 1,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            textAlign: 'center',
+            padding: '120px 48px 64px',
+          }}>
+            <div style={{ maxWidth: 720, width: '100%' }}>
+              <LeftHeroSection dark centered />
+            </div>
+          </div>
+
+          {/* Panel — bottom, 80vw wide, default minimized */}
+          <div style={{
+            position: 'relative', zIndex: 1,
+            display: 'flex', justifyContent: 'center',
+            padding: '0 0 48px',
+          }}>
+            <div style={{ width: '80vw', maxWidth: 1200 }}>
+              <HeroPanel defaultMinimized />
+            </div>
+          </div>
+        </div>
       </LandingAnimated>
 
       <MapLegendClient />
