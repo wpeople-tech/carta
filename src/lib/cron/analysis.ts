@@ -252,7 +252,7 @@ function detectSR(
   }
 
   const resistance = cluster(
-    pivotHighs.filter(p => p > currentPrice && p <= currentPrice * 1.10)
+    pivotHighs.filter(p => p > currentPrice && p <= currentPrice * 1.20)
   )
 
   const support = cluster(
@@ -277,7 +277,7 @@ function detectSR(
 
   const result: SRLevel[] = []
 
-  for (const r of classify(resistance.slice(0, 1))) {
+  for (const r of classify(resistance.slice(0, maxLevels + 1))) {
     result.push({
       level_type: 'RESISTANCE',
       strength: r.strength,
@@ -299,9 +299,21 @@ function detectSR(
     })
   }
 
-  // Guarantee at least 1 level on each side — injected as WEAK with confluence_note
-  // so downstream code (calculateTradeSetup, validateAnalysis) always has an anchor.
-  if (!result.some(l => l.level_type === 'RESISTANCE')) {
+  // Guarantee ≥2 resistance levels, with at least one ≥ 10% above current price.
+  const resistanceLevels = () => result.filter(l => l.level_type === 'RESISTANCE')
+
+  if (!resistanceLevels().some(l => l.price >= currentPrice * 1.10)) {
+    result.push({
+      level_type: 'RESISTANCE',
+      strength: 'WEAK',
+      price: Number((currentPrice * 1.10).toFixed(8)),
+      touches: 1,
+      confluence_note: 'Estimated — 10% resistance boundary',
+      sort_order: 0,
+    })
+  }
+
+  if (resistanceLevels().length < 2) {
     result.unshift({
       level_type: 'RESISTANCE',
       strength: 'WEAK',
@@ -312,7 +324,21 @@ function detectSR(
     })
   }
 
-  if (!result.some(l => l.level_type === 'SUPPORT')) {
+  // Guarantee ≥2 support levels, with at least one ≥ 10% below current price.
+  const supportLevels = () => result.filter(l => l.level_type === 'SUPPORT')
+
+  if (!supportLevels().some(l => l.price <= currentPrice * 0.90)) {
+    result.push({
+      level_type: 'SUPPORT',
+      strength: 'WEAK',
+      price: Number((currentPrice * 0.90).toFixed(8)),
+      touches: 1,
+      confluence_note: 'Estimated — 10% support boundary',
+      sort_order: 0,
+    })
+  }
+
+  if (supportLevels().length < 2) {
     result.push({
       level_type: 'SUPPORT',
       strength: 'WEAK',
@@ -541,9 +567,9 @@ export function computeMarketScore(
 
   const abs = Math.abs(score)
   const confidence_ceiling =
-    abs >= 6 ? 90 :
-      abs >= 4 ? 80 :
-        abs >= 2 ? 60 : 50
+    abs >= 6 ? 95 :
+      abs >= 4 ? 90 :
+        abs >= 2 ? 80 : 75
 
   const weekly_bias: MarketScore['weekly_bias'] =
     ta.price_vs_ema200 === 'ABOVE' && ta.trend !== 'Bearish' ? 'BULLISH' :
@@ -730,7 +756,7 @@ HARD VALIDATION RULES (YOU MUST RESPECT THESE):
 OUTPUT FORMAT (STRICT JSON ONLY):
 
 {
-  "confidence_pct": <integer 0-${marketScore.confidence_ceiling}>,
+  "confidence_pct": <integer ${Math.min(75, marketScore.confidence_ceiling)}-${marketScore.confidence_ceiling}>,
   "setup_grades": {
     "LONG": "A" | "B" | "C" | null,
     "SHORT": "A" | "B" | "C" | null
@@ -741,17 +767,18 @@ OUTPUT FORMAT (STRICT JSON ONLY):
 ---
 
 GRADE RULES:
-- A = aligned with marketScore.signal AND trend
-- B = valid setup but mixed confirmation
-- C = counter-trend OR weak confluence
+- A = aligned with marketScore.signal
+- B = valid setup but mixed indicator confirmation
+- C = counter-trend to marketScore.signal OR weak confluence
 - null = no valid setup
 
 ---
 
 CONFIDENCE RULES:
-- High confidence ONLY if EMA + MACD + Weekly align
-- Medium if mixed signals
-- Low if counter-trend or conflicting indicators exist
+- Minimum confidence is ${Math.min(75, marketScore.confidence_ceiling)}% regardless of signal strength
+- High confidence if EMA + MACD align with marketScore.signal
+- Medium if mixed indicator signals
+- Low if counter-trend to signal or conflicting indicators (still minimum ${Math.min(75, marketScore.confidence_ceiling)}%)
 
 ---
 

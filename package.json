@@ -10,7 +10,8 @@
     "dev:ext": "cd carta-extension/ && yarn dev",
     "build:ext": "cd carta-extension/ && yarn build",
     "seed:coins": "tsx src/lib/seed-coins.ts",
-    "init:analysis": "tsx src/lib/init-analysis.ts"
+    "init:analysis": "tsx src/lib/init-analysis.ts",
+    "init:prices": "tsx src/lib/init-prices.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",

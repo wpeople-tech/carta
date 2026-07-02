@@ -56,7 +56,7 @@ export const TV_SYMBOL_MAP: Record<string, string> = {
   'hyperliquid':        'BYBIT:HYPEUSDT',
   'bittensor':          'BINANCE:TAOUSDT',
   'kaspa':              'BYBIT:KASUSDT',
-  'monero':             'KRAKEN:XMRUSD',
+  'monero':             'KRAKEN:XMRUSDT',
   'bittorrent':         'BINANCE:BTTCUSDT',
   'internet-computer':  'BINANCE:ICPUSDT',
   'hedera-hashgraph':   'BINANCE:HBARUSDT',

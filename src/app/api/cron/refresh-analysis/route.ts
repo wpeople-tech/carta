@@ -72,13 +72,14 @@ async function callAI(
     console.error(`[callAI] JSON parse failed for ${coinName}. raw:\n${raw}\nerr:`, err)
     // Fallback: neutral interpretation so the coin is not skipped
     parsed = {
-      confidence_pct: marketScore.confidence_ceiling - 10,
+      confidence_pct: Math.min(75, marketScore.confidence_ceiling),
       setup_grades: { LONG: 'C', SHORT: 'C' },
       claude_call: 'Unable to parse AI interpretation. Using conservative defaults.',
     }
   }
 
-  parsed.confidence_pct = Math.min(parsed.confidence_pct ?? 40, marketScore.confidence_ceiling)
+  const confFloor = Math.min(75, marketScore.confidence_ceiling)
+  parsed.confidence_pct = Math.min(Math.max(parsed.confidence_pct ?? confFloor, confFloor), marketScore.confidence_ceiling)
   return parsed
 }
 
@@ -185,14 +186,15 @@ export async function GET(req: NextRequest) {
         })
         if (prev) {
           aiUsed = false
-          const conf = Math.min(prev.confidence_pct, marketScore.confidence_ceiling)
+          const confFloor = Math.min(75, marketScore.confidence_ceiling)
+          const conf = Math.min(Math.max(prev.confidence_pct, confFloor), marketScore.confidence_ceiling)
           interpretation = {
             confidence_pct: conf,
             setup_grades: {
               LONG:  validatedSetups.find(s => s.direction === 'LONG')
-                ? (marketScore.signal === 'BUY'  ? (conf >= 70 ? 'A' : 'B') : 'C') : null,
+                ? (marketScore.signal === 'BUY'  ? (conf >= 75 ? 'A' : 'B') : 'C') : null,
               SHORT: validatedSetups.find(s => s.direction === 'SHORT')
-                ? (marketScore.signal === 'SELL' ? (conf >= 70 ? 'A' : 'B') : 'C') : null,
+                ? (marketScore.signal === 'SELL' ? (conf >= 75 ? 'A' : 'B') : 'C') : null,
             },
             claude_call: prev.claude_call,
           }
