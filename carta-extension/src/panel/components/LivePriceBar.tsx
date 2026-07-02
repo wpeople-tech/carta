@@ -20,12 +20,6 @@ export default function LivePriceBar({ live, symbol }: Props) {
     return () => clearTimeout(t)
   }, [live.price])
 
-  const sign = live.changePct >= 0 ? '+' : ''
-  const pctColor =
-    live.changePct > 0 ? 'var(--carta-green)'
-    : live.changePct < 0 ? 'var(--carta-red)'
-    : 'var(--carta-ink-faint)'
-
   const ticker = symbol.includes(':') ? symbol.split(':')[1] : symbol
 
   return (
@@ -42,9 +36,6 @@ export default function LivePriceBar({ live, symbol }: Props) {
           className={`carta-live-price${flash ? ` carta-live-price--${flash}` : ''}`}
         >
           ${formatPrice(live.price)}
-        </span>
-        <span className="carta-live-change" style={{ color: pctColor }}>
-          {sign}{live.changePct.toFixed(2)}%
         </span>
       </div>
     </div>

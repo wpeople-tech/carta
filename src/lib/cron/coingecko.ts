@@ -19,6 +19,9 @@ export interface MarketCoin {
 
 export async function fetchMarketBatch(coinIds: string[]): Promise<Map<string, MarketCoin>> {
   const result = new Map<string, MarketCoin>()
+  console.log('Starting market batch fetch...');
+  console.log(`coinIds: ${JSON.stringify(coinIds)}`);
+
   for (let i = 0; i < coinIds.length; i += 50) {
     const batch = coinIds.slice(i, i + 50)
     const url = `${BASE}/coins/markets?vs_currency=usd&ids=${batch.join(',')}&order=market_cap_desc&per_page=250&sparkline=false`
@@ -37,6 +40,7 @@ export async function fetchMarketBatch(coinIds: string[]): Promise<Map<string, M
     }
     if (i + 50 < coinIds.length) await sleep(1_500)
   }
+  console.log(`market completed: ${JSON.stringify(result)}`);
   return result
 }
 

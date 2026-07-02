@@ -41,9 +41,12 @@ function formatPrice(p: number): string {
   return `$${p.toFixed(6)}`
 }
 
+const PAGE_SIZE = 20
+
 export default function CoverageSection({ coins }: { coins: CoinRow[] }) {
   const [coinFilter, setCoinFilter] = useState<'ALL' | 'BUY' | 'SELL' | 'NEUTRAL'>('ALL')
   const [coinSearch, setCoinSearch] = useState('')
+  const [page, setPage] = useState(1)
 
   const buyCount = coins.filter(c => c.signal === 'BUY').length
   const sellCount = coins.filter(c => c.signal === 'SELL').length
@@ -56,6 +59,14 @@ export default function CoverageSection({ coins }: { coins: CoinRow[] }) {
       c.name.toLowerCase().includes(coinSearch.toLowerCase()) ||
       c.symbol.toLowerCase().includes(coinSearch.toLowerCase())
     )
+
+  const totalPages = Math.max(1, Math.ceil(filteredCoins.length / PAGE_SIZE))
+  const safePage = Math.min(page, totalPages)
+  const pagedCoins = filteredCoins.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE)
+
+  function goTo(p: number) {
+    setPage(Math.max(1, Math.min(p, totalPages)))
+  }
 
   return (
     <section
@@ -106,7 +117,7 @@ export default function CoverageSection({ coins }: { coins: CoinRow[] }) {
               name="coin-filter"
               value={label}
               checked={coinFilter === label}
-              onChange={() => setCoinFilter(label)}
+              onChange={() => { setCoinFilter(label); setPage(1) }}
               style={{ accentColor: color, width: 14, height: 14, cursor: 'pointer' }}
             />
             <span style={{ fontFamily: MONO, fontSize: 18, fontWeight: 700 }}>{count}</span>
@@ -118,7 +129,7 @@ export default function CoverageSection({ coins }: { coins: CoinRow[] }) {
             type="text"
             placeholder="Search coin…"
             value={coinSearch}
-            onChange={e => setCoinSearch(e.target.value)}
+            onChange={e => { setCoinSearch(e.target.value); setPage(1) }}
             style={{
               fontFamily: MONO, fontSize: 13, padding: '8px 14px',
               border: `1px solid ${C.border}`, background: C.surface,
@@ -129,87 +140,179 @@ export default function CoverageSection({ coins }: { coins: CoinRow[] }) {
         </div>
       </motion.div>
 
-      {/* Coin grid — no animation dependency on data, always renders */}
-      <div style={{ marginTop: 24 }}>
-        {filteredCoins.length === 0 ? (
-          <div style={{ padding: '48px 0', textAlign: 'center', fontFamily: MONO, fontSize: 14, color: C.inkFaint, letterSpacing: '0.06em' }}>
-            No coins match your filter.
-          </div>
-        ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 1, background: C.border, border: `1px solid ${C.border}` }}>
-            {filteredCoins.map((coin) => {
-              const sig = coin.signal
-              const sigColor = sig === 'BUY' ? C.green : sig === 'SELL' ? C.red : C.inkMuted
-              const sigDim = sig === 'BUY' ? C.greenDim : sig === 'SELL' ? C.redDim : C.surface2
-              const change = coin.price_change_24h
-              const changeColor = change == null ? C.inkFaint : change >= 0 ? C.green : C.red
-
-              return (
-                <motion.div
-                  key={coin.coin_id}
-                  whileHover={{ y: -2, boxShadow: '0 6px 20px rgba(0,0,0,0.08)', zIndex: 2 }}
-                  transition={easeOutFast}
-                  style={{ background: C.bg, padding: '16px 18px', position: 'relative' }}
+      {/* Coin table */}
+      <div style={{ marginTop: 24, border: `1px solid ${C.border}`, overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ background: C.surface, borderBottom: `1px solid ${C.border}` }}>
+              {['#', 'Coin', 'Price', '24h', 'Signal', 'Conf.'].map((h, i) => (
+                <th
+                  key={h}
+                  style={{
+                    fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: '0.08em',
+                    color: C.inkFaint, textTransform: 'uppercase',
+                    padding: '10px 16px', textAlign: i === 0 ? 'center' : i >= 3 ? 'right' : 'left',
+                    whiteSpace: 'nowrap',
+                  }}
                 >
-                  {coin.market_cap_rank && (
-                    <span style={{ position: 'absolute', top: 10, right: 12, fontFamily: MONO, fontSize: 10, color: C.inkFaint, letterSpacing: '0.06em' }}>
-                      #{coin.market_cap_rank}
-                    </span>
-                  )}
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {filteredCoins.length === 0 ? (
+              <tr>
+                <td colSpan={6} style={{ padding: '48px 0', textAlign: 'center', fontFamily: MONO, fontSize: 14, color: C.inkFaint, letterSpacing: '0.06em' }}>
+                  No coins match your filter.
+                </td>
+              </tr>
+            ) : (
+              pagedCoins.map((coin, idx) => {
+                const sig = coin.signal
+                const sigColor = sig === 'BUY' ? C.green : sig === 'SELL' ? C.red : C.inkMuted
+                const sigDim = sig === 'BUY' ? C.greenDim : sig === 'SELL' ? C.redDim : C.surface2
+                const change = coin.price_change_24h
+                const changeColor = change == null ? C.inkFaint : change >= 0 ? C.green : C.red
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                    {coin.image_url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={coin.image_url} alt={coin.symbol} width={24} height={24} style={{ borderRadius: '50%', flexShrink: 0 }} />
-                    ) : (
-                      <div style={{ width: 24, height: 24, borderRadius: '50%', background: C.surface2, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <span style={{ fontFamily: MONO, fontSize: 8, fontWeight: 700, color: C.inkFaint }}>{coin.symbol.slice(0, 2).toUpperCase()}</span>
+                return (
+                  <motion.tr
+                    key={coin.coin_id}
+                    whileHover={{ backgroundColor: C.surface }}
+                    transition={easeOutFast}
+                    style={{
+                      borderBottom: `1px solid ${C.border}`,
+                      background: C.bg,
+                    }}
+                  >
+                    {/* Rank */}
+                    <td style={{ fontFamily: MONO, fontSize: 11, color: C.inkFaint, padding: '12px 16px', textAlign: 'center', minWidth: 48 }}>
+                      {coin.market_cap_rank ?? '—'}
+                    </td>
+
+                    {/* Coin */}
+                    <td style={{ padding: '12px 16px', minWidth: 180 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        {coin.image_url ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={coin.image_url} alt={coin.symbol} width={22} height={22} style={{ borderRadius: '50%', flexShrink: 0 }} />
+                        ) : (
+                          <div style={{ width: 22, height: 22, borderRadius: '50%', background: C.surface2, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <span style={{ fontFamily: MONO, fontSize: 7, fontWeight: 700, color: C.inkFaint }}>{coin.symbol.slice(0, 2).toUpperCase()}</span>
+                          </div>
+                        )}
+                        <div>
+                          <div style={{ fontFamily: MONO, fontSize: 13, fontWeight: 600, color: C.ink, letterSpacing: '0.04em' }}>{coin.symbol.toUpperCase()}</div>
+                          <div style={{ fontFamily: BODY, fontSize: 11, color: C.inkFaint }}>{coin.name}</div>
+                        </div>
                       </div>
-                    )}
-                    <div>
-                      <div style={{ fontFamily: MONO, fontSize: 13, fontWeight: 600, color: C.ink, letterSpacing: '0.04em' }}>{coin.symbol.toUpperCase()}</div>
-                      <div style={{ fontFamily: BODY, fontSize: 11, color: C.inkFaint, lineHeight: 1.2 }}>{coin.name}</div>
-                    </div>
-                  </div>
+                    </td>
 
-                  {coin.current_price != null && (
-                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 8 }}>
-                      <span style={{ fontFamily: MONO, fontSize: 13, fontWeight: 500, color: C.ink, fontVariantNumeric: 'tabular-nums' }}>
-                        {formatPrice(coin.current_price)}
-                      </span>
-                      {change != null && (
-                        <span style={{ fontFamily: MONO, fontSize: 11, color: changeColor }}>
-                          {change >= 0 ? '+' : ''}{change.toFixed(2)}%
+                    {/* Price */}
+                    <td style={{ fontFamily: MONO, fontSize: 13, fontWeight: 500, color: C.ink, padding: '12px 16px', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
+                      {coin.current_price != null ? formatPrice(coin.current_price) : '—'}
+                    </td>
+
+                    {/* 24h change */}
+                    <td style={{ fontFamily: MONO, fontSize: 12, color: changeColor, padding: '12px 16px', textAlign: 'right', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
+                      {change != null ? `${change >= 0 ? '+' : ''}${change.toFixed(2)}%` : '—'}
+                    </td>
+
+                    {/* Signal */}
+                    <td style={{ padding: '12px 16px', textAlign: 'right' }}>
+                      {sig ? (
+                        <span style={{
+                          fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em',
+                          padding: '3px 8px', background: sigDim, color: sigColor, border: `1px solid ${sigColor}`,
+                          whiteSpace: 'nowrap',
+                        }}>
+                          {sig === 'BUY' ? '▲ ' : sig === 'SELL' ? '▼ ' : '— '}{sig}
                         </span>
+                      ) : (
+                        <span style={{ fontFamily: MONO, fontSize: 10, color: C.inkFaint, letterSpacing: '0.06em' }}>PENDING</span>
                       )}
-                    </div>
-                  )}
+                    </td>
 
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    {sig ? (
-                      <span style={{
-                        fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em',
-                        padding: '3px 8px', background: sigDim, color: sigColor, border: `1px solid ${sigColor}`,
-                      }}>
-                        {sig === 'BUY' ? '▲ ' : sig === 'SELL' ? '▼ ' : '— '}{sig}
-                      </span>
-                    ) : (
-                      <span style={{ fontFamily: MONO, fontSize: 10, color: C.inkFaint, letterSpacing: '0.06em' }}>PENDING</span>
-                    )}
-                    {coin.confidence_pct != null && (
-                      <span style={{ fontFamily: MONO, fontSize: 11, color: C.inkFaint }}>{coin.confidence_pct}%</span>
-                    )}
-                  </div>
-                </motion.div>
-              )
-            })}
+                    {/* Confidence */}
+                    <td style={{ fontFamily: MONO, fontSize: 12, color: C.inkFaint, padding: '12px 16px', textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>
+                      {coin.confidence_pct != null ? `${coin.confidence_pct}%` : '—'}
+                    </td>
+                  </motion.tr>
+                )
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination */}
+      <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+        <span style={{ fontFamily: MONO, fontSize: 12, color: C.inkFaint, letterSpacing: '0.06em' }}>
+          {filteredCoins.length} of {coins.length} coins · Refreshed every 4h
+        </span>
+
+        {totalPages > 1 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            {/* Prev */}
+            <button
+              onClick={() => goTo(safePage - 1)}
+              disabled={safePage === 1}
+              style={{
+                fontFamily: MONO, fontSize: 12, padding: '5px 10px',
+                border: `1px solid ${C.border}`, background: C.surface,
+                color: safePage === 1 ? C.inkFaint : C.ink,
+                cursor: safePage === 1 ? 'default' : 'pointer',
+                opacity: safePage === 1 ? 0.4 : 1,
+              }}
+            >
+              ‹
+            </button>
+
+            {/* Page numbers */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .filter(p => p === 1 || p === totalPages || Math.abs(p - safePage) <= 1)
+              .reduce<(number | '…')[]>((acc, p, i, arr) => {
+                if (i > 0 && p - (arr[i - 1] as number) > 1) acc.push('…')
+                acc.push(p)
+                return acc
+              }, [])
+              .map((p, i) =>
+                p === '…' ? (
+                  <span key={`ellipsis-${i}`} style={{ fontFamily: MONO, fontSize: 12, color: C.inkFaint, padding: '5px 6px' }}>…</span>
+                ) : (
+                  <button
+                    key={p}
+                    onClick={() => goTo(p as number)}
+                    style={{
+                      fontFamily: MONO, fontSize: 12, padding: '5px 10px',
+                      border: `1px solid ${p === safePage ? C.ink : C.border}`,
+                      background: p === safePage ? C.ink : C.surface,
+                      color: p === safePage ? '#fff' : C.ink,
+                      cursor: 'pointer', minWidth: 32,
+                    }}
+                  >
+                    {p}
+                  </button>
+                )
+              )}
+
+            {/* Next */}
+            <button
+              onClick={() => goTo(safePage + 1)}
+              disabled={safePage === totalPages}
+              style={{
+                fontFamily: MONO, fontSize: 12, padding: '5px 10px',
+                border: `1px solid ${C.border}`, background: C.surface,
+                color: safePage === totalPages ? C.inkFaint : C.ink,
+                cursor: safePage === totalPages ? 'default' : 'pointer',
+                opacity: safePage === totalPages ? 0.4 : 1,
+              }}
+            >
+              ›
+            </button>
           </div>
         )}
       </div>
-
-      <p style={{ marginTop: 16, fontFamily: MONO, fontSize: 12, color: C.inkFaint, letterSpacing: '0.06em', textAlign: 'right' }}>
-        {filteredCoins.length} of {coins.length} coins · Refreshed every 4h
-      </p>
     </section>
   )
 }

@@ -252,7 +252,7 @@ function detectSR(
   }
 
   const resistance = cluster(
-    pivotHighs.filter(p => p > currentPrice)
+    pivotHighs.filter(p => p > currentPrice && p <= currentPrice * 1.10)
   )
 
   const support = cluster(
@@ -263,10 +263,8 @@ function detectSR(
   resistance.sort((a, b) => a.price - b.price)
   support.sort((a, b) => b.price - a.price)
 
-  const pickTop = (arr: any[]) =>
-    arr.slice(0, maxLevels)
-
   function classify(clusters: any[]) {
+    if (clusters.length === 0) return []
     const maxTouches = Math.max(...clusters.map(c => c.touches))
 
     return clusters.map(c => ({
@@ -279,7 +277,7 @@ function detectSR(
 
   const result: SRLevel[] = []
 
-  for (const r of classify(pickTop(resistance))) {
+  for (const r of classify(resistance.slice(0, 1))) {
     result.push({
       level_type: 'RESISTANCE',
       strength: r.strength,
@@ -290,13 +288,37 @@ function detectSR(
     })
   }
 
-  for (const s of classify(pickTop(support))) {
+  for (const s of classify(support.slice(0, maxLevels + 1))) {
     result.push({
       level_type: 'SUPPORT',
       strength: s.strength,
       price: s.price,
       touches: s.touches,
       confluence_note: s.touches > 2 ? `Touched ${s.touches}x` : null,
+      sort_order: 0,
+    })
+  }
+
+  // Guarantee at least 1 level on each side — injected as WEAK with confluence_note
+  // so downstream code (calculateTradeSetup, validateAnalysis) always has an anchor.
+  if (!result.some(l => l.level_type === 'RESISTANCE')) {
+    result.unshift({
+      level_type: 'RESISTANCE',
+      strength: 'WEAK',
+      price: Number((currentPrice * 1.05).toFixed(8)),
+      touches: 1,
+      confluence_note: 'Estimated — no pivot resistance detected',
+      sort_order: 0,
+    })
+  }
+
+  if (!result.some(l => l.level_type === 'SUPPORT')) {
+    result.push({
+      level_type: 'SUPPORT',
+      strength: 'WEAK',
+      price: Number((currentPrice * 0.95).toFixed(8)),
+      touches: 1,
+      confluence_note: 'Estimated — no pivot support detected',
       sort_order: 0,
     })
   }
@@ -318,92 +340,84 @@ export function calculateTradeSetup(
 
   const supports = srLevels
     .filter(l => l.level_type === 'SUPPORT' && l.price > 0)
-    .sort((a, b) => b.price - a.price)
+    .sort((a, b) => b.price - a.price)   // nearest first
 
   const resistances = srLevels
     .filter(l => l.level_type === 'RESISTANCE' && l.price > 0)
-    .sort((a, b) => a.price - b.price)
+    .sort((a, b) => a.price - b.price)   // nearest first
 
-  // fallback anchor
+  const safeAtr = atr > 0 ? atr : currentPrice * 0.01
+
+  // ── Anchor: nearest SR in the direction of the setup ──
   const fallbackAnchor =
-    direction === 'LONG'
-      ? currentPrice - atr
-      : currentPrice + atr
+    direction === 'LONG' ? currentPrice - safeAtr : currentPrice + safeAtr
 
-  const anchorPrice =
+  const anchor1 =
     direction === 'LONG'
       ? supports[0]?.price ?? fallbackAnchor
       : resistances[0]?.price ?? fallbackAnchor
 
-  // ATR fallback if invalid
-  const safeAtr = atr > 0 ? atr : anchorPrice * 0.01
+  const anchor2 =
+    direction === 'LONG' ? supports[1]?.price : resistances[1]?.price
 
-  // ENTRY ZONE (ATR-based)
-  const entryLow =
-    direction === 'LONG'
-      ? anchorPrice - 0.5 * safeAtr
-      : anchorPrice - 0.5 * safeAtr
+  // ── Entry zone: percentage-based around anchor1 ──
+  // LONG:  S1 − 0.3% .. S1 + 0.6%
+  // SHORT: R1 − 0.6% .. R1 + 0.3%
+  const entryLow  = direction === 'LONG' ? anchor1 * 0.997 : anchor1 * 0.994
+  const entryHigh = direction === 'LONG' ? anchor1 * 1.006 : anchor1 * 1.003
 
-  const entryHigh =
-    direction === 'LONG'
-      ? anchorPrice + 0.5 * safeAtr
-      : anchorPrice + 0.5 * safeAtr
-
-  // STOP LOSS
+  // ── Stop loss: fixed percentage, stop_safe reaches anchor2 if available ──
+  // LONG:  stop_tight = S1 − 1.5%, stop_safe = min(S1 − 3%, S2 − 0.3%)
+  // SHORT: stop_tight = R1 + 1.5%, stop_safe = max(R1 + 3%, R2 + 0.3%)
   const stopTight =
-    direction === 'LONG'
-      ? anchorPrice - 1.2 * safeAtr
-      : anchorPrice + 1.2 * safeAtr
+    direction === 'LONG' ? anchor1 * 0.985 : anchor1 * 1.015
 
   const stopSafe =
     direction === 'LONG'
-      ? anchorPrice - 2.0 * safeAtr
-      : anchorPrice + 2.0 * safeAtr
+      ? anchor2 != null
+        ? Math.min(anchor1 * 0.97, anchor2 * 0.997)
+        : anchor1 * 0.97
+      : anchor2 != null
+        ? Math.max(anchor1 * 1.03, anchor2 * 1.003)
+        : anchor1 * 1.03
 
   const entryMid = (entryLow + entryHigh) / 2
   const riskTight = Math.abs(entryMid - stopTight)
-
   const riskPctTight = (riskTight / entryMid) * 100
   const riskPctSafe = (Math.abs(entryMid - stopSafe) / entryMid) * 100
 
-  // TP SOURCE
-  let tpTargets: number[] =
+  // ── TP targets: next SR levels in trade direction ──
+  // LONG → R1/R2/R3 | SHORT → S1/S2/S3
+  // Only accept SR targets whose R:R is in the valid range (0, 15].
+  // Slots still empty after SR are filled with riskTight-based fallback
+  // targeting fixed R:R ratios [1.5, 2.5, 4.0] — always valid regardless of ATR.
+  const tpTargets: number[] =
     direction === 'LONG'
       ? resistances.map(r => r.price)
       : supports.map(s => s.price)
 
-  // fallback TP jika SR kosong
-  if (tpTargets.length === 0) {
-    tpTargets = direction === 'LONG'
-      ? [
-        entryMid + 1.5 * safeAtr,
-        entryMid + 2.5 * safeAtr,
-        entryMid + 4 * safeAtr,
-      ]
-      : [
-        entryMid - 1.5 * safeAtr,
-        entryMid - 2.5 * safeAtr,
-        entryMid - 4 * safeAtr,
-      ]
-  }
-
   const tpData: Array<{ price: number; rr: number }> = []
-
   for (const tp of tpTargets) {
+    if (tpData.length === 3) break
     const reward = Math.abs(tp - entryMid)
     const rr = riskTight > 0 ? reward / riskTight : 0
+    if (rr <= 0 || rr > 15) continue
+    tpData.push({ price: Number(tp.toFixed(8)), rr: Number(rr.toFixed(2)) })
+  }
 
-    tpData.push({
-      price: Number(tp.toFixed(8)),
-      rr: Number(rr.toFixed(2)),
-    })
-
-    if (tpData.length === 3) break
+  // Fill remaining slots with riskTight-proportional fallback prices
+  const RR_TARGETS = [1.5, 2.5, 4.0]
+  while (tpData.length < 3) {
+    const targetRr = RR_TARGETS[tpData.length]
+    const tpPrice = direction === 'LONG'
+      ? entryMid + targetRr * riskTight
+      : entryMid - targetRr * riskTight
+    tpData.push({ price: Number(tpPrice.toFixed(8)), rr: targetRr })
   }
 
   const triggerNote =
     direction === 'LONG'
-      ? `Wait breakout above ${entryHigh.toFixed(4)}`
+      ? `Wait rejection above ${entryHigh.toFixed(4)}`
       : `Wait rejection below ${entryLow.toFixed(4)}`
 
   const invalidation =
@@ -413,25 +427,18 @@ export function calculateTradeSetup(
 
   return {
     direction,
-
-    entry_zone_low: Number(entryLow.toFixed(8)),
+    entry_zone_low:  Number(entryLow.toFixed(8)),
     entry_zone_high: Number(entryHigh.toFixed(8)),
-
-    stop_tight: Number(stopTight.toFixed(8)),
-    stop_safe: Number(stopSafe.toFixed(8)),
-
-    risk_pct_tight: Number(riskPctTight.toFixed(2)),
-    risk_pct_safe: Number(riskPctSafe.toFixed(2)),
-
+    stop_tight:      Number(stopTight.toFixed(8)),
+    stop_safe:       Number(stopSafe.toFixed(8)),
+    risk_pct_tight:  Number(riskPctTight.toFixed(2)),
+    risk_pct_safe:   Number(riskPctSafe.toFixed(2)),
     tp1_price: tpData[0].price,
-    tp1_rr: tpData[0].rr,
-
-    tp2_price: tpData[1]?.price ?? tpData[0].price * 1.5,
-    tp2_rr: tpData[1]?.rr ?? tpData[0].rr * 1.2,
-
-    tp3_price: tpData[2]?.price ?? tpData[0].price * 2,
-    tp3_rr: tpData[2]?.rr ?? tpData[0].rr * 1.5,
-
+    tp1_rr:    tpData[0].rr,
+    tp2_price: tpData[1].price,
+    tp2_rr:    tpData[1].rr,
+    tp3_price: tpData[2].price,
+    tp3_rr:    tpData[2].rr,
     trigger_note: triggerNote,
     invalidation,
   }
@@ -553,7 +560,7 @@ export function computeMarketScore(
 
 // ── Main computation ────────────────────────────────────────────
 
-export function computeTechnicalAnalysis(ohlcv: OhlcvData): TechnicalAnalysis {
+export function computeTechnicalAnalysis(ohlcv: OhlcvData, priceOverride?: number): TechnicalAnalysis {
   const { close, high, low } = ohlcv
   let candles: Candle[] = [];
 
@@ -571,6 +578,9 @@ export function computeTechnicalAnalysis(ohlcv: OhlcvData): TechnicalAnalysis {
   const ema20 = ema20Arr[ema20Arr.length - 1]
   const ema200 = ema200Arr[ema200Arr.length - 1]
   const lastClose = close[close.length - 1]
+  // Use live market price for S/R classification so levels are consistent with
+  // the price used in validateAnalysis. OHLC candles can be 2–4 days stale.
+  const srPrice = (priceOverride != null && priceOverride > 0) ? priceOverride : lastClose
 
   const diffPct = (ema20 - ema200) / ema200 * 100
   const trend = diffPct > 1.5 ? 'Bullish' : diffPct < -1.5 ? 'Bearish' : 'Sideways'
@@ -578,7 +588,7 @@ export function computeTechnicalAnalysis(ohlcv: OhlcvData): TechnicalAnalysis {
   const macd = calcMacd(close)
   const bb = calcBollinger(close)
   const atr_value = calcAtr(candles)
-  const srLevels = detectSR(high, low, lastClose)
+  const srLevels = detectSR(high, low, srPrice)
 
   const rsi_status: 'OVERBOUGHT' | 'OVERSOLD' | 'NEUTRAL' =
     rsi > 70 ? 'OVERBOUGHT' : rsi < 30 ? 'OVERSOLD' : 'NEUTRAL'

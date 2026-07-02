@@ -348,7 +348,6 @@ export default function HeroPanel({ defaultMinimized = false, data }: Props) {
 
               {/* Footer */}
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 16px', fontSize: 10, color: C.inkFaint, letterSpacing: '0.04em' }}>
-                <span>mcptrade.site · Full analysis →</span>
                 <span>{data?.generated_at ? `Generated ${timeAgo(data.generated_at)}` : 'Live preview'}</span>
               </div>
             </motion.div>

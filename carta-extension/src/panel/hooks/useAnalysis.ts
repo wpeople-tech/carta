@@ -30,7 +30,7 @@ export function useAnalysis(symbol: string | null): AnalysisState {
     const controller = new AbortController()
 
     const url = new URL(`${SUPABASE_URL}/rest/v1/latest_analysis`)
-    url.searchParams.set('tradingview_sym', `eq.${symbol}`)
+    url.searchParams.set('tradingview_sym', `ilike.*${symbol}`)
     url.searchParams.set('select', '*,support_resistance(*),indicators(*),trade_setups(*)')
     url.searchParams.set('limit', '1')
 

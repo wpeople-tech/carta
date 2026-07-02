@@ -429,7 +429,7 @@ export function InstallClient() {
 
         <motion.div variants={staggerFast} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 20, marginTop: 56, paddingTop: 40, borderTop: `1px solid ${C.border}`, flexWrap: 'wrap' }}>
           <motion.span variants={fadeIn} transition={easeOutFast} style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: C.inkFaint }}>Powered by</motion.span>
-          {['Anthropic Claude', 'MCPTrade', 'Supabase'].map(badge => (
+          {['Anthropic Claude', 'Supabase'].map(badge => (
             <motion.span key={badge} variants={fadeUp} transition={easeOutFast} whileHover={{ scale: 1.05, borderColor: C.border2 }} style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, color: C.inkMuted, padding: '5px 12px', border: `1px solid ${C.border}`, letterSpacing: '0.06em', display: 'inline-block' }}>
               {badge}
             </motion.span>
@@ -503,13 +503,13 @@ export function FooterClient() {
         CARTA<span style={{ color: C.signal }}>.</span>
       </div>
       <ul style={{ display: 'flex', gap: 24, listStyle: 'none', margin: 0, padding: 0, flexWrap: 'wrap', justifyContent: 'center' }}>
-        {['MCPTrade', 'GitHub', 'X / Twitter'].map(link => (
+        {['GitHub', 'X / Twitter'].map(link => (
           <li key={link}>
             <a href="#" style={{ color: '#555', textDecoration: 'none', textTransform: 'uppercase', transition: 'color 0.15s' }}>{link}</a>
           </li>
         ))}
       </ul>
-      <div>Cartography Trading Agent · Built on MCPTrade</div>
+      <div>Cartography Trading Agent</div>
     </motion.footer>
   )
 }

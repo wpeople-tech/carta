@@ -6,6 +6,7 @@ import {
   computeTechnicalAnalysis,
   computeMarketScore,
   calculateTradeSetup,
+  validateAnalysis,
   buildInterpretationPrompt,
   type TradeSetupResult,
   type AIInterpretation,
@@ -36,6 +37,12 @@ function extractAndSanitizeJson(raw: string): string {
   // e.g. `"confidence_pct": 補足説明: 40` → `"confidence_pct": 40`
   // Pattern: after a colon+space, any run of non-ASCII chars followed by another colon
   s = s.replace(/:\s*[^\x00-\x7F\s][^:"\[\{]*:\s*/g, ': ')
+  // Quote bare unquoted non-numeric values after a colon — e.g. `"key": anj7` → `"key": "anj7"`
+  // Matches: colon+space, then a token starting with a letter (not true/false/null), ending before comma/brace/newline
+  s = s.replace(/:\s*([a-zA-Z][a-zA-Z0-9_]*)\s*([,\}\n])/g, (_, tok, term) => {
+    if (tok === 'true' || tok === 'false' || tok === 'null') return `: ${tok}${term}`
+    return `: "${tok}"${term}`
+  })
   return s
 }
 
@@ -50,7 +57,7 @@ async function callAI(
   const prompt = buildInterpretationPrompt(coinName, currentPrice, ta, setups, marketScore)
   const msg = await client.chat.completions.create({
     model: 'deepseek/deepseek-v3.2',
-    max_tokens: 1000,
+    max_tokens: 400,
     messages: [
       { role: 'system', content: 'Respond with valid JSON only. No annotations, no comments, no non-ASCII characters outside string values.' },
       { role: 'user', content: prompt },
@@ -98,6 +105,7 @@ export async function GET(req: NextRequest) {
     skip: offset,
     take: BATCH_SIZE,
   })
+  console.log(`coins batch: ${JSON.stringify(coins.map(item => item.symbol))}`)
 
   if (coins.length === 0) {
     await prisma.cronState.update({
@@ -127,20 +135,25 @@ export async function GET(req: NextRequest) {
 
     try {
       const mkt = marketMap.get(coin.coin_id)
+      const currentPrice = mkt?.current_price ?? 0
+      if (!currentPrice || currentPrice <= 0) {
+        results[coin.coin_id] = 'SKIP: no price data'
+        console.warn(`${coin.symbol}: no price data`)
+        continue
+      }
+      
       const ohlcv = await fetchOhlcv(coin.coin_id)
       if (!ohlcv) {
         results[coin.coin_id] = 'SKIP: no ohlcv'
+        console.warn(`${coin.symbol}: no price ohlcv`)
         continue
       }
 
-      const ta = computeTechnicalAnalysis(ohlcv)
+      // Pass live currentPrice so detectSR classifies levels against the same
+      // reference price that validateAnalysis will check — OHLC lastClose can
+      // be 2–4 days stale on CoinGecko's 365-day endpoint (4-day candles).
+      const ta = computeTechnicalAnalysis(ohlcv, currentPrice)
       const latest = latestMap.get(coin.coin_id)
-      const currentPrice = mkt?.current_price ?? 0
-
-      if (!currentPrice || currentPrice <= 0) {
-        results[coin.coin_id] = 'SKIP: no price data'
-        continue
-      }
 
       // ── 5. Deterministic market score (Layer 1) ──
       const marketScore = computeMarketScore(ta, currentPrice)
@@ -149,6 +162,14 @@ export async function GET(req: NextRequest) {
       const longSetup  = calculateTradeSetup(ta.srLevels, 'LONG', currentPrice, ta.atr_value)
       const shortSetup = calculateTradeSetup(ta.srLevels, 'SHORT', currentPrice, ta.atr_value)
       const validatedSetups: TradeSetupResult[] = [longSetup, shortSetup]
+
+      // ── 6b. Validate S/R and setup math before persisting ──
+      const validation = validateAnalysis(currentPrice, ta.srLevels, validatedSetups)
+      if (!validation.valid) {
+        results[coin.coin_id] = `SKIP: validation — ${validation.errors.join('; ')}`
+        console.warn(`${results[coin.coin_id]}::: ${coin.symbol}: validation - ${validation.errors.join('; ')}`)
+        continue
+      }
 
       // ── 7. AI interpretation (Layer 2) — confidence + grades + narrative only ──
       // Skip AI call when signal is unchanged (score-based, not trend-based).
@@ -202,6 +223,8 @@ export async function GET(req: NextRequest) {
             expires_at:       expiresAt,
           },
         })
+
+        if (analysis) console.log(`success create analysis: ${coin.symbol}`)
 
         // S/R levels — skip zero-price fallback placeholders
         const srToSave = ta.srLevels.filter(lv => lv.price > 0)

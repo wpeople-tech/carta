@@ -4,11 +4,12 @@ import { formatPrice } from '../utils'
 
 interface Props {
   setup: TradeSetupData
+  defaultExpanded?: boolean
 }
 
-export default function TradeSetup({ setup }: Props) {
+export default function TradeSetup({ setup, defaultExpanded = false }: Props) {
   const isLong = setup.direction === 'LONG'
-  const [expanded, setExpanded] = useState(isLong)
+  const [expanded, setExpanded] = useState(defaultExpanded)
 
   return (
     <div className="carta-section">
