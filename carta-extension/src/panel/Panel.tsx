@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useSymbol } from './hooks/useSymbol'
 import { useAnalysis } from './hooks/useAnalysis'
+import { useLivePrice } from './hooks/useLivePrice'
 import Header from './components/Header'
 import SignalBar from './components/SignalBar'
+import LivePriceBar from './components/LivePriceBar'
 import SRLevels from './components/SRLevels'
 import Indicators from './components/Indicators'
 import TradeSetup from './components/TradeSetup'
@@ -18,6 +20,10 @@ export default function Panel() {
   const [visible, setVisible] = useState(true)
   const symbol = useSymbol()
   const state = useAnalysis(symbol)
+  const basePrice = state.status === 'success' ? state.data.current_price ?? null : null
+  const live = useLivePrice(basePrice)
+
+  console.log('live', live);
 
   // Restore panel visibility dari chrome.storage
   useEffect(() => {
@@ -81,8 +87,14 @@ export default function Panel() {
               confidence={state.data.confidence_pct}
               weeklyBias={state.data.weekly_bias}
             />
+            {live && symbol && (
+              <LivePriceBar live={live} symbol={symbol} />
+            )}
             <div className="carta-body">
-              <SRLevels levels={state.data.support_resistance} />
+              <SRLevels
+                levels={state.data.support_resistance}
+                livePrice={live?.price ?? null}
+              />
               {state.data.indicators[0] && (
                 <Indicators data={state.data.indicators[0]} />
               )}

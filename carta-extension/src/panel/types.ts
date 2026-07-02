@@ -56,6 +56,8 @@ export interface Analysis {
   confidence_pct: number
   weekly_bias: WeeklyBias
   claude_call: string
+  current_price: number | null
+  price_change_24h: number | null
   support_resistance: SRLevel[]
   indicators: Indicators[]
   trade_setups: TradeSetup[]

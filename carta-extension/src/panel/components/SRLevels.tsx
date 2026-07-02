@@ -3,6 +3,7 @@ import { formatPrice } from '../utils'
 
 interface Props {
   levels: SRLevel[]
+  livePrice?: number | null
 }
 
 const DOT_CLASS: Record<string, string> = {
@@ -19,7 +20,7 @@ const LABEL: Record<string, string> = {
   SUPPORT_WEAK:      'Weak Support',
 }
 
-export default function SRLevels({ levels }: Props) {
+export default function SRLevels({ levels, livePrice }: Props) {
   const resistances = levels
     .filter(l => l.level_type === 'RESISTANCE')
     .sort((a, b) => b.price - a.price)
@@ -27,6 +28,16 @@ export default function SRLevels({ levels }: Props) {
   const supports = levels
     .filter(l => l.level_type === 'SUPPORT')
     .sort((a, b) => b.price - a.price)
+
+  // Find nearest S/R and compute distance
+  const nearestSup = supports.length > 0 ? supports[0] : null
+  const nearestRes = resistances.length > 0 ? resistances[resistances.length - 1] : null
+  const distToSup = livePrice && nearestSup
+    ? ((livePrice - nearestSup.price) / nearestSup.price) * 100
+    : null
+  const distToRes = livePrice && nearestRes
+    ? ((nearestRes.price - livePrice) / livePrice) * 100
+    : null
 
   const renderRow = (level: SRLevel) => {
     const key = `${level.level_type}_${level.strength}`
@@ -46,7 +57,27 @@ export default function SRLevels({ levels }: Props) {
       <div className="carta-section-label">Support &amp; Resistance · Daily</div>
       <div className="carta-sr-list">
         {resistances.map(renderRow)}
+
+        {/* Live price row between resistance and support */}
+        {livePrice != null && (
+          <div className="carta-sr-row carta-sr-row--current">
+            <div className="carta-sr-current-label">
+              ▶ CURRENT
+              {distToRes != null && (
+                <span className="carta-sr-current-dist"> · {distToRes.toFixed(1)}% to res</span>
+              )}
+            </div>
+            <div className="carta-sr-current-price">${formatPrice(livePrice)}</div>
+          </div>
+        )}
+
         {supports.map(renderRow)}
+
+        {livePrice != null && distToSup != null && (
+          <div className="carta-sr-dist-row">
+            <span>{distToSup.toFixed(1)}% above nearest support</span>
+          </div>
+        )}
       </div>
     </div>
   )

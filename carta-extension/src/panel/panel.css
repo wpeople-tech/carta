@@ -481,6 +481,115 @@
   line-height: 1.6;
 }
 
+/* ─── LIVE PRICE BAR ─────────────────────────────────────────────────────── */
+
+.carta-live-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--carta-border);
+  background: var(--carta-surface);
+  flex-shrink: 0;
+  transition: background 0.3s ease;
+}
+
+.carta-live-bar--up   { background: rgba(26, 122, 74, 0.08); }
+.carta-live-bar--down { background: rgba(192, 57, 43, 0.08); }
+
+.carta-live-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.carta-live-ticker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--carta-ink);
+}
+
+.carta-live-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--carta-signal);
+  animation: carta-pulse 1.4s infinite;
+  flex-shrink: 0;
+}
+
+.carta-live-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--carta-signal);
+}
+
+.carta-live-right {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.carta-live-price {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--carta-ink);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.25s ease;
+}
+
+.carta-live-price--up   { color: var(--carta-green); }
+.carta-live-price--down { color: var(--carta-red); }
+
+.carta-live-change {
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── S/R CURRENT ROW (live) ─────────────────────────────────────────────── */
+
+.carta-sr-row--current {
+  background: var(--carta-signal-dim);
+  margin: 0 -14px;
+  padding: 5px 14px;
+  border-bottom: none;
+  border-top: none;
+}
+
+.carta-sr-current-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--carta-signal);
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.carta-sr-current-dist {
+  font-weight: 500;
+  font-size: 10px;
+  color: var(--carta-signal);
+}
+
+.carta-sr-current-price {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--carta-signal);
+  font-variant-numeric: tabular-nums;
+}
+
+.carta-sr-dist-row {
+  padding: 4px 0;
+  font-size: 10px;
+  color: var(--carta-ink-faint);
+  letter-spacing: 0.04em;
+  text-align: right;
+}
+
 /* ─── TOGGLE BUTTON ──────────────────────────────────────────────────────── */
 
 #carta-toggle {

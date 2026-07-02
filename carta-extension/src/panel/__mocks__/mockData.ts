@@ -72,4 +72,6 @@ export const MOCK_ANALYSIS: Analysis = {
       setup_note: 'Counter to daily bias. Half size only.',
     },
   ],
+  current_price: null,
+  price_change_24h: null
 }
