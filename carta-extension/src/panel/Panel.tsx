@@ -27,9 +27,19 @@ function PanelContent({ symbol }: { symbol: string | null }) {
       {state.status === 'loading' && (
         <>
           <div className="carta-signal-bar">
-            <div className="carta-badge carta-badge--neutral">--</div>
+            <div className="carta-signal-bar-top">
+              <div className="carta-badge carta-badge--neutral">--</div>
+            </div>
           </div>
           <div className="carta-body">
+            <div className="carta-skeleton">
+              <div className="carta-skeleton-row carta-skeleton-row--short" />
+              <div className="carta-skeleton-row carta-skeleton-row--full" />
+              <div className="carta-skeleton-row carta-skeleton-row--med" />
+              <div className="carta-skeleton-row carta-skeleton-row--full" />
+              <div className="carta-skeleton-row carta-skeleton-row--short" />
+              <div className="carta-skeleton-row carta-skeleton-row--med" />
+            </div>
             <div className="carta-loading">
               <div className="carta-loading-dot" />
               <span className="carta-loading-text">CARTA READING TERRITORY</span>
@@ -76,10 +86,10 @@ function PanelContent({ symbol }: { symbol: string | null }) {
               <Indicators data={state.data.indicators[0]} />
             )}
             {[...state.data.trade_setups].sort((a, b) => {
-              const bias = state.data.weekly_bias
+              const sig = state.data.signal
               const priority = (dir: string) =>
-                bias === 'BULLISH' ? (dir === 'LONG' ? 0 : 1)
-                : bias === 'BEARISH' ? (dir === 'SHORT' ? 0 : 1)
+                sig === 'BUY'  ? (dir === 'LONG'  ? 0 : 1)
+                : sig === 'SELL' ? (dir === 'SHORT' ? 0 : 1)
                 : (dir === 'LONG' ? 0 : 1)
               return priority(a.direction) - priority(b.direction)
             }).map((setup, idx) => (

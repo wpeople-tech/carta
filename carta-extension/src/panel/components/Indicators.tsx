@@ -27,7 +27,7 @@ function cap(s: string): string {
 }
 
 export default function Indicators({ data }: Props) {
-  const items = [
+  const items: { label: string; value: string; tone: Tone }[] = [
     {
       label: 'RSI (14)',
       value: `${data.rsi_value} · ${cap(data.rsi_status)}`,
@@ -71,11 +71,24 @@ export default function Indicators({ data }: Props) {
       <div className="carta-section-label">Indicators</div>
       <div className="carta-indicator-grid">
         {items.map(item => (
-          <div key={item.label} className="carta-indicator">
+          <div
+            key={item.label}
+            className={`carta-indicator carta-ind-tile--${item.tone}`}
+          >
             <div className="carta-ind-label">{item.label}</div>
-            <div className={`carta-ind-value carta-ind--${item.tone}`}>{item.value}</div>
+            <span className={`carta-ind-pill carta-ind-pill--${item.tone}`}>
+              {item.value}
+            </span>
           </div>
         ))}
+
+        {/* ATR row — spans full width */}
+        <div className="carta-ind-atr">
+          <span>ATR (14)</span>
+          <span style={{ fontWeight: 700, color: 'var(--carta-ink-muted)' }}>
+            {data.atr_value}
+          </span>
+        </div>
       </div>
     </div>
   )

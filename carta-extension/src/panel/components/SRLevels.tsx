@@ -39,6 +39,13 @@ export default function SRLevels({ levels, livePrice }: Props) {
     ? ((nearestRes.price - livePrice) / livePrice) * 100
     : null
 
+  // Price ladder: position of livePrice between nearest sup and res
+  const ladderPct = livePrice && nearestSup && nearestRes
+    ? Math.max(0, Math.min(100,
+        ((livePrice - nearestSup.price) / (nearestRes.price - nearestSup.price)) * 100
+      ))
+    : 50
+
   const renderRow = (level: SRLevel) => {
     const key = `${level.level_type}_${level.strength}`
     return (
@@ -55,27 +62,40 @@ export default function SRLevels({ levels, livePrice }: Props) {
   return (
     <div className="carta-section">
       <div className="carta-section-label">Support &amp; Resistance · Daily</div>
-      <div className="carta-sr-list">
-        {resistances.map(renderRow)}
+      <div className="carta-sr-ladder-wrap">
+        <div className="carta-sr-list">
+          {resistances.map(renderRow)}
 
-        {/* Live price row between resistance and support */}
-        {livePrice != null && (
-          <div className="carta-sr-row carta-sr-row--current">
-            <div className="carta-sr-current-label">
-              ▶ CURRENT
-              {distToRes != null && (
-                <span className="carta-sr-current-dist"> · {distToRes.toFixed(1)}% to res</span>
-              )}
+          {/* Live price row between resistance and support */}
+          {livePrice != null && (
+            <div className="carta-sr-row carta-sr-row--current">
+              <div className="carta-sr-current-label">
+                ▶ CURRENT
+                {distToRes != null && (
+                  <span className="carta-sr-current-dist"> · {distToRes.toFixed(1)}% to res</span>
+                )}
+              </div>
+              <div className="carta-sr-current-price">${formatPrice(livePrice)}</div>
             </div>
-            <div className="carta-sr-current-price">${formatPrice(livePrice)}</div>
-          </div>
-        )}
+          )}
 
-        {supports.map(renderRow)}
+          {supports.map(renderRow)}
 
-        {livePrice != null && distToSup != null && (
-          <div className="carta-sr-dist-row">
-            <span>{distToSup.toFixed(1)}% above nearest support</span>
+          {livePrice != null && distToSup != null && (
+            <div className="carta-sr-dist-row">
+              <span>{distToSup.toFixed(1)}% above nearest support</span>
+            </div>
+          )}
+        </div>
+
+        {/* Vertical price position ladder */}
+        {livePrice != null && nearestSup && nearestRes && (
+          <div className="carta-sr-ladder">
+            <div className="carta-sr-ladder-res" style={{ flex: 100 - ladderPct }} />
+            <div className="carta-sr-ladder-gap">
+              <span className="carta-sr-ladder-dot" />
+            </div>
+            <div className="carta-sr-ladder-sup" style={{ flex: ladderPct }} />
           </div>
         )}
       </div>
