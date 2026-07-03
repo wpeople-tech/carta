@@ -207,7 +207,7 @@ function detectSR(
   lows: number[],
   currentPrice: number,
   n = 5,
-  maxLevels = 2,
+  maxLevels = 3,
   tolerancePct = 0.01 // 1% clustering tolerance
 ): SRLevel[] {
 
@@ -299,8 +299,10 @@ function detectSR(
     })
   }
 
-  // Guarantee ≥2 resistance levels, with at least one ≥ 10% above current price.
+  // Guarantee ≥3 resistance levels, with at least one ≥ 10% above current price.
   const resistanceLevels = () => result.filter(l => l.level_type === 'RESISTANCE')
+  const hasResNear = (pct: number) =>
+    resistanceLevels().some(l => Math.abs(l.price - currentPrice * pct) / (currentPrice * pct) < 0.01)
 
   if (!resistanceLevels().some(l => l.price >= currentPrice * 1.10)) {
     result.push({
@@ -312,20 +314,31 @@ function detectSR(
       sort_order: 0,
     })
   }
-
-  if (resistanceLevels().length < 2) {
-    result.unshift({
+  if (resistanceLevels().length < 3 && !hasResNear(1.05)) {
+    result.push({
       level_type: 'RESISTANCE',
       strength: 'WEAK',
       price: Number((currentPrice * 1.05).toFixed(8)),
       touches: 1,
-      confluence_note: 'Estimated — no pivot resistance detected',
+      confluence_note: 'Estimated — 5% resistance boundary',
+      sort_order: 0,
+    })
+  }
+  if (resistanceLevels().length < 3 && !hasResNear(1.15)) {
+    result.push({
+      level_type: 'RESISTANCE',
+      strength: 'WEAK',
+      price: Number((currentPrice * 1.15).toFixed(8)),
+      touches: 1,
+      confluence_note: 'Estimated — 15% resistance boundary',
       sort_order: 0,
     })
   }
 
-  // Guarantee ≥2 support levels, with at least one ≥ 10% below current price.
+  // Guarantee ≥3 support levels, with at least one ≥ 10% below current price.
   const supportLevels = () => result.filter(l => l.level_type === 'SUPPORT')
+  const hasSupNear = (pct: number) =>
+    supportLevels().some(l => Math.abs(l.price - currentPrice * pct) / (currentPrice * pct) < 0.01)
 
   if (!supportLevels().some(l => l.price <= currentPrice * 0.90)) {
     result.push({
@@ -337,14 +350,23 @@ function detectSR(
       sort_order: 0,
     })
   }
-
-  if (supportLevels().length < 2) {
+  if (supportLevels().length < 3 && !hasSupNear(0.95)) {
     result.push({
       level_type: 'SUPPORT',
       strength: 'WEAK',
       price: Number((currentPrice * 0.95).toFixed(8)),
       touches: 1,
-      confluence_note: 'Estimated — no pivot support detected',
+      confluence_note: 'Estimated — 5% support boundary',
+      sort_order: 0,
+    })
+  }
+  if (supportLevels().length < 3 && !hasSupNear(0.85)) {
+    result.push({
+      level_type: 'SUPPORT',
+      strength: 'WEAK',
+      price: Number((currentPrice * 0.85).toFixed(8)),
+      touches: 1,
+      confluence_note: 'Estimated — 15% support boundary',
       sort_order: 0,
     })
   }
@@ -705,7 +727,8 @@ You MUST:
     : ''
 
   return `
-You are CARTA, a STRICT RULE-BASED technical analysis explanation engine.
+You are CARTA, a technical navigator who has read the territory before the trader arrives.
+CARTA does not hedge. CARTA does not merely report. CARTA tells you what it sees and what it is waiting for.
 
 CRITICAL RULES (NON-NEGOTIABLE):
 - You are NOT a trader.
@@ -753,16 +776,21 @@ HARD VALIDATION RULES (YOU MUST RESPECT THESE):
 
 ---
 
-OUTPUT FORMAT (STRICT JSON ONLY):
+OUTPUT FORMAT (STRICT JSON ONLY — output the object below, fill in values, no other text):
 
 {
-  "confidence_pct": <integer ${Math.min(75, marketScore.confidence_ceiling)}-${marketScore.confidence_ceiling}>,
+  "confidence_pct": 78,
   "setup_grades": {
-    "LONG": "A" | "B" | "C" | null,
-    "SHORT": "A" | "B" | "C" | null
+    "LONG": "B",
+    "SHORT": "C"
   },
-  "claude_call": "<2-3 sentences only, first person, CARTA voice>"
+  "claude_call": "Structure is bearish with EMA stacked below price. The short entry sits at $X — price needs to move Y% before I am interested. If price closes below $Z with volume, the move becomes worth watching."
 }
+
+Rules for filling in values:
+- confidence_pct: integer between ${Math.min(75, marketScore.confidence_ceiling)} and ${marketScore.confidence_ceiling}
+- LONG/SHORT grades: exactly one of "A", "B", "C", or null — never a pipe-separated list
+- claude_call: 3 sentences max, first person CARTA voice, stance first, use real prices from the data, end with a concrete condition
 
 ---
 
@@ -783,15 +811,20 @@ CONFIDENCE RULES:
 ---
 
 CLAUDE CALL RULES:
-- MUST mention trend + setup type
-- MUST mention conflicts if any exist
-- MUST NOT sound like financial advice
-- MUST NOT use phrases like "I am initiating BUY/SELL"
-- MUST describe scenario, not decision
+- CARTA always has a stance — never just "observe" or "note" signals.
+- ONE idea per sentence. No compound hedging ("X aligns but Y conflicts while Z suggests...").
+- If the setup hasn't arrived yet, say exactly that with the price level CARTA is watching.
+- If conflicting signals exist, acknowledge them but still commit to a direction.
+- ALWAYS close with a concrete condition using a real price from the data. ("If price holds $X and closes green, ..." or "The short entry sits at $X — price needs to move Y% before I'm interested.")
+- MUST mention the trend direction.
+- MUST NOT sound like financial advice.
+- MUST NOT use phrases like "I am initiating BUY/SELL" or "I recommend".
+- MUST describe what CARTA is watching, not what to do.
 
 ---
 
 FINAL REMINDER:
-If you are uncertain → default to explaining uncertainty, NOT making conviction statements.
+CARTA always has a position. If the signal is weak, say "structure is unclear but I'm watching $X."
+Never end with a summary — always end with what needs to happen next for the setup to be valid.
 `
 }

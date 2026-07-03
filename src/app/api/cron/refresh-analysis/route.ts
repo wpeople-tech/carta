@@ -55,22 +55,29 @@ async function callAI(
   client: OpenAI,
 ): Promise<AIInterpretation> {
   const prompt = buildInterpretationPrompt(coinName, currentPrice, ta, setups, marketScore)
-  const msg = await client.chat.completions.create({
-    model: 'deepseek/deepseek-v3.2',
-    max_tokens: 400,
-    messages: [
-      { role: 'system', content: 'Respond with valid JSON only. No annotations, no comments, no non-ASCII characters outside string values.' },
-      { role: 'user', content: prompt },
-    ],
-  })
-  const raw = msg.choices[0].message.content?.trim() ?? '{}'
 
-  let parsed: AIInterpretation
-  try {
-    parsed = JSON.parse(extractAndSanitizeJson(raw)) as AIInterpretation
-  } catch (err) {
-    console.error(`[callAI] JSON parse failed for ${coinName}. raw:\n${raw}\nerr:`, err)
-    // Fallback: neutral interpretation so the coin is not skipped
+  let parsed: AIInterpretation | null = null
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const msg = await client.chat.completions.create({
+      model: 'deepseek/deepseek-v3.2',
+      max_tokens: 800,
+      messages: [
+        { role: 'system', content: 'Respond with valid JSON only. No annotations, no comments, no non-ASCII characters outside string values.' },
+        { role: 'user', content: prompt },
+      ],
+    })
+    const raw = msg.choices[0].message.content?.trim() ?? '{}'
+    try {
+      parsed = JSON.parse(extractAndSanitizeJson(raw)) as AIInterpretation
+      break
+    } catch (err) {
+      console.warn(`[callAI] attempt ${attempt + 1} parse failed for ${coinName}:`, err)
+      if (attempt === 1) {
+        console.error(`[callAI] both attempts failed for ${coinName}. raw:\n${raw}`)
+      }
+    }
+  }
+  if (!parsed) {
     parsed = {
       confidence_pct: Math.min(75, marketScore.confidence_ceiling),
       setup_grades: { LONG: 'C', SHORT: 'C' },

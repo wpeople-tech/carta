@@ -8,16 +8,16 @@ interface Props {
 
 const DOT_CLASS: Record<string, string> = {
   RESISTANCE_STRONG: 'carta-dot--strong-res',
-  RESISTANCE_WEAK:   'carta-dot--weak-res',
-  SUPPORT_STRONG:    'carta-dot--strong-sup',
-  SUPPORT_WEAK:      'carta-dot--weak-sup',
+  RESISTANCE_WEAK: 'carta-dot--weak-res',
+  SUPPORT_STRONG: 'carta-dot--strong-sup',
+  SUPPORT_WEAK: 'carta-dot--weak-sup',
 }
 
 const LABEL: Record<string, string> = {
   RESISTANCE_STRONG: 'Strong Resistance',
-  RESISTANCE_WEAK:   'Weak Resistance',
-  SUPPORT_STRONG:    'Strong Support',
-  SUPPORT_WEAK:      'Weak Support',
+  RESISTANCE_WEAK: 'Weak Resistance',
+  SUPPORT_STRONG: 'Strong Support',
+  SUPPORT_WEAK: 'Weak Support',
 }
 
 export default function SRLevels({ levels, livePrice }: Props) {
@@ -42,8 +42,8 @@ export default function SRLevels({ levels, livePrice }: Props) {
   // Price ladder: position of livePrice between nearest sup and res
   const ladderPct = livePrice && nearestSup && nearestRes
     ? Math.max(0, Math.min(100,
-        ((livePrice - nearestSup.price) / (nearestRes.price - nearestSup.price)) * 100
-      ))
+      ((livePrice - nearestSup.price) / (nearestRes.price - nearestSup.price)) * 100
+    ))
     : 50
 
   const renderRow = (level: SRLevel) => {
@@ -52,7 +52,14 @@ export default function SRLevels({ levels, livePrice }: Props) {
       <div key={`${level.level_type}-${level.price}`} className="carta-sr-row">
         <div className="carta-sr-label">
           <span className={DOT_CLASS[key]} />
-          {LABEL[key]}
+          {LABEL[key].split(' ').filter(item =>
+            item
+              .toLowerCase()
+              .includes("resistance") ||
+            item
+              .toLowerCase()
+              .includes("support")
+          )}
         </div>
         <div className="carta-sr-price">${formatPrice(level.price)}</div>
       </div>

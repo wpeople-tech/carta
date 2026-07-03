@@ -45,8 +45,8 @@ function parsePriceFromTitle(basePrice: number | null): number | null {
   if (tokens.length === 0) return null
 
   // Pick the token most likely to be a crypto price:
-  // prefer values > 0.0001 and < 10_000_000, pick the largest such value
-  const candidates = tokens.filter(n => n > 0.0001 && n < 10_000_000)
+  // prefer values < 10_000_000, pick the largest such value
+  const candidates = tokens.filter(n => n < 10_000_000)
 
   if (candidates.length === 0) return null
 
