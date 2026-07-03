@@ -6,7 +6,7 @@ function parseSymbolFromTitle(): string | null {
   //   "104,820.00 BTCUSDT — TradingView"
   //   "BINANCE:BTCUSDT, 104820.00"
   // Extract all uppercase ticker-like tokens and find the one ending with USDT
-  const tokens = document.title.match(/[A-Z][A-Z0-9]{2,}(?:USDT)/g) ?? []
+  const tokens = document.title.match(/\b[A-Z][A-Z0-9]*USDT\b/g) ?? []
   return tokens[0] ?? null
 }
 
