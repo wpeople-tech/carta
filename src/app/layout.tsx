@@ -18,7 +18,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CARTA — Cartography Trading Agent",
+  title: "CARTA",
   description: "CARTA reads every crypto chart you open in TradingView. Signal, levels, trade setup. Already there when you arrive. Powered by Claude via MCP.",
 };
 
