@@ -256,7 +256,7 @@ function detectSR(
   )
 
   const support = cluster(
-    pivotLows.filter(p => p < currentPrice)
+    pivotLows.filter(p => p < currentPrice && p >= currentPrice * 0.75)
   )
 
   // 3. Sort by proximity to price
