@@ -73,18 +73,37 @@ export default function Navbar() {
         )
         )}
       </motion.ul>
-      <motion.a
-        href="#install"
-        className="btn-ink font-technical font-semibold text-background bg-ink px-6 py-2 uppercase inline-block"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.35, duration: 0.3 }}
-        whileHover={{ scale: 1.03 }}
-        whileTap={{ scale: 0.97 }}
-        style={{ transition: "background 0.15s" }}
-      >
-        Install Free
-      </motion.a>
+
+      <div className="flex gap-x-3 items-center">
+        <motion.a
+          href="https://x.com/cartatrade"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-ink-muted hover:text-ink"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.35, duration: 0.3 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          style={{ transition: "color 0.15s" }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.26 5.632 5.904-5.632Zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+          </svg>
+        </motion.a>
+        <motion.a
+          href="#install"
+          className="btn-ink font-technical font-semibold text-background bg-ink px-6 py-2 uppercase inline-block"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.35, duration: 0.3 }}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          style={{ transition: "background 0.15s" }}
+        >
+          Install Free
+        </motion.a>
+      </div>
     </motion.nav>
   )
 }
