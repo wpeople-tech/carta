@@ -4,7 +4,7 @@ import { easeOutFast, fadeIn, staggerContainer } from "@/design.config";
 import { motion } from "motion/react";
 import { useState } from "react";
 
-const CA = "73c1VpDi5YtgkoFpz5mxTYDDMgqsxfozx5KzhAzbpump";
+const CA = "";
 
 interface NavLink {
   href: string;
