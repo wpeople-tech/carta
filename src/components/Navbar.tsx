@@ -2,6 +2,9 @@
 
 import { easeOutFast, fadeIn, staggerContainer } from "@/design.config";
 import { motion } from "motion/react";
+import { useState } from "react";
+
+const CA = "73c1VpDi5YtgkoFpz5mxTYDDMgqsxfozx5KzhAzbpump";
 
 interface NavLink {
   href: string;
@@ -26,6 +29,43 @@ const navLinks: NavLink[] = [
     label: "The Territory",
   }
 ]
+
+function CaButton() {
+  const [copied, setCopied] = useState(false);
+
+  function handleCopy() {
+    navigator.clipboard.writeText(CA).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  }
+
+  return (
+    <motion.button
+      onClick={handleCopy}
+      className="hidden md:flex items-center gap-2 font-technical cursor-pointer text-xs font-medium text-ink-muted border border-border-base px-3 py-2 uppercase hover:border-ink hover:text-ink"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.35, duration: 0.3 }}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.97 }}
+      style={{ transition: "color 0.15s, border-color 0.15s" }}
+      title={CA}
+    >
+      <span>CA: {CA.slice(0, 6)}…{CA.slice(-4)}</span>
+      {copied ? (
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      ) : (
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+        </svg>
+      )}
+    </motion.button>
+  );
+}
 
 export default function Navbar() {
   return (
@@ -75,6 +115,7 @@ export default function Navbar() {
       </motion.ul>
 
       <div className="flex gap-x-3 items-center">
+        <CaButton />
         <motion.a
           href="https://x.com/cartatrade"
           target="_blank"

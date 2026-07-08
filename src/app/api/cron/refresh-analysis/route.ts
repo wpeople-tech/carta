@@ -59,7 +59,7 @@ async function callAI(
   let parsed: AIInterpretation | null = null
   for (let attempt = 0; attempt < 2; attempt++) {
     const msg = await client.chat.completions.create({
-      model: 'deepseek/deepseek-v3.2',
+      model: 'cohere/north-mini-code:free',
       max_tokens: 800,
       messages: [
         { role: 'system', content: 'Respond with valid JSON only. No annotations, no comments, no non-ASCII characters outside string values.' },
