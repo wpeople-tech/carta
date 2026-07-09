@@ -5,6 +5,8 @@ import { motion, useInView, useReducedMotion } from 'motion/react'
 import Link from 'next/link'
 import { fadeUp, staggerContainer, easeOut, easeOutFast, viewportOnce } from '@/design.config'
 import ShinyText from '@/components/ui/ShinyText'
+import SpotlightCard from '@/components/ui/SpotlightCard'
+import GlitchText from '@/components/ui/GlitchText'
 
 const BRASS = '#B08D57'
 const SIGNAL_PREMIUM = '#4B3FCF'
@@ -61,6 +63,12 @@ const WAYPOINTS = [
     cta: null,
   },
 ] as const
+
+const SPOTLIGHT_COLORS: Record<string, string> = {
+  now: 'rgba(176, 141, 87, 0.15)',
+  next: 'rgba(75, 63, 207, 0.18)',
+  later: 'rgba(176, 141, 87, 0.10)',
+}
 
 function RouteConnector({ solid, inView }: { solid: boolean; inView: boolean }) {
   if (solid) {
@@ -370,8 +378,12 @@ export default function RoadmapSection() {
           style={{ gap: 20, marginTop: 40 }}
         >
           {WAYPOINTS.map((wp, idx) => (
-            <motion.div
+            <SpotlightCard
               key={wp.id}
+              spotlightColor={SPOTLIGHT_COLORS[wp.id]}
+              className="roadmap-card-spotlight"
+            >
+            <motion.div
               variants={fadeUp}
               transition={{ ...easeOutFast, delay: idx * 0.08 }}
               style={{
@@ -382,6 +394,7 @@ export default function RoadmapSection() {
                 boxShadow: wp.hero
                   ? '0 8px 32px rgba(75,63,207,0.12), 0 2px 8px rgba(0,0,0,0.06)'
                   : 'none',
+                height: '100%',
               }}
             >
               {/* Accent bar on hero */}
@@ -422,7 +435,13 @@ export default function RoadmapSection() {
                     lineHeight: 1.2,
                   }}
                 >
-                  {wp.title}
+                  {wp.hero ? (
+                    <GlitchText enableOnHover={true} enableShadows={true} speed={1.2} className="carta-premium-glitch">
+                      {wp.title}
+                    </GlitchText>
+                  ) : (
+                    wp.title
+                  )}
                 </div>
                 {'subtitle' in wp && wp.subtitle && (
                   <div
@@ -489,6 +508,7 @@ export default function RoadmapSection() {
                 </Link>
               )}
             </motion.div>
+            </SpotlightCard>
           ))}
         </motion.div>
       </div>

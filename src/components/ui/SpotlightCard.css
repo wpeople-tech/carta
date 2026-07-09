@@ -24,3 +24,11 @@
 .card-spotlight:focus-within::before {
   opacity: 1;
 }
+
+/* Override defaults for roadmap cards — visual styling stays on inner motion.div */
+.roadmap-card-spotlight {
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  padding: 0;
+}
