@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback, useRef } from 'react'
-import { motion, useMotionValue, useAnimationFrame, useTransform } from 'motion/react'
+import { motion, useMotionValue, useAnimationFrame, useTransform, useReducedMotion } from 'motion/react'
 import './ShinyText.css'
 
 interface ShinyTextProps {
@@ -26,6 +26,7 @@ export default function ShinyText({
   pauseOnHover = false,
 }: ShinyTextProps) {
   const [isPaused, setIsPaused] = useState(false)
+  const prefersReduced = useReducedMotion()
   const progress = useMotionValue(0)
   const elapsedRef = useRef(0)
   const lastTimeRef = useRef<number | null>(null)
@@ -33,7 +34,7 @@ export default function ShinyText({
   const animationDuration = speed * 1000
 
   useAnimationFrame(time => {
-    if (disabled || isPaused) {
+    if (disabled || isPaused || prefersReduced) {
       lastTimeRef.current = null
       return
     }

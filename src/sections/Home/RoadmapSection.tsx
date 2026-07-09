@@ -109,8 +109,12 @@ function WaypointPulse({ color, delay = 0 }: { color: string; delay?: number }) 
           0%   { transform: scale(1); opacity: 0.6; }
           100% { transform: scale(2.2); opacity: 0; }
         }
+        @media (prefers-reduced-motion: reduce) {
+          .waypoint-pulse-ring { animation: none !important; }
+        }
       `}</style>
       <div
+        className="waypoint-pulse-ring"
         style={{
           position: 'absolute',
           width: 16,
@@ -436,7 +440,7 @@ export default function RoadmapSection() {
                   }}
                 >
                   {wp.hero ? (
-                    <GlitchText enableOnHover={true} enableShadows={true} speed={1.2} className="carta-premium-glitch">
+                    <GlitchText enableOnHover={true} enableShadows={false} speed={1.2} className="carta-premium-glitch">
                       {wp.title}
                     </GlitchText>
                   ) : (

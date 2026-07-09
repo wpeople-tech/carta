@@ -63,6 +63,13 @@
   color: #0F0F0D;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .glitch::before,
+  .glitch::after {
+    animation: none;
+  }
+}
+
 @keyframes animate-glitch {
   0%   { clip-path: inset(20% 0 50% 0); }
   5%   { clip-path: inset(10% 0 60% 0); }
