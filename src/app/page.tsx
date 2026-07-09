@@ -15,6 +15,7 @@ import LandingAnimated, {
   HowItWorksClient,
   FooterClient,
 } from '@/sections/Home/LandingAnimated'
+import RoadmapSection from '@/sections/Home/RoadmapSection'
 
 export const dynamic = 'force-dynamic'
 
@@ -199,6 +200,7 @@ export default async function Page() {
       <McpClient />
       <TopoDivider v={4} />
       <FeaturesClient />
+      <RoadmapSection />
       <TopoDivider v={5} />
       <CoverageSection coins={coinRows} />
       <TopoDivider v={5} />

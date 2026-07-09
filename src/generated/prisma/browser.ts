@@ -47,3 +47,8 @@ export type TradeSetup = Prisma.TradeSetupModel
  * 
  */
 export type CronState = Prisma.CronStateModel
+/**
+ * Model PremiumAccess
+ * 
+ */
+export type PremiumAccess = Prisma.PremiumAccessModel

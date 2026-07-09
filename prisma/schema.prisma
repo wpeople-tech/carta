@@ -253,3 +253,15 @@ model CronState {
 
   @@map("cron_state")
 }
+
+// ─────────────────────────────────────────────────────────────
+// premium_access — wallet-gated $CARTA holder sessions
+// ─────────────────────────────────────────────────────────────
+model PremiumAccess {
+  wallet_address     String   @id
+  last_verified_at   DateTime
+  last_balance       Decimal  @db.Decimal(30, 0)
+  session_expires_at DateTime
+
+  @@map("premium_access")
+}

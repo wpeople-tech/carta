@@ -65,6 +65,11 @@
   --color-app-red: #C0392B;
   --color-app-red-dim: rgba(192, 57, 43, 0.094);
 
+  /* Roadmap / Premium tokens */
+  --carta-brass: #B08D57;
+  --carta-signal-premium: #4B3FCF;
+  --carta-route: #C9BFA8;
+
   /* Font Families */
   --font-display: var(--font-space-grotesk), sans-serif;
   --font-reading: var(--font-inter), sans-serif;

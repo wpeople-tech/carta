@@ -56,7 +56,8 @@ export const ModelName = {
   SupportResistance: 'SupportResistance',
   Indicator: 'Indicator',
   TradeSetup: 'TradeSetup',
-  CronState: 'CronState'
+  CronState: 'CronState',
+  PremiumAccess: 'PremiumAccess'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -179,6 +180,16 @@ export const CronStateScalarFieldEnum = {
 } as const
 
 export type CronStateScalarFieldEnum = (typeof CronStateScalarFieldEnum)[keyof typeof CronStateScalarFieldEnum]
+
+
+export const PremiumAccessScalarFieldEnum = {
+  wallet_address: 'wallet_address',
+  last_verified_at: 'last_verified_at',
+  last_balance: 'last_balance',
+  session_expires_at: 'session_expires_at'
+} as const
+
+export type PremiumAccessScalarFieldEnum = (typeof PremiumAccessScalarFieldEnum)[keyof typeof PremiumAccessScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -389,7 +389,8 @@ export const ModelName = {
   SupportResistance: 'SupportResistance',
   Indicator: 'Indicator',
   TradeSetup: 'TradeSetup',
-  CronState: 'CronState'
+  CronState: 'CronState',
+  PremiumAccess: 'PremiumAccess'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -405,7 +406,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "coin" | "analysis" | "supportResistance" | "indicator" | "tradeSetup" | "cronState"
+    modelProps: "coin" | "analysis" | "supportResistance" | "indicator" | "tradeSetup" | "cronState" | "premiumAccess"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -853,6 +854,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PremiumAccess: {
+      payload: Prisma.$PremiumAccessPayload<ExtArgs>
+      fields: Prisma.PremiumAccessFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PremiumAccessFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PremiumAccessPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PremiumAccessFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PremiumAccessPayload>
+        }
+        findFirst: {
+          args: Prisma.PremiumAccessFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PremiumAccessPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PremiumAccessFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PremiumAccessPayload>
+        }
+        findMany: {
+          args: Prisma.PremiumAccessFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PremiumAccessPayload>[]
+        }
+        create: {
+          args: Prisma.PremiumAccessCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PremiumAccessPayload>
+        }
+        createMany: {
+          args: Prisma.PremiumAccessCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PremiumAccessCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PremiumAccessPayload>[]
+        }
+        delete: {
+          args: Prisma.PremiumAccessDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PremiumAccessPayload>
+        }
+        update: {
+          args: Prisma.PremiumAccessUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PremiumAccessPayload>
+        }
+        deleteMany: {
+          args: Prisma.PremiumAccessDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PremiumAccessUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PremiumAccessUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PremiumAccessPayload>[]
+        }
+        upsert: {
+          args: Prisma.PremiumAccessUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PremiumAccessPayload>
+        }
+        aggregate: {
+          args: Prisma.PremiumAccessAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePremiumAccess>
+        }
+        groupBy: {
+          args: Prisma.PremiumAccessGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PremiumAccessGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PremiumAccessCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PremiumAccessCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -996,6 +1071,16 @@ export const CronStateScalarFieldEnum = {
 } as const
 
 export type CronStateScalarFieldEnum = (typeof CronStateScalarFieldEnum)[keyof typeof CronStateScalarFieldEnum]
+
+
+export const PremiumAccessScalarFieldEnum = {
+  wallet_address: 'wallet_address',
+  last_verified_at: 'last_verified_at',
+  last_balance: 'last_balance',
+  session_expires_at: 'session_expires_at'
+} as const
+
+export type PremiumAccessScalarFieldEnum = (typeof PremiumAccessScalarFieldEnum)[keyof typeof PremiumAccessScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1288,6 +1373,20 @@ export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'J
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -1404,6 +1503,7 @@ export type GlobalOmitConfig = {
   indicator?: Prisma.IndicatorOmit
   tradeSetup?: Prisma.TradeSetupOmit
   cronState?: Prisma.CronStateOmit
+  premiumAccess?: Prisma.PremiumAccessOmit
 }
 
 /* Types for Logging */

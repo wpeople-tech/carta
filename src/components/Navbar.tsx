@@ -3,6 +3,7 @@
 import { easeOutFast, fadeIn, staggerContainer } from "@/design.config";
 import { motion } from "motion/react";
 import { useState } from "react";
+import Link from "next/link";
 
 const CA = "5wbeGDwCUCgmJSBVGVc6FLcmMMQVirrCsUSsBPYupump";
 
@@ -132,6 +133,34 @@ export default function Navbar() {
             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.26 5.632 5.904-5.632Zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
           </svg>
         </motion.a>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.35, duration: 0.3 }}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+        >
+          <Link
+            href="/premium"
+            className="font-technical font-semibold text-xs uppercase px-4 py-2 inline-block"
+            style={{
+              color: '#4B3FCF',
+              border: '1px solid #4B3FCF',
+              letterSpacing: '0.08em',
+              transition: 'background 0.15s, color 0.15s',
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.background = '#4B3FCF'
+              ;(e.currentTarget as HTMLElement).style.color = '#fff'
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.background = 'transparent'
+              ;(e.currentTarget as HTMLElement).style.color = '#4B3FCF'
+            }}
+          >
+            Premium
+          </Link>
+        </motion.div>
         <motion.a
           href="#install"
           className="btn-ink font-technical font-semibold text-background bg-ink px-6 py-2 uppercase inline-block"
