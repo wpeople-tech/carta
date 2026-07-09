@@ -7,6 +7,7 @@ import { fadeUp, staggerContainer, easeOut, easeOutFast, viewportOnce } from '@/
 import ShinyText from '@/components/ui/ShinyText'
 import SpotlightCard from '@/components/ui/SpotlightCard'
 import GlitchText from '@/components/ui/GlitchText'
+import MetaBalls from '@/components/ui/MetaBalls'
 
 const BRASS = '#B08D57'
 const SIGNAL_PREMIUM = '#4B3FCF'
@@ -246,70 +247,97 @@ export default function RoadmapSection() {
       />
 
       <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative' }}>
-        {/* Eyebrow */}
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          transition={easeOut}
-        >
-          <div
-            style={{
-              fontFamily: MONO,
-              fontSize: 12,
-              fontWeight: 600,
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              marginBottom: 20,
-            }}
-          >
-            <ShinyText text="Roadmap" color={BRASS} shineColor="#FFD580" speed={3} spread={100} />
-          </div>
-          <motion.h2
-            variants={staggerContainer}
+        {/* Top row: text left, MetaBalls right */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 40, marginBottom: 0 }}>
+          {/* Left: eyebrow + heading + paragraph */}
+          <motion.div
+            variants={fadeUp}
             initial="hidden"
             whileInView="visible"
             viewport={viewportOnce}
-            style={{
-              fontFamily: SANS,
-              fontSize: 'clamp(28px, 4vw, 48px)',
-              fontWeight: 700,
-              lineHeight: 1.1,
-              letterSpacing: '-0.02em',
-              color: INK,
-              marginBottom: 16,
-              display: 'block',
-            }}
+            transition={easeOut}
+            style={{ flex: 1, minWidth: 0 }}
           >
-            {'The Next Bearing'.split('').map((char, i) =>
-              char === ' ' ? (
-                <span key={i}>&nbsp;</span>
-              ) : (
-                <motion.span
-                  key={i}
-                  variants={charVariants}
-                  transition={{ ...easeOut, duration: 0.4 }}
-                  style={{ display: 'inline-block' }}
-                >
-                  {char}
-                </motion.span>
-              )
-            )}
-          </motion.h2>
-          <p
-            style={{
-              fontSize: 17,
-              lineHeight: 1.7,
-              color: INK_MUTED,
-              maxWidth: 640,
-            }}
+            <div
+              style={{
+                fontFamily: MONO,
+                fontSize: 12,
+                fontWeight: 600,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                marginBottom: 20,
+              }}
+            >
+              <ShinyText text="Roadmap" color={BRASS} shineColor="#FFD580" speed={3} spread={100} />
+            </div>
+            <motion.h2
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportOnce}
+              style={{
+                fontFamily: SANS,
+                fontSize: 'clamp(28px, 4vw, 48px)',
+                fontWeight: 700,
+                lineHeight: 1.1,
+                letterSpacing: '-0.02em',
+                color: INK,
+                marginBottom: 16,
+                display: 'block',
+              }}
+            >
+              {'The Next Bearing'.split('').map((char, i) =>
+                char === ' ' ? (
+                  <span key={i}>&nbsp;</span>
+                ) : (
+                  <motion.span
+                    key={i}
+                    variants={charVariants}
+                    transition={{ ...easeOut, duration: 0.4 }}
+                    style={{ display: 'inline-block' }}
+                  >
+                    {char}
+                  </motion.span>
+                )
+              )}
+            </motion.h2>
+            <p
+              style={{
+                fontSize: 17,
+                lineHeight: 1.7,
+                color: INK_MUTED,
+                maxWidth: 640,
+              }}
+            >
+              CARTA is charting new waters. The reasoning engine behind every call is moving to Claude
+              Fable 5, Anthropic&apos;s newest and most capable model — the sharpest CARTA has ever
+              read a chart.
+            </p>
+          </motion.div>
+
+          {/* Right: MetaBalls ~50vh tall */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            transition={{ ...easeOut, delay: 0.15 }}
+            style={{ width: '40%', flexShrink: 0, height: '40vh', minHeight: 300, maxHeight: 560 }}
           >
-            CARTA is charting new waters. The reasoning engine behind every call is moving to Claude
-            Fable 5, Anthropic&apos;s newest and most capable model — the sharpest CARTA has ever
-            read a chart.
-          </p>
-        </motion.div>
+            <MetaBalls
+              color={BRASS}
+              cursorBallColor="#FFD580"
+              speed={0.25}
+              enableMouseInteraction={true}
+              hoverSmoothness={0.06}
+              animationSize={30}
+              ballCount={12}
+              clumpFactor={1}
+              cursorBallSize={3.5}
+              enableTransparency={true}
+            />
+          </motion.div>
+        </div>
 
         {/* Route line with waypoint dots */}
         <div ref={routeRef} style={{ marginTop: 64, marginBottom: 0, position: 'relative' }}>
