@@ -62,10 +62,22 @@ const WAYPOINTS = [
   },
 ] as const
 
-function RouteConnector({ solid }: { solid: boolean }) {
+function RouteConnector({ solid, inView }: { solid: boolean; inView: boolean }) {
   if (solid) {
     return (
-      <div style={{ flex: 1, height: 2, background: BRASS, alignSelf: 'center', minWidth: 0 }} />
+      <motion.div
+        initial={{ scaleX: 0 }}
+        animate={inView ? { scaleX: 1 } : { scaleX: 0 }}
+        transition={{ duration: 0.8, ease: [0.22, 0.97, 0.36, 1], delay: 0.4 }}
+        style={{
+          flex: 1,
+          height: 2,
+          background: BRASS,
+          alignSelf: 'center',
+          minWidth: 0,
+          transformOrigin: 'left',
+        }}
+      />
     )
   }
   return (
@@ -78,6 +90,30 @@ function RouteConnector({ solid }: { solid: boolean }) {
         minWidth: 0,
       }}
     />
+  )
+}
+
+function WaypointPulse({ color, delay = 0 }: { color: string; delay?: number }) {
+  return (
+    <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+      <style>{`
+        @keyframes pulse-ring {
+          0%   { transform: scale(1); opacity: 0.6; }
+          100% { transform: scale(2.2); opacity: 0; }
+        }
+      `}</style>
+      <div
+        style={{
+          position: 'absolute',
+          width: 16,
+          height: 16,
+          borderRadius: '50%',
+          border: `1.5px solid ${color}`,
+          animation: `pulse-ring 2s ${delay}s ease-out infinite`,
+          pointerEvents: 'none',
+        }}
+      />
+    </div>
   )
 }
 
@@ -100,8 +136,13 @@ function WaypointDot({ color, hero }: { color: string; hero: boolean }) {
 
 function CompassNeedle({ inView }: { inView: boolean }) {
   const prefersReduced = useReducedMotion()
-
   const finalX = 'calc(33.33% - 8px)'
+
+  const needle = (
+    <svg width="16" height="20" viewBox="0 0 16 20" fill="none">
+      <path d="M8 0L14 12H8V20L2 8H8V0Z" fill={BRASS} opacity="0.9" />
+    </svg>
+  )
 
   if (prefersReduced) {
     return (
@@ -114,30 +155,52 @@ function CompassNeedle({ inView }: { inView: boolean }) {
           pointerEvents: 'none',
         }}
       >
-        <svg width="16" height="20" viewBox="0 0 16 20" fill="none">
-          <path d="M8 0L14 12H8V20L2 8H8V0Z" fill={BRASS} opacity="0.9" />
-        </svg>
+        {needle}
       </div>
     )
   }
 
+  const trails = [
+    { offset: -36, opacity: 0.03, duration: 1.0 },
+    { offset: -24, opacity: 0.08, duration: 1.1 },
+    { offset: -12, opacity: 0.15, duration: 1.2 },
+  ]
+
   return (
-    <motion.div
-      initial={{ x: 0 }}
-      animate={inView ? { x: finalX } : { x: 0 }}
-      transition={{ duration: 1.4, ease: [0.22, 0.97, 0.36, 1], delay: 0.3 }}
-      style={{
-        position: 'absolute',
-        top: '50%',
-        translateY: '-50%',
-        left: 0,
-        pointerEvents: 'none',
-      }}
-    >
-      <svg width="16" height="20" viewBox="0 0 16 20" fill="none">
-        <path d="M8 0L14 12H8V20L2 8H8V0Z" fill={BRASS} opacity="0.9" />
-      </svg>
-    </motion.div>
+    <>
+      {trails.map((t, i) => (
+        <motion.div
+          key={i}
+          initial={{ x: 0 }}
+          animate={inView ? { x: `calc(33.33% - ${8 - t.offset}px)` } : { x: 0 }}
+          transition={{ duration: t.duration, ease: [0.22, 0.97, 0.36, 1], delay: 0.3 }}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            translateY: '-50%',
+            left: 0,
+            pointerEvents: 'none',
+            opacity: t.opacity,
+          }}
+        >
+          {needle}
+        </motion.div>
+      ))}
+      <motion.div
+        initial={{ x: 0 }}
+        animate={inView ? { x: finalX } : { x: 0 }}
+        transition={{ duration: 1.4, ease: [0.22, 0.97, 0.36, 1], delay: 0.3 }}
+        style={{
+          position: 'absolute',
+          top: '50%',
+          translateY: '-50%',
+          left: 0,
+          pointerEvents: 'none',
+        }}
+      >
+        {needle}
+      </motion.div>
+    </>
   )
 }
 
@@ -250,15 +313,29 @@ export default function RoadmapSection() {
               {/* Compass needle animates over the route */}
               <CompassNeedle inView={inView} />
 
-              {/* Waypoint 1 dot */}
-              <WaypointDot color={BRASS} hero={false} />
-              {/* NOW → NEXT: solid brass */}
-              <RouteConnector solid={true} />
-              {/* Waypoint 2 dot */}
-              <WaypointDot color={SIGNAL_PREMIUM} hero={true} />
-              {/* NEXT → LATER: dotted route */}
-              <RouteConnector solid={false} />
-              {/* Waypoint 3 dot */}
+              {/* NOW dot with brass pulse */}
+              <div style={{ position: 'relative', flexShrink: 0 }}>
+                <WaypointDot color={BRASS} hero={false} />
+                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <WaypointPulse color={BRASS} delay={0} />
+                </div>
+              </div>
+
+              {/* NOW → NEXT: solid brass, animated draw */}
+              <RouteConnector solid={true} inView={inView} />
+
+              {/* NEXT dot with premium purple pulse */}
+              <div style={{ position: 'relative', flexShrink: 0 }}>
+                <WaypointDot color={SIGNAL_PREMIUM} hero={true} />
+                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <WaypointPulse color={SIGNAL_PREMIUM} delay={1} />
+                </div>
+              </div>
+
+              {/* NEXT → LATER: dotted route, no draw animation */}
+              <RouteConnector solid={false} inView={inView} />
+
+              {/* LATER dot — no pulse (muted) */}
               <WaypointDot color={ROUTE} hero={false} />
             </div>
 
