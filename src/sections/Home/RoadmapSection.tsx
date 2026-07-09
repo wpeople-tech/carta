@@ -4,6 +4,7 @@ import { useRef } from 'react'
 import { motion, useInView, useReducedMotion } from 'motion/react'
 import Link from 'next/link'
 import { fadeUp, staggerContainer, easeOut, easeOutFast, viewportOnce } from '@/design.config'
+import ShinyText from '@/components/ui/ShinyText'
 
 const BRASS = '#B08D57'
 const SIGNAL_PREMIUM = '#4B3FCF'
@@ -17,6 +18,11 @@ const BORDER = '#D0CEC9'
 
 const MONO = "'JetBrains Mono', monospace"
 const SANS = "'Space Grotesk', sans-serif"
+
+const charVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+}
 
 const WAYPOINTS = [
   {
@@ -179,14 +185,17 @@ export default function RoadmapSection() {
               fontSize: 12,
               fontWeight: 600,
               letterSpacing: '0.18em',
-              color: BRASS,
               textTransform: 'uppercase',
               marginBottom: 20,
             }}
           >
-            Roadmap
+            <ShinyText text="Roadmap" color={BRASS} shineColor="#FFD580" speed={3} spread={100} />
           </div>
-          <h2
+          <motion.h2
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
             style={{
               fontFamily: SANS,
               fontSize: 'clamp(28px, 4vw, 48px)',
@@ -195,10 +204,24 @@ export default function RoadmapSection() {
               letterSpacing: '-0.02em',
               color: INK,
               marginBottom: 16,
+              display: 'block',
             }}
           >
-            The Next Bearing
-          </h2>
+            {'The Next Bearing'.split('').map((char, i) =>
+              char === ' ' ? (
+                <span key={i}>&nbsp;</span>
+              ) : (
+                <motion.span
+                  key={i}
+                  variants={charVariants}
+                  transition={{ ...easeOut, duration: 0.4 }}
+                  style={{ display: 'inline-block' }}
+                >
+                  {char}
+                </motion.span>
+              )
+            )}
+          </motion.h2>
           <p
             style={{
               fontSize: 17,
