@@ -2,11 +2,11 @@
   "crons": [
     {
       "path": "/api/cron/refresh-analysis",
-      "schedule": "*/5 0-1 * * *"
+      "schedule": "0 0 * * *"
     },
     {
       "path": "/api/cron/refresh-prices",
-      "schedule": "*/3 0-1 * * *"
+      "schedule": "0 0 * * *"
     }
   ]
 }

@@ -31,5 +31,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "carta-extension", "scripts"],
+  "exclude": ["node_modules", "carta-extension", "scripts", "cron-trigger"],
 }
