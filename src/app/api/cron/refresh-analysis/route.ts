@@ -92,8 +92,10 @@ async function callAI(
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get('Authorization')
+  const test = req.headers.get('X-Test')
   return NextResponse.json({
-    cronKey: authHeader
+    cronKey: authHeader,
+    test,
   })
   // if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
   //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

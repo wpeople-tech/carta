@@ -33,7 +33,9 @@ export default {
 		try {
 			let resp1 = await fetch('https://cartatrade.tech/api/cron/refresh-analysis', {
 				headers: {
-					'authorization': `Bearer ${env.CRON_SECRET}`,
+					Authorization: '123',
+					"X-Test": "hello",
+					Accept: "application/json",
 				}
 			});
 			let resp2 = await fetch('https://cartatrade.tech/api/cron/refresh-prices', {
