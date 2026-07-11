@@ -33,7 +33,7 @@ export default {
 		try {
 			let resp1 = await fetch('https://cartatrade.tech/api/cron/refresh-analysis', {
 				headers: {
-					'Authorization': '123',
+					'X-CronKey': '123',
 					"X-Test": "hello",
 					Accept: "application/json",
 				}
