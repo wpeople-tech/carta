@@ -11,7 +11,7 @@ const PRICES_BATCH_SIZE = 25
 // Does NOT re-run TA or call AI. Batched with cursor so it fits inside
 // Vercel Hobby's 10s function timeout.
 export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get('authorization')
+  const authHeader = req.headers.get('X-CronKey')
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
