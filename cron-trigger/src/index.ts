@@ -41,7 +41,7 @@ export default {
 					'authorization': `Bearer ${env.CRON_SECRET}`,
 				}
 			});
-			console.log('resp1', resp1.headers)
+			console.log('resp1', await resp1.json())
 			let wasSuccessful1 = resp1.ok ? 'success' : 'fail';
 			let wasSuccessful2 = resp2.ok ? 'success' : 'fail';
 

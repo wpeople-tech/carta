@@ -91,7 +91,7 @@ async function callAI(
 }
 
 export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get('authorization')
+  const authHeader = req.headers.get('Authorization')
   return NextResponse.json({
     cronKey: authHeader
   })
